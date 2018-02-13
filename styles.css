@@ -1,0 +1,28 @@
+
+.mod_simplelesson_listbuttons input[type="submit"]{
+	width: 400px;
+	/*float: left;*/
+}
+
+.mod_simplelesson_actionbuttons {
+	display: flex;
+	float: right;
+}
+
+.mod_simplelesson_userreport_buttoncontainer {
+	display: flex;
+	float: right;
+
+}
+.mod_simplelesson_buttons {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+.mod_simplelesson_resource_container {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.mod_simplelesson_resource_container_hide {
+	display:none;
+}
