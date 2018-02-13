@@ -72,14 +72,17 @@ class mod_simplelesson_mod_form extends moodleform_mod {
         $mform->addElement('static', 'label1', 'simplelessonsettings', get_string('simplelessonsettings', MOD_SIMPLELESSON_LANG));
         $mform->addElement('text', 'lessontitle', get_string('lessontitle', MOD_SIMPLELESSON_LANG), array('size'=>'64'));
         $mform->addRule('lessontitle', null, 'required', null, 'client');
-        $mform->addHelpButton('lessontitle', 'lessontitle_help', MOD_SIMPLELESSON_LANG);
+        $mform->addHelpButton('lessontitle', 'lessontitle', MOD_SIMPLELESSON_LANG);
         $mform->setType('lessontitle', PARAM_TEXT);	
 		        
-        // First page text
-        $instructionoptions = array();
-        $mform->addElement('editor', 'firstpage', get_string('firstpage', MOD_SIMPLELESSON_LANG), null, $instructionoptions);
-        $mform->setType('firstpage', PARAM_RAW);
-        $mform->addRule('firstpage', get_string('required'), 'required', null, 'client');
+        // First page text - editor field
+        $firstpageoptions = simplelesson_get_editor_options($this->context);
+        $mform->addElement('editor', 'firstpage_editor', get_string('firstpage', MOD_SIMPLELESSON_LANG), null, $firstpageoptions);
+        $mform->setType('firstpage_editor', PARAM_RAW);
+        $mform->addRule('firstpage_editor', get_string('required'), 'required', null, 'client');
+        $mform->setDefault('firstpage_editor', 
+                array('text'=> get_string('defaultfirstpagetext', MOD_SIMPLELESSON_LANG),
+                'format'=>1));
 
 		//attempts
         $attemptoptions = array(0 => get_string('unlimited', MOD_SIMPLELESSON_LANG),
@@ -132,11 +135,14 @@ class mod_simplelesson_mod_form extends moodleform_mod {
 	
 	function data_preprocessing(&$default_values) {
         if ($this->current->instance) {
-			//firstpage        	
-        	$default_values['firstpage']=array(
-        		'format'=>$default_values['firstpageformat'],
-        		'text'=>$default_values['firstpage']
-        	);
+            $context = $this->context;
+            $editoroptions = simplelesson_get_editor_options($context);
+            $default_values = (object) $default_values;
+            $default_values = 
+                    file_prepare_standard_editor($default_values, 'firstpage_editor',
+                    $editoroptions, $context, 'mod_simplelesson',
+                    $default_values->id);
+            $default_values = (array) $default_values;
         }
     }
   

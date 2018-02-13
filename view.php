@@ -80,13 +80,14 @@ $someadminsetting = $config->someadminsetting;
 
 //Get an instance setting
 $lessontitle = $moduleinstance->lessontitle;
+$activityname = $moduleinstance->name;
 
 // Declare renderer for page output
 $renderer = $PAGE->get_renderer('mod_simplelesson');
 
 //if we are teacher we see tabs. If student we just see the page
 if(has_capability('mod/simplelesson:preview',$modulecontext)) {
-    echo $renderer->header($lessontitle);
+    echo $renderer->header($lessontitle, $activityname);
 } else {
     echo $renderer->notabsheader();
 }

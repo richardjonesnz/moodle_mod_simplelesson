@@ -43,6 +43,7 @@ $string['simplelessonname'] = 'Lesson name';
 $string['simplelessonname_help'] = 'Required: the name of this Simple lesson.';
 $string['simplelessonsettings'] = 'Simple lesson settings';
 $string['firstpage'] ='Lesson introduction';
+$string['defaultfirstpagetext'] = 'Introductory text for the first page';
 $string['lessontitle'] = 'Lesson title';
 $string['lessontitle_help'] = 'Lesson title - appears on first page only';
 $string['maxattempts'] ='Max. Attempts';

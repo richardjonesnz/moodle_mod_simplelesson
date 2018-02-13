@@ -390,11 +390,28 @@ function simplelesson_add_instance(stdClass $simplelesson, mod_simplelesson_mod_
 
     $simplelesson->timecreated = time();
 
-    # You may have to add extra stuff in here #
-    $firstpage = $simplelesson->firstpage;
-	$simplelesson->firstpage =$firstpage['text'];
-	$simplelesson->firstpageformat =$firstpage['format'];
-    return $DB->insert_record(MOD_SIMPLELESSON_TABLE, $simplelesson);  
+    // add new instance with dummy data for editor content
+    // This is part of the uploaded files saving process
+    $simplelesson->firstpagetext ='';
+    $simplelesson->firstpagetextformat =FORMAT_HTML;
+    $simplelessonid = $DB->insert_record(MOD_SIMPLELESSON_TABLE, $simplelesson);  
+    $simplelesson->id = $simplelessonid;
+
+    //call file_postupdate_standard editor to save files,
+    // and prepare editor content for saving in database
+    $cmid = $simplelesson->coursemodule;
+    $context = context_module::instance($cmid);
+    $editoroptions = simplelesson_get_editor_options($context);
+    
+    $simplelesson = file_postupdate_standard_editor($simplelesson, 'firstpage',
+            $editoroptions, $context, 
+            'mod_simplelesson', 'firstpage', 
+            $simplelessonid);
+
+    //update database with proper editor content
+    $DB->update_record(MOD_SIMPLELESSON_TABLE, $simplelesson);
+
+    return $simplelessonid;  
 }
 
 /**
@@ -414,12 +431,18 @@ function simplelesson_update_instance(stdClass $simplelesson, mod_simplelesson_m
     $simplelesson->timemodified = time();
     $simplelesson->id = $simplelesson->instance;
 
-    # You may have to add extra stuff in here #
-    $firstpage = $simplelesson->firstpage;
-	$simplelesson->firstpage =$firstpage['text'];
-	$simplelesson->firstpageformat =$firstpage['format'];
+    //save files and process editor content
+    $cmid = $simplelesson->coursemodule;
+    $context = context_module::instance($cmid);
+    $editoroptions = simplelesson_get_editor_options($context);
+    
+    $simplelesson = file_postupdate_standard_editor($simplelesson, 'firstpage',
+            $editoroptions, $context, 
+            'mod_simplelesson', 'firstpage', 
+            $simplelesson->id);
 
-    return $DB->update_record(MOD_SIMPLELESSON_TABLE, $simplelesson);
+    $DB->update_record(MOD_SIMPLELESSON_TABLE, $simplelesson);
+    return $simplelesson->id;
 }
 
 /**
@@ -586,6 +609,14 @@ function simplelesson_scale_used_anywhere($scaleid) {
 ////////////////////////////////////////////////////////////////////////////////
 // File API                                                                   //
 ////////////////////////////////////////////////////////////////////////////////
+
+// Return editor options
+function simplelesson_get_editor_options($context) {
+    global $CFG;
+    return array('subdirs'=>true, 'maxbytes'=>$CFG->maxbytes, 'maxfiles'=>-1,
+            'changeformat'=>1, 'context'=>$context, 
+            'noclean'=>true, 'trusttext'=>false);
+}
 
 /**
  * Returns the lists of all browsable file areas within the given module context

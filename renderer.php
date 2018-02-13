@@ -35,15 +35,16 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      * @param string $extrapagetitle String to append to the page title.
      * @return string
      */
-    public function header($lessontitle) {
+    public function header($lessontitle, $activityname) {
 
         //$context = context_module::instance($cm->id);
 
         // Header setup
-        $this->page->set_title($lessontitle);
+        $this->page->set_title($this->page->course->shortname.": ".$activityname);
         $this->page->set_heading($this->page->course->fullname);
         $output = $this->output->header();
-        $output .= $this->output->heading($activityname);
+
+        $output .= $this->output->heading($lessontitle);
 
         return $output;
     }
