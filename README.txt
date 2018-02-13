@@ -1,36 +1,23 @@
+Modified
+========
+This is modified from Justin Hunt's Pairwork activity module for Moodle.  This is hopefully
+a good basis for a simple lesson module that has basic features as follows:
+
+1.  Supports adding questions from the question bank
+2.  Consists of multimedia pages with simple hyperlinked navigation
+3.  Reports for students and teacher's will hopefully be a part of it
+
+For more complex needs (timing, grading, access restrictions, use the Lesson activity module)
+
+Note: I've removed some of Justin's niftier features such as the module.js and tab navigation.
+
+Richard Jones
+richardnz@outlook.com
+
 Template Activity Module for Moodle
-==========================
+===================================
 This is a more modern, and at least for me, more useful template than the others available.
 It contains admin and instance settings stubs, a renderer.php and a module.js . It also contains activity completion on grade, grade book logic, backup and restore and adgoc/scheduled tasks
-
-To Use
-===========
-i) Replace all instances of PAIRWORK with your uppercase module name eg WIDGET
-There are 3 of these.
-
-ii) Replace all instances of MOD_SIMPLELESSON_ with your module frankenstyle component name eg MOD_WIDGET_
-(NB note the trailing underscore. Just to be safe, include that.)
-There are 141 of these.
-
-iii) Replace all instances of simplelesson with your lowercase module name eg widget
-There are 331 of these.
-
-iv) Replace all instances of 2015 Flash Gordon http://www.flashgordon.com with something like "2015 Justin Hunt".
-There are 31 of these.
-
-It is recommended to use a search and replace tool from a text editor or a command line script to do this.
-Trying to do this manually is sure to lead to mistakes.
-
-Make sure the plugin folder name, and the names of the files in these directories are also changed:
-lang/en
-backup/moodle2
-classes/task
-
-Copy the folder to your [Moodle Site Dir]/mod directory
-
-Install as usual.
-
-Enjoy.
 
 Justin Hunt
 poodllsupport@gmail.com
