@@ -107,7 +107,7 @@ $firstpagetext = file_rewrite_pluginfile_urls($firstpagetext, 'pluginfile.php',
         $contextid, 'mod_simplelesson', 'firstpage', $moduleinstance->id);
 
 // Fetch the firstpage stuff
-echo $renderer->fetch_firstpage_text($firstpagetext);
+echo $renderer->fetch_firstpage_text($moduleinstance, $firstpagetext);
 
 // Finish the page
 echo $renderer->footer();

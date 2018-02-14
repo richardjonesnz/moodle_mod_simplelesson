@@ -56,30 +56,44 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
       	return $this->output->header();
       }
       
-    /**
-     * Returns the text of the first page
-     *
-     * @param object $instance
-     * @param object $displayopts
-     * @return string
-     */
-    public function fetch_firstpage() {
-    	$html =  $this->output->box_start();
-    	$html .=  html_writer::div($instructions, MOD_SIMPLELESSON_CLASS . '_instructions');
-    	$html .=  $this->output->box_end();
-    	return $html;
-    }
-
      /**
      * Returns the text for the first page
      *
      * @param object $instance
      * @return string
      */
-    public function fetch_firstpage_text($firstpagetext) {
-    	$html =  $this->output->box_start();
-    	$html .=  html_writer::div($firstpagetext, MOD_SIMPLELESSON_CLASS . '_introduction');
-    	$html .=  $this->output->box_end();
-    	return $html;
+    public function fetch_firstpage_text($moduleinstance, $firstpagetext) {
+    	
+        // Introductory text        
+        $html =  $this->output->box_start();
+        $html .= html_writer::start_div(MOD_SIMPLELESSON_CLASS . '_firstpagecontent');
+        $html .=  $firstpagetext;
+        $html .= html_writer::end_div();
+        
+        // Link to first content page
+        $url = new moodle_url('/mod/simplelesson/showpage.php',
+                array('id' => $moduleinstance->id, 'page' => 1));
+        $link = html_writer::link($url, get_string('gotofirstpage', MOD_SIMPLELESSON_LANG));
+        $html .= html_writer::div($link, MOD_SIMPLELESSON_CLASS . '_firstpagecontent_link');
+        
+        $html .=  $this->output->box_end();
+        return $html;
+
     }
+
+    /**
+     * Returns add first page button
+     *
+     * @param object $instance
+     * @return string
+     */
+    public function fetch_firstpage_button($moduleinstance) {
+        $html =  $this->output->box_start();
+        $url = new moodle_url('/mod/simplelesson/edit_page.php', array('id'=>$moduleinstance->id));
+        $button = $this->output->single_button($url,get_string('addfirstpage', MOD_SIMPLELESSON_LANG));
+        $html .=  html_writer::div($button, MOD_SIMPLELESSON_CLASS . '_firstpage_editing');
+        $html .=  $this->output->box_end();
+        return $html;
+    }
+
 }

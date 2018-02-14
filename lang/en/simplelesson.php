@@ -43,6 +43,7 @@ $string['simplelessonname'] = 'Lesson name';
 $string['simplelessonname_help'] = 'Required: the name of this Simple lesson.';
 $string['simplelessonsettings'] = 'Simple lesson settings';
 $string['firstpage'] ='Lesson introduction';
+$string['firstpage_help'] ='Add some snappy text and any necessary instructions here';
 $string['defaultfirstpagetext'] = 'Introductory text for the first page';
 $string['lessontitle'] = 'Lesson title';
 $string['lessontitle_help'] = 'Lesson title - appears on first page only';
@@ -53,12 +54,15 @@ $string['unlimited'] ='unlimited';
 $string['someadminsetting'] = 'Some Admin Setting';
 $string['someadminsetting_details'] = 'More info about Some Admin Setting';
 
-$string['someinstancesetting_details'] = 'More infor about Some Instance Setting';
 $string['simplelesson:addinstance'] = 'Add a new simplelesson';
 $string['simplelesson:view'] = 'View simplelesson';
 $string['simplelesson:preview'] = 'Preview simplelesson';
 $string['simplelesson:itemview'] = 'View items';
 $string['simplelesson:itemedit'] = 'Edit items';
+
+// First page strings
+$string['addfirstpage'] = 'Add the first page';
+$string['gotofirstpage'] = 'Continue the lesson';
 
 
 $string['id']='ID';

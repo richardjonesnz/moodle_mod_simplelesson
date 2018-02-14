@@ -26,3 +26,11 @@
 .mod_simplelesson_resource_container_hide {
 	display:none;
 }
+
+.mod_simplelesson_firstpagecontent .mod_simplelesson_firstpagecontent_link {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+{
+	margin-top: 5px;
+}

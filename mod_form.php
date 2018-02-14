@@ -80,6 +80,7 @@ class mod_simplelesson_mod_form extends moodleform_mod {
         $mform->addElement('editor', 'firstpage_editor', get_string('firstpage', MOD_SIMPLELESSON_LANG), null, $firstpageoptions);
         $mform->setType('firstpage_editor', PARAM_RAW);
         $mform->addRule('firstpage_editor', get_string('required'), 'required', null, 'client');
+        $mform->addHelpButton('firstpage_editor', 'firstpage', MOD_SIMPLELESSON_LANG);
         $mform->setDefault('firstpage_editor', 
                 array('text'=> get_string('defaultfirstpagetext', MOD_SIMPLELESSON_LANG),
                 'format'=>1));
