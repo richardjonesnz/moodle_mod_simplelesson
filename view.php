@@ -102,8 +102,9 @@ if($moduleinstance->maxattempts > 0){
 }
 // Prepare firstpage text and re-write urls
 $firstpagetext = $moduleinstance->firstpage;
+$contextid = $PAGE->context->id;
 $firstpagetext = file_rewrite_pluginfile_urls($firstpagetext, 'pluginfile.php', 
-        $cm->id, 'mod_simplelesson', 'firstpage', $moduleinstance->id);
+        $contextid, 'mod_simplelesson', 'firstpage', $moduleinstance->id);
 
 // Fetch the firstpage stuff
 echo $renderer->fetch_firstpage_text($firstpagetext);
