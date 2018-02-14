@@ -8,6 +8,7 @@ a good basis for a simple lesson module that has basic features as follows:
 3.  Reports for students and teacher's will hopefully be a part of it
 
 For more complex needs (timing, grading, access restrictions, use the Lesson activity module)
+For summative activities use the quiz or lesson.
 
 Note: I've removed some of Justin's niftier features such as the module.js and tab navigation.
 
