@@ -109,5 +109,10 @@ $firstpagetext = file_rewrite_pluginfile_urls($firstpagetext, 'pluginfile.php',
 // Fetch the firstpage stuff
 echo $renderer->fetch_firstpage_text($moduleinstance, $firstpagetext);
 
+//if we are teacher we see the add button
+if(has_capability('mod/simplelesson:manage', $modulecontext)) {
+    echo $renderer->fetch_firstpage_button($moduleinstance);
+}
+
 // Finish the page
 echo $renderer->footer();

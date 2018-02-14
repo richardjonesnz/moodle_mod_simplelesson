@@ -67,7 +67,7 @@ class mod_simplelesson_mod_form extends moodleform_mod {
 		}
 
         //-------------------------------------------------------------------------------
-        // Adding the rest of simplelesson settings, spreeading all them into this fieldset
+        // Adding the rest of simplelesson settings, spreading all them into this fieldset
         // or adding more fieldsets ('header' elements) if needed for better logic
         $mform->addElement('static', 'label1', 'simplelessonsettings', get_string('simplelessonsettings', MOD_SIMPLELESSON_LANG));
         $mform->addElement('text', 'lessontitle', get_string('lessontitle', MOD_SIMPLELESSON_LANG), array('size'=>'64'));

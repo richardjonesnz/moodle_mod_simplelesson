@@ -47,83 +47,87 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$capabilities = array(
+$capabilities = array (
 
-	'mod/simplelesson:addinstance' => array(
-			'riskbitmask' => RISK_XSS,
-			'captype' => 'write',
-			'contextlevel' => CONTEXT_COURSE,
-			'archetypes' => array(
-					'editingteacher' => CAP_ALLOW,
-					'manager' => CAP_ALLOW
-			),
-			'clonepermissionsfrom' => 'moodle/course:manageactivities'
-	),
+    'mod/simplelesson:addinstance' => array (
+        'riskbitmask' => RISK_XSS,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => array (
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
+        ),
+    
+        'clonepermissionsfrom' => 'moodle/course:manageactivities'
+    ),
 	
-	'mod/simplelesson:manage' => array(
-			'riskbitmask' => RISK_XSS,
-			'captype' => 'write',
-			'contextlevel' => CONTEXT_COURSE,
-			'archetypes' => array(
-					'editingteacher' => CAP_ALLOW,
-					'manager' => CAP_ALLOW
-			),
-			'clonepermissionsfrom' => 'moodle/course:manageactivities'
-	),
+    'mod/simplelesson:manage' => array (
+        'riskbitmask' => RISK_XSS,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => array (
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
+        ),
+        
+        'clonepermissionsfrom' => 'moodle/course:manageactivities'
+    ),
 	
-	'mod/simplelesson:itemedit' => array(
-			'riskbitmask' => RISK_XSS,
-			'captype' => 'write',
-			'contextlevel' => CONTEXT_COURSE,
-			'archetypes' => array(
-					'editingteacher' => CAP_ALLOW,
-					'manager' => CAP_ALLOW
-			),
-			'clonepermissionsfrom' => 'moodle/course:manageactivities'
-	),
+    'mod/simplelesson:itemedit' => array (
+        'riskbitmask' => RISK_XSS,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => array (
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
+         ),
+ 
+         'clonepermissionsfrom' => 'moodle/course:manageactivities'
+    ),
 	
-	'mod/simplelesson:itemview' => array(
-			'riskbitmask' => RISK_XSS,
-			'captype' => 'write',
-			'contextlevel' => CONTEXT_COURSE,
-			'archetypes' => array(
-					'editingteacher' => CAP_ALLOW,
-					'teacher' => CAP_ALLOW,
-					'manager' => CAP_ALLOW
-			),
-			'clonepermissionsfrom' => 'moodle/course:manageactivities'
-	),
+    'mod/simplelesson:itemview' => array (
+        'riskbitmask' => RISK_XSS,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => array (
+            'editingteacher' => CAP_ALLOW,
+            'teacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
+        ),
+        
+        'clonepermissionsfrom' => 'moodle/course:manageactivities'
+    ),
 	
-	'mod/simplelesson:preview' => array(
-			'captype' => 'write',
-			'contextlevel' => CONTEXT_COURSE,
-			'archetypes' => array(
-					'teacher' => CAP_ALLOW,
-					'editingteacher' => CAP_ALLOW,
-					'manager' => CAP_ALLOW
-			),
-			'clonepermissionsfrom' => 'moodle/course:manageactivities'
-	),
+    'mod/simplelesson:preview' => array (
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => array (
+            'teacher' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
+        ),
+        
+        'clonepermissionsfrom' => 'moodle/course:manageactivities'
+    ),
 
-    'mod/simplelesson:view' => array(
+    'mod/simplelesson:view' => array (
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
-        'legacy' => array(
+        'legacy' => array (
             'guest' => CAP_ALLOW,
             'student' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
-        )
+         )
     ),
 
-    'mod/simplelesson:submit' => array(
+    'mod/simplelesson:submit' => array (
         'riskbitmask' => RISK_SPAM,
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'legacy' => array(
+        'legacy' => array (
             'student' => CAP_ALLOW
         )
     ),
 );
-

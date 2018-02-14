@@ -70,7 +70,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $html .=  $firstpagetext;
         $html .= html_writer::end_div();
         
-        // Link to first content page
+        // Link to first content page - ToDo: add check that first page exists
         $url = new moodle_url('/mod/simplelesson/showpage.php',
                 array('id' => $moduleinstance->id, 'page' => 1));
         $link = html_writer::link($url, get_string('gotofirstpage', MOD_SIMPLELESSON_LANG));
