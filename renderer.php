@@ -76,9 +76,9 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      * @param object $instance
      * @return string
      */
-    public function fetch_firstpage_text($moduleinstance) {
+    public function fetch_firstpage_text($firstpagetext) {
     	$html =  $this->output->box_start();
-    	$html .=  html_writer::div($moduleinstance->firstpage, MOD_SIMPLELESSON_CLASS . '_instructions');
+    	$html .=  html_writer::div($firstpagetext, MOD_SIMPLELESSON_CLASS . '_introduction');
     	$html .=  $this->output->box_end();
     	return $html;
     }

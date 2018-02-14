@@ -139,8 +139,9 @@ class mod_simplelesson_mod_form extends moodleform_mod {
             $editoroptions = simplelesson_get_editor_options($context);
             $default_values = (object) $default_values;
             $default_values = 
-                    file_prepare_standard_editor($default_values, 'firstpage_editor',
-                    $editoroptions, $context, 'mod_simplelesson',
+                    file_prepare_standard_editor($default_values, 'firstpage',
+                    $editoroptions, $context, 'mod_simplelesson', 
+                    'firstpage',
                     $default_values->id);
             $default_values = (array) $default_values;
         }

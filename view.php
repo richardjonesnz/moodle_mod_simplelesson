@@ -100,9 +100,13 @@ if($moduleinstance->maxattempts > 0){
         echo get_string("exceededattempts",MOD_SIMPLELESSON_LANG,$moduleinstance->maxattempts);
     }
 }
+// Prepare firstpage text and re-write urls
+$firstpagetext = $moduleinstance->firstpage;
+$firstpagetext = file_rewrite_pluginfile_urls($firstpagetext, 'pluginfile.php', 
+        $cm->id, 'mod_simplelesson', 'firstpage', $moduleinstance->id);
 
 // Fetch the firstpage stuff
-echo $renderer->fetch_firstpage_text($moduleinstance);
+echo $renderer->fetch_firstpage_text($firstpagetext);
 
 // Finish the page
 echo $renderer->footer();

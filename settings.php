@@ -29,15 +29,13 @@ require_once($CFG->dirroot.'/mod/simplelesson/lib.php');
 
 if ($ADMIN->fulltree) {
 
-		$settings->add(new admin_setting_configcheckbox(MOD_SIMPLELESSON_FRANKY . '/enablereset',
-  get_string('enablereset', MOD_SIMPLELESSON_LANG), 
-  get_string('enablereset_desc',MOD_SIMPLELESSON_LANG),'0'));
+    $settings->add(new admin_setting_configcheckbox(MOD_SIMPLELESSON_FRANKY . 
+            '/enablereset',
+            get_string('enablereset', MOD_SIMPLELESSON_LANG), 
+            get_string('enablereset_desc',MOD_SIMPLELESSON_LANG),'0'));
   
-  	$settings->add(new admin_setting_configcheckbox(MOD_SIMPLELESSON_FRANKY . '/enablereports',
-  get_string('enablereports', MOD_SIMPLELESSON_LANG), 
-  get_string('enablereports_desc',MOD_SIMPLELESSON_LANG),'0'));
-
-	  $settings->add(new admin_setting_configtext('mod_simplelesson/someadminsetting',
-        get_string('someadminsetting', 'simplelesson'), get_string('someadminsetting_details', MOD_SIMPLELESSON_LANG), 'default text', PARAM_TEXT));
-
+    $settings->add(new admin_setting_configcheckbox(MOD_SIMPLELESSON_FRANKY . 
+            '/enablereports',
+            get_string('enablereports', MOD_SIMPLELESSON_LANG), 
+            get_string('enablereports_desc',MOD_SIMPLELESSON_LANG),'0'));
 }

@@ -393,7 +393,7 @@ function simplelesson_add_instance(stdClass $simplelesson, mod_simplelesson_mod_
     // add new instance with dummy data for editor content
     // This is part of the uploaded files saving process
     $simplelesson->firstpagetext ='';
-    $simplelesson->firstpagetextformat =FORMAT_HTML;
+    $simplelesson->firstpageformat =FORMAT_HTML;
     $simplelessonid = $DB->insert_record(MOD_SIMPLELESSON_TABLE, $simplelesson);  
     $simplelesson->id = $simplelessonid;
 
@@ -630,7 +630,7 @@ function simplelesson_get_editor_options($context) {
  * @return array of [(string)filearea] => (string)description
  */
 function simplelesson_get_file_areas($course, $cm, $context) {
-    return array();
+    return array('firstpage'=>'Holds first page text items');
 }
 
 /**
@@ -677,7 +677,20 @@ function simplelesson_pluginfile($course, $cm, $context, $filearea, array $args,
 
     require_login($course, true, $cm);
 
-    send_file_not_found();
+    if ($context->contextlevel != CONTEXT_MODULE) {
+        return false;
+    }
+    require_course_login($course, true, $cm);
+    
+    $fs = get_file_storage();
+    $relativepath = implode('/', $args);
+    $fullpath = "/$context->id/mod_simplelesson/$filearea/$relativepath";
+    if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+        return false;
+    }
+
+    // Finally send the file.
+    send_stored_file($file, 0, 0, $forcedownload, $options);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
