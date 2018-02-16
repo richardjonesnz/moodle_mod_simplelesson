@@ -10,7 +10,7 @@ a good basis for a simple lesson module that has basic features as follows:
 For more complex needs (timing, grading, access restrictions, use the Lesson activity module)
 For summative activities use the quiz or lesson.
 
-Note: I've removed some of Justin's niftier features such as the module.js and tab navigation.
+Note: I've removed some of Justin's niftier features such as the module.js and tab navigation.  Atleast for now.
 
 Richard Jones
 richardnz@outlook.com

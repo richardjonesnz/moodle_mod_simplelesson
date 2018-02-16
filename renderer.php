@@ -82,17 +82,23 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
     }
 
     /**
-     * Returns add first page button
+     * Returns add first page button, used when no pages exist yet
      *
      * @param object $instance
      * @return string
      */
-    public function fetch_firstpage_button($moduleinstance) {
+    public function fetch_firstpage_button($simplelessonid, $courseid) {
+
         $html =  $this->output->box_start();
-        $url = new moodle_url('/mod/simplelesson/edit_page.php', array('id'=>$moduleinstance->id));
+        
+        $url = new moodle_url('/mod/simplelesson/edit_page.php', 
+                array('id'=>$courseid, 'simplelessonid'=>$simplelessonid, 
+                'action'=>'edit', 'pageid' => 1));
         $button = $this->output->single_button($url,get_string('addfirstpage', MOD_SIMPLELESSON_LANG));
-        $html .=  html_writer::div($button, MOD_SIMPLELESSON_CLASS . '_firstpage_editing');
+        $text = '<p>' . get_string('nopages', MOD_SIMPLELESSON_LANG) . '</p>' . $button;
+        $html .=  html_writer::div($text, MOD_SIMPLELESSON_CLASS . '_firstpage_editing');
         $html .=  $this->output->box_end();
+        
         return $html;
     }
 

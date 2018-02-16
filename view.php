@@ -74,10 +74,6 @@ $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 $PAGE->set_pagelayout('course');
 
-//Get an admin settings 
-$config = get_config(MOD_SIMPLELESSON_FRANKY);
-$someadminsetting = $config->someadminsetting;
-
 //Get an instance setting
 $lessontitle = $moduleinstance->lessontitle;
 $activityname = $moduleinstance->name;
@@ -102,16 +98,19 @@ if($moduleinstance->maxattempts > 0){
 }
 // Prepare firstpage text and re-write urls
 $firstpagetext = $moduleinstance->firstpage;
-$contextid = $PAGE->context->id;
+$contextid = $modulecontext->id;
 $firstpagetext = file_rewrite_pluginfile_urls($firstpagetext, 'pluginfile.php', 
         $contextid, 'mod_simplelesson', 'firstpage', $moduleinstance->id);
 
 // Fetch the firstpage stuff
 echo $renderer->fetch_firstpage_text($moduleinstance, $firstpagetext);
 
-//if we are teacher we see the add button
+//if we are teacher and this is a new simplelesson we see the add button
 if(has_capability('mod/simplelesson:manage', $modulecontext)) {
-    echo $renderer->fetch_firstpage_button($moduleinstance);
+    $n = \mod_simplelesson\utilities::count_pages($moduleinstance->id);
+    if ($n == 0) {
+        echo $renderer->fetch_firstpage_button($moduleinstance->id, $course->id);
+    }
 }
 
 // Finish the page

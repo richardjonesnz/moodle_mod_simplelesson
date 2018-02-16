@@ -60,10 +60,14 @@ $string['simplelesson:preview'] = 'Preview simplelesson';
 $string['simplelesson:itemview'] = 'View items';
 $string['simplelesson:itemedit'] = 'Edit items';
 
-// First page strings
+// First page and page editing strings
 $string['addfirstpage'] = 'Add the first page';
 $string['gotofirstpage'] = 'Continue the lesson';
-
+$string['nopages'] = 'There are no pages yet, add a page';
+$string['editingpage'] = 'Simple lesson page editor';
+$string['pagetitle'] = 'Page title';
+$string['pagecontents'] = 'Page content';
+$string['nopagenumber'] = 'Invalid page specified';
 
 $string['id']='ID';
 $string['name']='Name';
