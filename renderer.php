@@ -92,10 +92,9 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $html =  $this->output->box_start();
         
         $url = new moodle_url('/mod/simplelesson/edit_page.php', 
-                array('id'=>$courseid, 'simplelessonid'=>$simplelessonid, 
-                'action'=>'edit', 'pageid' => 1));
-        $button = $this->output->single_button($url,get_string('addfirstpage', MOD_SIMPLELESSON_LANG));
-        $text = '<p>' . get_string('nopages', MOD_SIMPLELESSON_LANG) . '</p>' . $button;
+                array('id' => $simplelessonid, 'courseid' => $courseid));
+        $link = html_writer::link($url,get_string('addfirstpage', MOD_SIMPLELESSON_LANG));
+        $text = '<p>' . get_string('nopages', MOD_SIMPLELESSON_LANG) . '</p>' . $link;
         $html .=  html_writer::div($text, MOD_SIMPLELESSON_CLASS . '_firstpage_editing');
         $html .=  $this->output->box_end();
         

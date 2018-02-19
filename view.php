@@ -32,7 +32,7 @@ require_once(dirname(__FILE__).'/lib.php');
 
 
 $id = optional_param('id', 0, PARAM_INT); // course_module ID, or
-$n  = optional_param('n', 0, PARAM_INT);  // simplelesson instance ID - it should be named as the first character of the module
+$n  = optional_param('n', 0, PARAM_INT);  // simplelesson instance ID 
 
 if ($id) {
     $cm         = get_coursemodule_from_id('simplelesson', $id, 0, false, MUST_EXIST);
@@ -109,7 +109,7 @@ echo $renderer->fetch_firstpage_text($moduleinstance, $firstpagetext);
 if(has_capability('mod/simplelesson:manage', $modulecontext)) {
     $n = \mod_simplelesson\utilities::count_pages($moduleinstance->id);
     if ($n == 0) {
-        echo $renderer->fetch_firstpage_button($moduleinstance->id, $course->id);
+        echo $renderer->fetch_firstpage_button($cm->id, $course->id);
     }
 }
 
