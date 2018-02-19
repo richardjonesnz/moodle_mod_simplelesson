@@ -62,4 +62,19 @@ class simplelesson_edit_page_form extends moodleform {
 
         $this->add_action_buttons($cancel=true);
     }
+
+    function data_preprocessing(&$default_values) {
+        if ($this->current->instance) {
+            $context = $this->context;
+            $editoroptions = simplelesson_get_editor_options($context);
+            $default_values = (object) $default_values;
+            $default_values =
+                    file_prepare_standard_editor($default_values, 'pagecontents',
+                    $editoroptions, $context, 'mod_simplelesson',
+                    'pagecontents',
+                    $default_values->id);
+            $default_values = (array) $default_values;
+        }
+    }
+
 }

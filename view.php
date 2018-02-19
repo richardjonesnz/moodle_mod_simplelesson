@@ -109,7 +109,7 @@ echo $renderer->fetch_firstpage_text($moduleinstance, $firstpagetext);
 if(has_capability('mod/simplelesson:manage', $modulecontext)) {
     $n = \mod_simplelesson\local\utilities::count_pages($moduleinstance->id);
     //if ($n == 0) {
-        echo $renderer->fetch_firstpage_button($course->id, $moduleinstance->id, 'edit');
+        echo $renderer->fetch_firstpage_button($course->id, $moduleinstance->id);
     //} 
 }
 

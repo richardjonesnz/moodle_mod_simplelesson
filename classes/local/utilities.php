@@ -67,8 +67,8 @@ class utilities  {
         $data->simplelessonid = $simplelessonid;
         $data->timecreated = time();
         $data->timemodified = time();
-        $data->pagetitle ='';
-        $data->pagecontents ='';
+        $data->pagetitle = 'Page title';
+        $data->pagecontents = '';
         $data->pagecontentsformat =FORMAT_HTML;
         $dataid = $DB->insert_record('simplelesson_pages', $data);  
         $data->id = $dataid;
@@ -85,24 +85,15 @@ class utilities  {
      */
 
     public static function add_page_record($data) {
-
-        // Create a dummy record to insert
-        $data->simplelessonid = $simplelessonid;
-        $data->timecreated = time();
-        $data->timemodified = time();
-        $data->pagecontents ='';
-        $data->pagecontentsformat =FORMAT_HTML;
-        $dataid = $DB->insert_record('simplelesson_pages', $data);  
-        $data->id = $dataid;
-
+        global $DB;
         // Update record with actual values to insert
         $context = $data->context;
         $editoroptions = simplelesson_get_editor_options($context);
         $data = file_postupdate_standard_editor($data,'pagecontents',
-                        $editoroptions, $context, 'mod_simplelesson','pagecontents', $dataid);
+                        $editoroptions, $context, 'mod_simplelesson','pagecontents', $data->id);
         $DB->update_record('simplelesson_pages', $data);
 
-        return $dataid;
+        return $data->id;
     }
     /** 
      * Update a page record
