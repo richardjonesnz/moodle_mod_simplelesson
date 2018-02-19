@@ -26,38 +26,97 @@
 require_once('../../config.php');
 require_once('edit_page_form.php');
 
-global $DB, $PAGE, $OUTPUT;
+//fetch URL parameters
+$simplelessonid = required_param('simplelessonid', PARAM_INT); 
+$action = optional_param('action','list',PARAM_TEXT);
+$pageid = optional_param('pageid',0,PARAM_INT);
 
-// Fetch parameters
-$cmid = required_param('id', PARAM_INT);  // module id
-$courseid = required_param('courseid', PARAM_INT);
+//Set course related variables
+$PAGE->set_course($COURSE);
+$course = $DB->get_record('course', array('id' => $COURSE->id), '*', MUST_EXIST);
+$coursecontext = context_course::instance($course->id);
 
-// Return to view page on error
-$return_url = new moodle_url('/mod/simplelesson/view.php',
-        array('id' => $cmid));
+//set up the page
+$PAGE->set_url('/mod/simplelesson/edit_page.php', array('simplelesson' => $simplelessonid));
+$PAGE->set_context($coursecontext);
+$PAGE->set_pagelayout('course');
 
-// Get course record
-$cm = get_coursemodule_from_id('simplelesson', $cmid, 0, false, MUST_EXIST);
-$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
-require_course_login($course);
-$modulecontext = context_module::instance($cm->id);
+//=========================================
+//Form processing begins here
+//=========================================
 
-// Set up page
-$PAGE->set_url('/mod/simplelesson/edit_page.php', 
-        array('id' => $cmid, 'courseid' => $courseid));
-$PAGE->set_title(format_string($course->fullname));
-$PAGE->set_heading(format_string($course->fullname));
-$PAGE->set_context($modulecontext);
-$PAGE->set_pagelayout('admin');
-
-// Form processing begins here
+//get the page editing form
 $mform = new simplelesson_edit_page_form();
+
+//if the cancel button was pressed, we are out of here
 if ($mform->is_cancelled()) {
-    redirect($return_url, get_string('cancelled'), 2);
+    $return_url = new moodle_url('/mod/simplelesson/view.php', array('n' => $simplelessonid));
+    redirect($return->url, get_string('cancelled'), 2);
     exit;
-} else if ($data = $mform->get_data()) {     
-    echo 'process data';  
 }
+
+//if we have data, then our job here is to save it and return
+if ($data = $mform->get_data()) {
+    $DB->update_record('simplelesson_pages', $data);
+    redirect($PAGE->url,get_string('updated','core', $data->{$pagetitle}), 2);
+}
+
+//=========================================
+//Page output begins here
+//=========================================
 echo $OUTPUT->header();
-$mform->display();
+
+//if the action param is "edit" then we show the edit form
+if($action =="edit") {
+    //create some data for our form and set it to the form
+    $data = new stdClass();
+    $data = $DB->get_record('simplelesson_pages', array('id'=>$pageid));
+
+    // If there is no page data, create a dummy record
+    if(!$data || empty($data)) {
+        $data = new stdClass();
+        $pageid = \mod_simplelesson\local\utilities::make_dummy_page_record($data, $simplelessonid); 
+    } 
+    
+    $mform->set_data($data);
+    
+    // Header for the page
+    echo $OUTPUT->heading(get_string('page_editing', MOD_SIMPLELESSON_LANG), 2);
+    
+    $mform->display();
+}
+
+
+$head=false;
+$table = new html_table();
+    //foreach($data as $onedata){
+        // var_dump($data);
+
+        
+        $onearray = get_object_vars($data);
+        //build the head row
+        if(!$head){
+            $head=true;
+            $table->head= array_keys($onearray);
+            $table->head[] = get_string('edit');
+            $table->head[] = get_string('delete');
+        }
+        //build all the other rows
+        $rowdata=array_values($onearray);
+        $editlink = html_writer::link(
+        new moodle_url('/mod/simplelesson/edit_page.php', 
+                array('id'=>$onearray['id'],'action' => 'edit')),get_string('edit'));
+        $rowdata[] = $editlink;
+
+        /* will need a delete action param eventually
+        $deletelink = html_writer::link(
+                new moodle_url('/mod/simplelesson/edit_page.php', 
+                array('id'=>$onearray['id'],'action' => 'delete')),get_string('delete'));
+        $rowdata[] = $deletelink;
+        */
+        $table->data[]=$rowdata;
+        
+echo html_writer::table($table);
 echo $OUTPUT->footer();
+
+return;

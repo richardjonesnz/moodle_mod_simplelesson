@@ -21,7 +21,7 @@
  * @copyright 2015 Justin Hunt, modified 2018 Richard Jones https://richardnz.net
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- namespace mod_simplelesson;
+ namespace mod_simplelesson\local;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -52,9 +52,31 @@ class utilities  {
      * @return boolean
      */
     public static function has_page_record($pageid, $simplelessonid) {
+        global $DB;
         return $DB->get_record('simplelesson_pages', 
                 array('id' => $pageid, 'simplelessonid'=>$simplelessonid), '*');
     }
+    /** 
+     * Write a dummy record to database
+     *
+     * @param int $simplelessonid the id of a simplelesson
+     * @return int the id of the dummy record
+     */
+    public static function make_dummy_page_record($data, $simplelessonid) {
+        global $DB;
+        $data->simplelessonid = $simplelessonid;
+        $data->timecreated = time();
+        $data->timemodified = time();
+        $data->pagetitle ='';
+        $data->pagecontents ='';
+        $data->pagecontentsformat =FORMAT_HTML;
+        $dataid = $DB->insert_record('simplelesson_pages', $data);  
+        $data->id = $dataid;
+
+        return $dataid;
+    }
+
+
     /** 
      * Add new page record
      *

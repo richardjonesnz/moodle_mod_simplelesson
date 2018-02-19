@@ -68,6 +68,7 @@ $string['editingpage'] = 'Simple lesson page editor';
 $string['pagetitle'] = 'Page title';
 $string['pagecontents'] = 'Page content';
 $string['nopagenumber'] = 'Invalid page specified';
+$string['page_editing'] = 'Editing page';
 
 $string['id']='ID';
 $string['name']='Name';

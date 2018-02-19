@@ -107,10 +107,10 @@ echo $renderer->fetch_firstpage_text($moduleinstance, $firstpagetext);
 
 //if we are teacher and this is a new simplelesson we see the add button
 if(has_capability('mod/simplelesson:manage', $modulecontext)) {
-    $n = \mod_simplelesson\utilities::count_pages($moduleinstance->id);
-    if ($n == 0) {
-        echo $renderer->fetch_firstpage_button($cm->id, $course->id);
-    }
+    $n = \mod_simplelesson\local\utilities::count_pages($moduleinstance->id);
+    //if ($n == 0) {
+        echo $renderer->fetch_firstpage_button($course->id, $moduleinstance->id, 'edit');
+    //} 
 }
 
 // Finish the page

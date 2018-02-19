@@ -87,12 +87,13 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      * @param object $instance
      * @return string
      */
-    public function fetch_firstpage_button($simplelessonid, $courseid) {
+    public function fetch_firstpage_button($courseid, $simplelessonid, $action) {
 
         $html =  $this->output->box_start();
         
         $url = new moodle_url('/mod/simplelesson/edit_page.php', 
-                array('id' => $simplelessonid, 'courseid' => $courseid));
+                array('id' => $courseid, 'simplelessonid' => $simplelessonid,
+                      'action' => $action));
         $link = html_writer::link($url,get_string('addfirstpage', MOD_SIMPLELESSON_LANG));
         $text = '<p>' . get_string('nopages', MOD_SIMPLELESSON_LANG) . '</p>' . $link;
         $html .=  html_writer::div($text, MOD_SIMPLELESSON_CLASS . '_firstpage_editing');
