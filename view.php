@@ -96,21 +96,30 @@ if($moduleinstance->maxattempts > 0){
         echo get_string("exceededattempts",MOD_SIMPLELESSON_LANG,$moduleinstance->maxattempts);
     }
 }
+
 // Prepare firstpage text and re-write urls
 $firstpagetext = $moduleinstance->firstpage;
 $contextid = $modulecontext->id;
 $firstpagetext = file_rewrite_pluginfile_urls($firstpagetext, 'pluginfile.php', 
         $contextid, 'mod_simplelesson', 'firstpage', $moduleinstance->id);
 
-// Fetch the firstpage stuff
-echo $renderer->fetch_firstpage_text($moduleinstance, $firstpagetext);
+// Are there any pages in this lesson?
+$n = \mod_simplelesson\local\utilities::count_pages($moduleinstance->id);
+echo 'pages: ' . $n;
+// Fetch the firstpage stuff - then the link, if a page exists
+echo $renderer->fetch_firstpage_text($firstpagetext);
+if ($n != 0) {
+    $pageid = \mod_simplelesson\local\utilities::get_page_id_from_sequence( 
+            $moduleinstance->id, 1);
+    echo 'Found page: '. $pageid; 
+    echo $renderer->fetch_firstpage_link($course->id, $moduleinstance->id, $pageid);
+}
 
 //if we are teacher and this is a new simplelesson we see the add button
 if(has_capability('mod/simplelesson:manage', $modulecontext)) {
-    $n = \mod_simplelesson\local\utilities::count_pages($moduleinstance->id);
-    //if ($n == 0) {
-        echo $renderer->fetch_firstpage_button($course->id, $moduleinstance->id);
-    //} 
+    if ($n == 0) {
+        echo $renderer->add_firstpage_button($course->id, $moduleinstance->id);
+    } 
 }
 
 // Finish the page

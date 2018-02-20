@@ -60,6 +60,12 @@ class simplelesson_edit_page_form extends moodleform {
         // If this is first page then just a link to home, otherwise a list
         // of available page titles to link to.
 
+        // Hidden fields
+        $mform->addElement('hidden', 'courseid', $this->_customdata['courseid']);
+        $mform->addElement('hidden', 'simplelessonid', $this->_customdata['simplelessonid']);
+        $mform->setType('courseid', PARAM_INT);
+        $mform->setType('simplelessonid', PARAM_INT);
+
         $this->add_action_buttons($cancel=true);
     }
 

@@ -57,29 +57,49 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
       }
       
      /**
-     * Returns the text for the first page
-     *
-     * @param object $instance
+     * Returns the text for the first page as defined in the
+     * module's instance settings page
+     * @param string $firstpage text
      * @return string
      */
-    public function fetch_firstpage_text($moduleinstance, $firstpagetext) {
+    public function fetch_firstpage_text($firstpagetext) {
     	
         // Introductory text        
         $html =  $this->output->box_start();
         $html .= html_writer::start_div(MOD_SIMPLELESSON_CLASS . '_firstpagecontent');
         $html .=  $firstpagetext;
         $html .= html_writer::end_div();
-        
-        // Link to first content page - ToDo: add check that first page exists
-        $url = new moodle_url('/mod/simplelesson/showpage.php',
-                array('id' => $moduleinstance->id, 'page' => 1));
-        $link = html_writer::link($url, get_string('gotofirstpage', MOD_SIMPLELESSON_LANG));
-        $html .= html_writer::div($link, MOD_SIMPLELESSON_CLASS . '_firstpagecontent_link');
-        
         $html .=  $this->output->box_end();
         return $html;
-
     }
+
+    /**
+     * Returns the link to the lesson's real first content page
+     *
+     * @param string $courseid
+     * @param string $moduleid
+     * @param string $pagesequence
+
+     * @return string
+     */
+    public function fetch_firstpage_link($courseid, $simplelessonid, $pageid) {
+  
+        $html =  $this->output->box_start();
+
+        $url = new moodle_url('/mod/simplelesson/showpage.php',
+                    array('courseid' => $courseid, 
+                          'simplelessonid' => $simplelessonid, 
+                          'pageid' => $pageid));
+        $link = html_writer::link($url, 
+                    get_string('gotofirstpage', MOD_SIMPLELESSON_LANG));
+        $html .= html_writer::div($link, 
+                    MOD_SIMPLELESSON_CLASS . '_firstpagecontent_link');
+        
+        $html .=  $this->output->box_end();
+
+        return $html;
+    }
+
 
     /**
      * Returns add first page button, used when no pages exist yet
@@ -87,12 +107,14 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      * @param object $instance
      * @return string
      */
-    public function fetch_firstpage_button($courseid, $simplelessonid) {
+    public function add_firstpage_button($courseid, $simplelessonid) {
 
         $html =  $this->output->box_start();
         
         $url = new moodle_url('/mod/simplelesson/edit_page.php', 
-                array('id' => $courseid, 'simplelessonid' => $simplelessonid));
+                array('courseid' => $courseid, 
+                      'simplelessonid' => $simplelessonid,
+                      'pagesequence' => 1));
         $link = html_writer::link($url,get_string('addfirstpage', MOD_SIMPLELESSON_LANG));
         $text = '<p>' . get_string('nopages', MOD_SIMPLELESSON_LANG) . '</p>' . $link;
         $html .=  html_writer::div($text, MOD_SIMPLELESSON_CLASS . '_firstpage_editing');
@@ -102,12 +124,18 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
     }
 
     public function show_page($data) {
- 
+        
         $html =  $this->output->box_start();
-        $title =  $data->pagetitle;
-        $html .=  html_writer::div($title, MOD_SIMPLELESSON_CLASS . '_firstpage_display');
-        $html .=  $this->output->box_end();     
+        //$html .= $this->output->heading($data->pagetitle, 2, 'main');
+        /*
+        $html .= html_writer::div($data->pagecontents, 
+                MOD_SIMPLELESSON_CLASS . '_content_page');
+        */
+        $html .= 'My page content here';
+        $html .=  $this->output->box_end();
         
         return $html;
+
     }
+
 }

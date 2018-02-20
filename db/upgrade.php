@@ -64,6 +64,21 @@ function xmldb_simplelesson_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2018021301, 'simplelesson');
     }
 
+    // Add field for lesson page sequence number
+    if ($oldversion < 2018022002) {
+
+        // Define editor fields
+        $table = new xmldb_table('simplelesson_pages');
+        $field = new xmldb_field('sequence', XMLDB_TYPE_INTEGER, '8', 
+                XMLDB_UNSIGNED, null, null, '0', 'simplelessonid');
+
+            if (!$dbman->field_exists($table, $field)) {
+                $dbman->add_field($table, $field);
+            }
+        upgrade_mod_savepoint(true, 2018022002, 'simplelesson');
+    }
+
+
     // Final return of upgrade result (true, all went good) to Moodle.
     return true;
 }

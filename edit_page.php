@@ -27,40 +27,44 @@ require_once('../../config.php');
 require_once('edit_page_form.php');
 
 //fetch URL parameters
-$simplelessonid = optional_param('simplelessonid', 0, PARAM_INT); 
+$courseid = required_param('courseid', PARAM_INT);
+$simplelessonid = required_param('simplelessonid', PARAM_INT); 
 $pageid = optional_param('pageid', 0, PARAM_INT);
+$pagesequence = optional_param('pagesequence', 1, PARAM_INT);
 
 //Set course related variables
-$PAGE->set_course($COURSE);
-$course = $DB->get_record('course', array('id' => $COURSE->id), '*', MUST_EXIST);
-$coursecontext = context_course::instance($course->id);
+//$PAGE->set_course($COURSE);
+$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+$coursecontext = context_course::instance($courseid);
 
 //set up the page
 $PAGE->set_url('/mod/simplelesson/edit_page.php', 
-        array('simplelesson' => $simplelessonid, 'pageid' => $pageid));
+        array('courseid' => $courseid, 'simplelessonid' => $simplelessonid, 'pageid' => $pageid));
 $PAGE->set_context($coursecontext);
 $PAGE->set_pagelayout('course');
 
 $return_url = new moodle_url('/mod/simplelesson/view.php', array('n' => $simplelessonid));
 
 //get the page editing form
-$mform = new simplelesson_edit_page_form();
+$mform = new simplelesson_edit_page_form(null, 
+        array('context'=>$coursecontext, 
+              'courseid' => $courseid, 
+              'simplelessonid' => $simplelessonid));
 
-//if the cancel button was pressed, we are out of here
+//if the cancel button was pressed
 if ($mform->is_cancelled()) {
     redirect($return_url, get_string('cancelled'), 2);
-    exit;
 }
 
 //if we have data, then our job here is to save it and return
 if ($data = $mform->get_data()) {
     $data->context = $coursecontext;
     $data->id = $pageid;
+    $data->sequence = $pagesequence;
+    $data->simplelessonid = $simplelessonid;
     \mod_simplelesson\local\utilities::add_page_record($data);    
-    redirect($PAGE->url, get_string('updated','core', $data->{$pagetitle}), 2);
+    redirect($return_url, get_string('updated'), 2);
 }
-
-// Show the page
 
 echo $OUTPUT->header();
 
@@ -70,11 +74,12 @@ $data = $DB->get_record('simplelesson_pages', array('id'=>$pageid));
 
 
 // If there is no page data, create a dummy record
+/*
 if(!$data || empty($data)) {
     $data = new stdClass();
     $pageid = \mod_simplelesson\local\utilities::make_dummy_page_record($data, $simplelessonid);
 } 
-
+*/
 $mform->set_data($data);
     
 // Header for the page
@@ -82,11 +87,6 @@ echo $OUTPUT->heading(get_string('page_editing', MOD_SIMPLELESSON_LANG), 2);
     
 $mform->display();
 
-// Show the page 
-
-$renderer = $PAGE->get_renderer('mod_simplelesson');
-$renderer->show_page($data);
-
 echo $OUTPUT->footer();
 
-//return;
+return;

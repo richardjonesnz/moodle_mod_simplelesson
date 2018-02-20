@@ -62,21 +62,17 @@ class utilities  {
      * @param int $simplelessonid the id of a simplelesson
      * @return int the id of the dummy record
      */
-    public static function make_dummy_page_record($data, $simplelessonid) {
+    public static function make_dummy_page_record($data) {
         global $DB;
-        $data->simplelessonid = $simplelessonid;
         $data->timecreated = time();
         $data->timemodified = time();
-        $data->pagetitle = 'Page title';
-        $data->pagecontents = '';
-        $data->pagecontentsformat =FORMAT_HTML;
+        $data->pagecontents = ' ';
+        $data->pagecontentsformat = FORMAT_HTML;
         $dataid = $DB->insert_record('simplelesson_pages', $data);  
         $data->id = $dataid;
 
         return $dataid;
     }
-
-
     /** 
      * Add new page record
      *
@@ -86,6 +82,7 @@ class utilities  {
 
     public static function add_page_record($data) {
         global $DB;
+        self::make_dummy_page_record($data);
         // Update record with actual values to insert
         $context = $data->context;
         $editoroptions = simplelesson_get_editor_options($context);
@@ -96,17 +93,30 @@ class utilities  {
         return $data->id;
     }
     /** 
-     * Update a page record
+     * Given a lesson id and sequence number, find that page record
      *
-     * @param int $data from edit_page form
-     * @param int $pageid, id of record to update
+     * @param int $simplelessonid the lesson id
+     * @param int $sequence, where the page is in the lesson sequence
      * @return int pageid 
      */
 
-    public static function update_page_record($data, $pageid) {
-
-        return $pageid;
-
+    public static function get_page_id_from_sequence($simplelessonid, $sequence) {
+        global $DB;  
+        $page = $DB->get_record('simplelesson_pages', 
+                array('simplelessonid' => $simplelessonid, 
+                      'sequence' => $sequence));
+        return $page->id;
     }
 
+    /** 
+     * Given a page id return the data for that page record
+     *
+     * @param int $pageid the page id
+     * @return object representing the record
+     */
+    public static function get_page_record($pageid) {
+        global $DB;
+        return $DB->get_record('simplelesson_pages', 
+                array('id' => $pageid), '*', MUST_EXIST);
+    }
 }
