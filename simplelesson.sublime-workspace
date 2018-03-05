@@ -1,0 +1,1082 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"module",
+				"modulecontext"
+			],
+			[
+				"simplele",
+				"simplelesson"
+			],
+			[
+				"si",
+				"simplelessonid"
+			],
+			[
+				"simplelesson",
+				"simplelessonid"
+			],
+			[
+				"M",
+				"MOD_SIMPLELESSON_LANG"
+			],
+			[
+				"firstp",
+				"firstpagetext"
+			],
+			[
+				"sett",
+				"settingnode"
+			],
+			[
+				"first",
+				"firstpagetext"
+			],
+			[
+				"default",
+				"default_values"
+			],
+			[
+				"title",
+				"PDF_set_info_title"
+			],
+			[
+				"padding",
+				"padding-right"
+			],
+			[
+				"bl",
+				"block_superiframe"
+			],
+			[
+				"h",
+				"height"
+			],
+			[
+				"context",
+				"context_module"
+			],
+			[
+				"border",
+				"border-style"
+			],
+			[
+				"pub",
+				"Public"
+			],
+			[
+				"upd",
+				"update_task"
+			],
+			[
+				"display",
+				"displayvalue"
+			],
+			[
+				"ne",
+				"next_resource"
+			],
+			[
+				"fir",
+				"first_resource"
+			],
+			[
+				"margin",
+				"margin-bottom"
+			],
+			[
+				"defa",
+				"default_values"
+			],
+			[
+				"cm",
+				"cmid"
+			],
+			[
+				"get_s",
+				"get_string"
+			],
+			[
+				"w",
+				"width"
+			],
+			[
+				"ac",
+				"actionurl"
+			],
+			[
+				"course",
+				"context_course"
+			],
+			[
+				"filter_sim",
+				"filter_simplequestion"
+			],
+			[
+				"set",
+				"set_url"
+			],
+			[
+				"linktext",
+				"linktextlimit"
+			],
+			[
+				"start",
+				"starttag"
+			],
+			[
+				"length",
+				"cubrid_fetch_lengths"
+			],
+			[
+				"filter",
+				"filter_simplequestion"
+			],
+			[
+				"button",
+				"buttonA_label"
+			],
+			[
+				"preview",
+				"previewid"
+			],
+			[
+				"require",
+				"require_login"
+			],
+			[
+				"filter_simplequestion",
+				"moodle_filter_simplequestion"
+			],
+			[
+				"filter_s",
+				"moodle_filter_simplequestion"
+			],
+			[
+				"MOD_PA",
+				"MOD_pairwork_FRANKY"
+			],
+			[
+				"QUESTION",
+				"QUESTIONID"
+			],
+			[
+				"large",
+				"Large"
+			],
+			[
+				"la",
+				"large"
+			],
+			[
+				"me",
+				"medium"
+			],
+			[
+				"background",
+				"background-color"
+			],
+			[
+				"block",
+				"block_superiframe_sizes"
+			],
+			[
+				"c",
+				"color"
+			],
+			[
+				"U",
+				"user"
+			],
+			[
+				"pro",
+				"profile"
+			],
+			[
+				"user",
+				"userId"
+			],
+			[
+				"iD",
+				"chatId"
+			],
+			[
+				"u",
+				"userId"
+			],
+			[
+				"l",
+				"legend\tTag"
+			],
+			[
+				"create",
+				"createdOn"
+			],
+			[
+				"Co",
+				"Collection"
+			],
+			[
+				"backgrou",
+				"background-color"
+			],
+			[
+				"o",
+				"owner"
+			],
+			[
+				"Edi",
+				"EditingUsers"
+			],
+			[
+				"Do",
+				"Documents"
+			],
+			[
+				"d",
+				"documents"
+			],
+			[
+				"doc",
+				"docid"
+			],
+			[
+				"ed",
+				"editingUsers"
+			],
+			[
+				"get",
+				"getValue"
+			],
+			[
+				"it",
+				"itemErrors"
+			],
+			[
+				"website",
+				"website_id"
+			],
+			[
+				"he",
+				"helpers"
+			],
+			[
+				"this",
+				"this_comment"
+			],
+			[
+				"A",
+				"add"
+			],
+			[
+				"return",
+				"return_errors"
+			],
+			[
+				"t",
+				"title"
+			],
+			[
+				"va",
+				"value"
+			],
+			[
+				"scroll",
+				"scrollTop"
+			],
+			[
+				"scr",
+				"scrollTop"
+			],
+			[
+				"meeting",
+				"BusinessMeeting"
+			],
+			[
+				"im",
+				"imageLimit"
+			],
+			[
+				"find",
+				"findOne"
+			],
+			[
+				"F",
+				"userFilter"
+			],
+			[
+				"fun",
+				"function"
+			],
+			[
+				"created",
+				"createdBy"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "<?php\n\n// This file is part of Moodle - http://moodle.org/\n//\n// Moodle is free software: you can redistribute it and/or modify\n// it under the terms of the GNU General Public License as published by\n// the Free Software Foundation, either version 3 of the License, or\n// (at your option) any later version.\n//\n// Moodle is distributed in the hope that it will be useful,\n// but WITHOUT ANY WARRANTY; without even the implied warranty of\n// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n// GNU General Public License for more details.\n//\n// You should have received a copy of the GNU General Public License\n// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.\n\n/**\n * Edit a page\n *\n * @package   mod_simplelesson\n * @copyright 2018 Richard Jones https://richardnz.net\n * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later\n */\n\nrequire_once('../../config.php');\nrequire_once('edit_page_form.php');\n\n//fetch URL parameters\n$courseid = required_param('courseid', PARAM_INT);\n$simplelessonid = required_param('simplelessonid', PARAM_INT); \n$pageid = optional_param('pageid', 0, PARAM_INT);\n$pagesequence = optional_param('pagesequence', 1, PARAM_INT);\n$action = optional_param('action', 'none', PARAM_TEXT);\n\n// Set course related variables\n$moduleinstance  = $DB->get_record('simplelesson', array('id' => $simplelessonid), '*', MUST_EXIST);\n$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);\n$cm = get_coursemodule_from_instance('simplelesson', $simplelessonid, $courseid, false, MUST_EXIST);\n\n//set up the page\n$PAGE->set_url('/mod/simplelesson/edit_page.php', \n        array('courseid' => $courseid, 'simplelessonid' => $simplelessonid, 'pageid' => $pageid));\nrequire_login($course, true, $cm);\n$coursecontext = context_course::instance($courseid);\n$modulecontext = context_module::instance($cm->id);\n\n$PAGE->set_context($modulecontext);\n$PAGE->set_pagelayout('course');\n\n$return_url = new moodle_url('/mod/simplelesson/view.php', array('n' => $simplelessonid));\n\n//get the page editing form\n$mform = new simplelesson_edit_page_form(null, \n        array('courseid' => $courseid, \n              'simplelessonid' => $simplelessonid,\n              'pageid'  => $pageid,\n              'context'=> $modulecontext));\n\n//if the cancel button was pressed\nif ($mform->is_cancelled()) {\n    redirect($return_url, get_string('cancelled'), 2);\n}\n\n//if we have data, then our job here is to save it and return\nif ($data = $mform->get_data()) {\n    $data->sequence = $pagesequence;\n    $data->simplelessonid = $simplelessonid;\n    if ($action == 'add') {\n        \\mod_simplelesson\\local\\utilities::add_page_record($data, $modulecontext);\n        redirect($return_url, get_string('page_saved', MOD_SIMPLELESSON_LANG), 2);\n    } else if ($action == 'edit') {\n        \\mod_simplelesson\\local\\utilities::update_page_record($data, $modulecontext);\n        redirect($return_url, get_string('page_updated', MOD_SIMPLELESSON_LANG), 2);\n    }   \n}\n\necho $OUTPUT->header();\n\n// Does the page record already exist\n$action = '';\nif (\\mod_simplelesson\\local\\utilities::has_page_record($pageid, $simplelessonid)) {\n    echo $OUTPUT->heading(get_string('page_editing', MOD_SIMPLELESSON_LANG), 2);\n    $data = new stdClass();\n    $data = $DB->get_record('simplelesson_pages', array('id'=>$pageid));\n    $pagecontentsoptions = simplelesson_get_pagecontents_options($modulecontext);\n    $data = file_prepare_standard_editor(\n            $data, \n            'pagecontents',\n            $pagecontentsoptions, \n            $modulecontext, \n            'mod_simplelesson', \n            'pagecontents',\n            $data->id);\n    $mform->set_data($data);\n    $action = 'edit';\n} else { \n    echo $OUTPUT->heading(get_string('page_adding', MOD_SIMPLELESSON_LANG), 2);        \n    $action = 'add';\n}  \n\n$mform->display();\n\necho $OUTPUT->footer();\n\nreturn;",
+			"file": "edit_page.php",
+			"file_size": 3905,
+			"file_write_time": 131641629274528783,
+			"settings":
+			{
+				"buffer_size": 3893,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "lib.php",
+			"settings":
+			{
+				"buffer_size": 25934,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "classes/local/utilities.php",
+			"settings":
+			{
+				"buffer_size": 4489,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "lang/en/simplelesson.php",
+			"settings":
+			{
+				"buffer_size": 4311,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "db/install.xml",
+			"settings":
+			{
+				"buffer_size": 4974,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "version.php",
+			"settings":
+			{
+				"buffer_size": 1310,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "renderer.php",
+			"settings":
+			{
+				"buffer_size": 5517,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "edit_page_form.php",
+			"settings":
+			{
+				"buffer_size": 3681,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "showpage.php",
+			"settings":
+			{
+				"buffer_size": 2554,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"last_filter": "Package Control: I",
+		"selected_items":
+		[
+			[
+				"Package Control: I",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Enable Package"
+			]
+		],
+		"width": 392.0
+	},
+	"console":
+	{
+		"height": 213.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/E/xampp/htdocs/moodle/mod/simplelesson",
+		"/E/xampp/htdocs/moodle/mod/simplelesson/classes",
+		"/E/xampp/htdocs/moodle/mod/simplelesson/classes/local",
+		"/E/xampp/htdocs/moodle/mod/simplelesson/db",
+		"/E/xampp/htdocs/moodle/mod/simplelesson/lang",
+		"/E/xampp/htdocs/moodle/mod/simplelesson/lang/en"
+	],
+	"file_history":
+	[
+		"/E/xampp/htdocs/moodle/mod/simplelesson/classes/local/utilities.php",
+		"/E/xampp/htdocs/moodle/mod/simplelesson/edit_page_form.php",
+		"/E/xampp/htdocs/moodle/mod/simplelesson/edit_page.php",
+		"/E/xampp/htdocs/moodle/mod/simplelesson/version.php",
+		"/E/xampp/htdocs/moodle/mod/simplelesson/lib.php",
+		"/E/xampp/htdocs/moodle/moodle34.sublime-project",
+		"/E/xampp/htdocs/moodle/lib/filestorage/file_system_filedir.php",
+		"/E/xampp/htdocs/moodle/lib/filestorage/file_storage.php",
+		"/E/xampp/htdocs/moodle/repository/upload/lib.php",
+		"/E/xampp/htdocs/moodle/repository/repository_ajax.php",
+		"/E/xampp/htdocs/moodle/lib/classes/shutdown_manager.php",
+		"/E/xampp/htdocs/moodle/mod/simplelesson/renderer.php",
+		"/E/xampp/htdocs/moodle/lib/dml/moodle_database.php",
+		"/E/xampp/htdocs/moodle/lib/filelib.php",
+		"/D/Users/richa/AppData/Roaming/Sublime Text 3/Packages/User/Xdebug.sublime-settings",
+		"/E/xampp/htdocs/moodle/theme/image.php",
+		"/E/xampp/php/php.ini",
+		"/E/xampp/htdocs/moodle/config.php",
+		"//DEBIAN/anonymous/html/index.php",
+		"/E/xampp/htdocs/index.html",
+		"//WEKA/anonymous/html/index.html",
+		"/M/etc/xdebug-2.6.0/xdebug.ini",
+		"/M/var/www/html/moodle/mod/simplelesson/renderer.php",
+		"/M/var/www/html/moodle/mod/simplelesson/showpage.php",
+		"/M/etc/php/7.0/apache2/php.ini",
+		"/M/var/www/html/moodle/mod/simplelesson/edit_page.php",
+		"/M/var/www/html/moodle/mod/simplelesson/version.php",
+		"/M/var/www/html/moodle/mod/simplelesson/edit_page_form.php",
+		"/M/var/www/html/moodle/mod/simplelesson/classes/local/utilities.php",
+		"/M/var/www/html/moodle/mod/simplelesson/lang/en/simplelesson.php",
+		"/M/var/www/html/moodle/mod/simplelesson/mod_form.php",
+		"/M/var/www/html/moodle/mod/simplelesson/lib.php",
+		"/M/var/www/html/moodle/blocks/superiframe/tablemanager.php",
+		"/M/var/www/html/moodle/mod/simplelesson/view.php",
+		"/M/var/www/html/moodle/config.php",
+		"/M/var/www/html/moodle/frontpage/frontpage.html",
+		"/M/var/www/html/moodle/mod/simplelesson/db/upgrade.php",
+		"/M/var/www/html/moodle/mod/simplelesson/db/install.xml",
+		"/M/var/www/html/moodle/mod/simplelesson/db/access.php",
+		"/M/var/www/html/moodle/mod/simplelesson/styles.css",
+		"/M/var/www/html/moodle/mod/simplelesson/settings.php",
+		"/M/var/www/html/moodle/mod/simplelesson/README.txt",
+		"/M/var/www/html/moodle/mod/simplelesson/simplelesson.php",
+		"/M/var/www/html/moodle/mod/simplelesson/reportclasses.php",
+		"/M/var/www/html/moodle/mod/simplelesson/tabs.php",
+		"/M/var/www/html/moodle/mod/simplelesson/userreport.php",
+		"/M/var/www/html/moodle/mod/simplelesson/locallib.php",
+		"/M/var/www/html/moodle/mod/simplelesson/reports.php",
+		"/M/var/www/html/moodle/mod/simplelesson/activity.php",
+		"/M/var/www/html/moodle/mod/simplelesson/backup/moodle2/backup_simplelesson_stepslib.php",
+		"/M/var/www/html/moodle/mod/simplelesson/backup/moodle2/restore_simplelesson_activity_task.class.php",
+		"/M/var/www/html/moodle/mod/simplelesson/backup/moodle2/restore_simplelesson_stepslib.php",
+		"/M/var/www/html/moodle/mod/simplelesson/classes/event_observer.php",
+		"/M/var/www/html/moodle/mod/simplelesson/classes/task/simplelesson_scheduled.php",
+		"/M/var/www/html/moodle/mod/simplelesson/classes/event/course_module_viewed.php",
+		"/M/var/www/html/moodle/mod/simplelesson/classes/task/simplelesson_adhoc.php",
+		"/M/var/www/html/moodle/mod/simplelesson/db/events.php",
+		"/M/var/www/html/moodle/mod/simplelesson/db/install.php",
+		"/M/var/www/html/moodle/mod/simplelesson/db/log.php",
+		"/M/var/www/html/moodle/mod/simplelesson/db/tasks.php",
+		"/M/var/www/html/moodle/mod/simplelesson/db/uninstall.php",
+		"/M/var/www/html/moodle/mod/simplelesson/error_log",
+		"/M/var/www/html/moodle/mod/simplelesson/grade.php",
+		"/M/var/www/html/moodle/mod/simplelesson/index.php",
+		"/M/var/www/html/moodle/mod/simplelesson/module.js",
+		"/M/var/www/html/moodle/mod/simplelesson/namechanger.php",
+		"/M/var/www/html/moodle/mod/simplelesson/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/abbrev/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/ajv/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/ansi-regex/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/ansi-styles/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/argparse/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/array-find-index/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/asap/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/asn1/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/assert-plus/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/async/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/asynckit/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/aws-sign2/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/aws4/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/balanced-match/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/bcrypt-pbkdf/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/body-parser/node_modules/iconv-lite/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/body-parser/node_modules/qs/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/body-parser/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/boom/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/brace-expansion/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/browserify-zlib/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/builtin-modules/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/bytes/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/camelcase-keys/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/camelcase/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/caseless/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/chalk/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/co/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/coffee-script/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/colors/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/combined-stream/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/commander/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/concat-map/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/concat-stream/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/content-type/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/core-util-is/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/cryptiles/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/currently-unhandled/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/dashdash/node_modules/assert-plus/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/dashdash/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/dateformat/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/debug/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/decamelize/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/delayed-stream/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/depd/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/ecc-jsbn/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/ee-first/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/errno/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/error-ex/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/escape-string-regexp/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/esprima/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/eventemitter2/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/exit/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/extend/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/extsprintf/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/faye-websocket/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/figures/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/find-up/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/findup-sync/node_modules/glob/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/findup-sync/package.json",
+		"/M/var/www/html/moodle/mod/simplelesson/amd/node_modules/forever-agent/package.json"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 146.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "edit_page.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3893,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2959,
+								2959
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2106.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "lib.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 25934,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								21578,
+								21578
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 17067.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "classes/local/utilities.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4489,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2057,
+								2057
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1134.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "lang/en/simplelesson.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4311,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3062,
+								3062
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1458.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "db/install.xml",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4974,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4351,
+								4351
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/XML/XML.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1215.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "version.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1310,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								691,
+								691
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "renderer.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5517,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3905,
+								3905
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2727.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "edit_page_form.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3681,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3672,
+								3678
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1539.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "showpage.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2554,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2395,
+								2395
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1188.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 35.0
+	},
+	"input":
+	{
+		"height": 47.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.xdebug":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "simplelesson.sublime-project",
+	"replace":
+	{
+		"height": 66.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"preview.php"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+		"xdebug":
+		{
+			"hide_conflict": false,
+			"restore_index":
+			{
+				"17":
+				{
+					"group": 0,
+					"index": 0
+				},
+				"18":
+				{
+					"group": 0,
+					"index": 8
+				},
+				"19":
+				{
+					"group": 0,
+					"index": 9
+				},
+				"20":
+				{
+					"group": 0,
+					"index": 10
+				},
+				"21":
+				{
+					"group": 0,
+					"index": 1
+				},
+				"23":
+				{
+					"group": 0,
+					"index": 7
+				},
+				"25":
+				{
+					"group": 0,
+					"index": 2
+				},
+				"28":
+				{
+					"group": 0,
+					"index": 3
+				},
+				"29":
+				{
+					"group": 0,
+					"index": 6
+				},
+				"30":
+				{
+					"group": 0,
+					"index": 5
+				},
+				"33":
+				{
+					"group": 1,
+					"index": 0
+				},
+				"35":
+				{
+					"group": 0,
+					"index": 4
+				}
+			},
+			"restore_layout":
+			{
+				"cells":
+				[
+					[
+						0,
+						0,
+						2,
+						1
+					],
+					[
+						0,
+						1,
+						1,
+						2
+					],
+					[
+						1,
+						1,
+						2,
+						2
+					]
+				],
+				"cols":
+				[
+					0.0,
+					0.5,
+					1.0
+				],
+				"rows":
+				[
+					0.0,
+					0.589497716895,
+					1.0
+				]
+			}
+		}
+	},
+	"show_minimap": false,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 412.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
