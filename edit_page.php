@@ -71,15 +71,13 @@ $mform = new simplelesson_edit_page_form(null,
 if ($mform->is_cancelled()) {
     redirect($return_showpage, get_string('cancelled'), 2);
 }
-//$page_titles = \mod_simplelesson\local\utilities::fetch_page_titles(
-//                $simplelessonid, $pageid);
 
 //if we have data, then our job here is to save it and return
 if ($data = $mform->get_data()) {
     $data->sequence = $sequence;
     $data->simplelessonid = $simplelessonid;
-    $data->nextpageid = (int) $data->nextpageid; 
-    $data->prevpageid = (int) $data->prevpageid; 
+    $data->nextpageid = (int) $data->nextpageid;
+    $data->prevpageid = (int) $data->prevpageid;  
     $data->id = $pageid;
     \mod_simplelesson\local\utilities::update_page_record($data, $modulecontext);
     redirect($return_showpage, 

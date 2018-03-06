@@ -79,10 +79,8 @@ $show_index = (int) $moduleinstance->show_index;
 echo $renderer->show_page($data, $show_index, $page_links);
 echo $renderer->show_page_nav_links($data, $courseid);
 
-// If we have the capability, show the edit page link
-// Only an add link on the last page.
-if(has_capability('mod/simplelesson:preview',$modulecontext)) {
-    $add_link = (\mod_simplelesson\local\utilities::is_last_page($data));
-    echo $renderer->fetch_action_links($courseid, $data, $add_link);
+// If we have the capability, show the action links
+if(has_capability('mod/simplelesson:manage',$modulecontext)) {
+    echo $renderer->fetch_action_links($courseid, $data);
 }
 echo $OUTPUT->footer();

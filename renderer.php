@@ -176,16 +176,18 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      */
     public function show_page($data, $show_index, $page_links) {
         
-        // Show the index if required) 
-       $html = '';          
-       if ($show_index) {
+        $html = '';
+        // Show the index if required)           
+        if ($show_index) {
             $html .= self::fetch_index($page_links);
         }
 
         // Show page content
-        $html .= html_writer::div($data->pagecontents, 
+        $html .= html_writer::start_div(
                 MOD_SIMPLELESSON_CLASS . '_content');
-        $html .= html_writer::end_div();  // col-sm-9      
+        $html .= $this->output->heading($data->pagetitle, 4);
+        $html .= $data->pagecontents;
+        $html .= html_writer::end_div();     
         return $html;
 
     }
@@ -208,7 +210,19 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $links[] = html_writer::link($return_view, 
                     get_string('homelink', MOD_SIMPLELESSON_LANG));
         
-        // next/prev nav links
+        
+        if ($data->prevpageid != 0) {
+            $prev_url = new moodle_url('/mod/simplelesson/showpage.php',
+                        array('courseid' => $courseid, 
+                        'simplelessonid' => $data->simplelessonid, 
+                        'pageid' => $data->prevpageid));
+            $links[] = html_writer::link($prev_url, 
+                        get_string('gotoprevpage', MOD_SIMPLELESSON_LANG));
+        
+        } else {
+            // Just put out the link text
+            $links[] = get_string('gotoprevpage', MOD_SIMPLELESSON_LANG);
+        }
         // Check link is valid
         if ($data->nextpageid != 0) {
             $next_url = new moodle_url('/mod/simplelesson/showpage.php',
@@ -221,18 +235,6 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         } else {
             // Just put out the link text
             $links[] = get_string('gotonextpage', MOD_SIMPLELESSON_LANG);
-        }
-        if ($data->prevpageid != 0) {
-            $prev_url = new moodle_url('/mod/simplelesson/showpage.php',
-                        array('courseid' => $courseid, 
-                        'simplelessonid' => $data->simplelessonid, 
-                        'pageid' => $data->prevpageid));
-            $links[] = html_writer::link($prev_url, 
-                        get_string('gotoprevpage', MOD_SIMPLELESSON_LANG));
-        
-        } else {
-            // Just put out the link text
-            $links[] = get_string('gotoprevpage', MOD_SIMPLELESSON_LANG);
         }
         $html .= html_writer::alist($links, null, 'ul');
         $html .= html_writer::end_div();  // pagelinks 
@@ -249,7 +251,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      * @param object $data represents the current page
      * @return string html link
      */
-    public function fetch_action_links($courseid, $data, $add_link) {
+    public function fetch_action_links($courseid, $data) {
     
         $links = array();
 
@@ -257,25 +259,23 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $html .= html_writer::start_div(MOD_SIMPLELESSON_CLASS . '_action_links');      
         
         // edit link
-        $edit_link = new moodle_url('/mod/simplelesson/edit_page.php',
+        $link = new moodle_url('/mod/simplelesson/edit_page.php',
                     array('courseid' => $courseid, 
                           'simplelessonid' => $data->simplelessonid, 
                           'pageid' => $data->id,
                           'sequence' => $data->sequence));
-        $links[] = html_writer::link($edit_link, 
+        $links[] = html_writer::link($link, 
                     get_string('gotoeditpage', MOD_SIMPLELESSON_LANG));
         
         // add link
-        if($add_link) {
-            $add_page_link = 
-                    new moodle_url('/mod/simplelesson/add_page.php', 
-                    array('courseid' => $courseid, 
-                    'simplelessonid' => $data->simplelessonid,
-                    'sequence' => $data->sequence + 1));    
-            $links[] = html_writer::link($add_page_link, 
-                    get_string('gotoaddpage', MOD_SIMPLELESSON_LANG));
-
-        }
+        $link = 
+                new moodle_url('/mod/simplelesson/add_page.php', 
+                array('courseid' => $courseid, 
+                'simplelessonid' => $data->simplelessonid,
+                'sequence' => $data->sequence + 1));    
+        $links[] = html_writer::link($link, 
+                get_string('gotoaddpage', MOD_SIMPLELESSON_LANG));
+        
         $html .= html_writer::alist($links, null, 'ul');
         $html .= html_writer::end_div();  // action links 
 

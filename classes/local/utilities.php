@@ -41,19 +41,25 @@ class utilities  {
      * @param int $pageid id of current page
      * @return array of pageid=>titles of pages in the simplelesson
      */
-    public static function fetch_page_titles($simplelessonid, $pageid) { 
+    public static function fetch_page_titles($simplelessonid, 
+            $pageid) { 
         $page_titles = array();
         $pagecount = self::count_pages($simplelessonid);
         if ($pagecount != 0) {
             for ($p = 1; $p <= $pagecount; $p++ ) {
                 $pid = self::get_page_id_from_sequence($simplelessonid, $p);
                 $data = self::get_page_record($pid);
-                if ($pid != $pageid) { // Don't add link to self
+                // head 'em off at the pass, don't add link to self
+                if ($pid != $pageid) { 
                     $page_titles[$pid] = $data->pagetitle;  
                 }
            }
         }
-       return $page_titles;
+        // Add a "none" link
+        $page_titles[0] = 
+                    get_string('nolink', MOD_SIMPLELESSON_LANG);
+
+        return $page_titles;
     }
     /** 
      * Get the page links for the simplelesson index
@@ -130,6 +136,7 @@ class utilities  {
      * Add new page record
      *
      * @param int $data from edit_page form
+     * @param object $context, the module context
      * @return int pageid
      */
 
@@ -160,7 +167,12 @@ class utilities  {
 
         return $data->id;
     }
-
+    /** 
+     * Update a page record
+     *
+     * @param int $data from edit_page form
+     * @param object $context, the module context
+     */
     public static function update_page_record($data, $context) {
         global $DB;
 

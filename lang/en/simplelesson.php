@@ -77,6 +77,7 @@ $string['nopagenumber'] = 'Invalid page specified';
 $string['page_editing'] = 'Editing page';
 $string['gotoeditpage'] = 'Edit page';
 $string['gotoaddpage'] = 'Add page';
+$string['gotodeletepage'] = 'Delete page';
 $string['page_adding'] = 'Adding page';
 $string['page_saved'] = 'Page saved';
 $string['page_updated'] = 'Page updated';
@@ -84,6 +85,8 @@ $string['page_index_header'] = 'Index of pages:';
 $string['homelink'] = 'Home page';
 $string['getnextpage'] = 'Select link to next page';
 $string['getprevpage'] = 'Select link to previous page';
+$string['afterpage'] = 'Add after page';
+$string['nolink'] = 'None';
 
 $string['id']='ID';
 $string['name']='Name';

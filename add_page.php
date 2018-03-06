@@ -16,7 +16,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Edit a page
+ * Add a page after the current page, 
+ * adjusting sequence numbers as necessary
  *
  * @package   mod_simplelesson
  * @copyright 2018 Richard Jones https://richardnz.net
@@ -65,10 +66,16 @@ if ($mform->is_cancelled()) {
     redirect($return_view, get_string('cancelled'), 2);
 }
 
-//if we have data, then our job here is to save it and return
+// if we have data, then our job here is to save it and return
+// We will always add pages at the end and have 
+// a "sequencing" page somewhere
 if ($data = $mform->get_data()) {
-    $data->sequence = $sequence;
+    $last_page = \mod_simplelesson\local\utilities::count_pages(
+      $moduleinstance->id);
+    $data->sequence = $last_page + 1;
     $data->simplelessonid = $simplelessonid;
+    $data->nextpageid = (int) $data->nextpageid;
+    $data->prevpageid = (int) $data->prevpageid; 
     \mod_simplelesson\local\utilities::add_page_record($data, $modulecontext);
     redirect($return_view, get_string('page_saved', MOD_SIMPLELESSON_LANG), 2);
 }

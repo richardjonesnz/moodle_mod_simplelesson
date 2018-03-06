@@ -62,11 +62,12 @@ class simplelesson_edit_page_form extends moodleform {
         $page_titles = \mod_simplelesson\local\utilities::fetch_page_titles(
                 $this->_customdata['simplelessonid'],
                 $this->_customdata['pageid']);
-        $mform->addElement('select', 'nextpageid', get_string('getnextpage', MOD_SIMPLELESSON_LANG), $page_titles);
+        
         $mform->addElement('select', 'prevpageid', get_string('getprevpage', MOD_SIMPLELESSON_LANG), $page_titles);
-
+        $mform->addElement('select', 'nextpageid', get_string('getnextpage', MOD_SIMPLELESSON_LANG), $page_titles);
+        
         $mform->setType('nextpage', PARAM_TEXT);  
-        $mform->setType('prevpage', PARAM_TEXT);  
+        $mform->setType('prevpage', PARAM_TEXT);   
 
         // Hidden fields
         $mform->addElement('hidden', 'courseid', $this->_customdata['courseid']);
