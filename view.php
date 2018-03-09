@@ -16,10 +16,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Prints a particular instance of simplelesson
- *
- * You can have a rather longer description of the file as well,
- * if you like, and it can span multiple lines.
+ * Prints the simplelesson introduction page
  *
  * @package    mod_simplelesson
  * @copyright 2015 Justin Hunt, modified 2018 Richard Jones https://richardnz.net
@@ -50,7 +47,7 @@ $PAGE->set_url('/mod/simplelesson/view.php', array('id' => $cm->id));
 require_login($course, true, $cm);
 $modulecontext = context_module::instance($cm->id);
 
-// Supports Moodle 3 onwards
+// Supports Moodle 3 onwards.
 // Trigger module viewed event.
 $event = \mod_simplelesson\event\course_module_viewed::create(array(
         'objectid' => $moduleinstance->id,
@@ -61,11 +58,11 @@ $event->add_record_snapshot('course', $course);
 $event->add_record_snapshot('simplelesson', $moduleinstance);
 $event->trigger();
 
-//if we got this far, we can consider the activity "viewed"
+// if we got this far, we can consider the activity "viewed"
 $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
 
-//are we a teacher or a student?
+//  are we a teacher or a student?
 $mode= "view";
 
 /// Set up the page header
@@ -74,14 +71,14 @@ $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 $PAGE->set_pagelayout('course');
 
-//Get an instance setting
+//Get an instance setting.
 $lessontitle = $moduleinstance->lessontitle;
 $activityname = $moduleinstance->name;
 
-// Declare renderer for page output
+// Declare renderer for page output.
 $renderer = $PAGE->get_renderer('mod_simplelesson');
 
-//if we are teacher we see tabs. If student we just see the page
+//if we are teacher we see tabs. If student we just see the page.
 if(has_capability('mod/simplelesson:preview',$modulecontext)) {
     echo $renderer->header($lessontitle, $activityname);
 } else {
@@ -97,7 +94,7 @@ if($moduleinstance->maxattempts > 0){
     }
 }
 
-// Prepare firstpage text and re-write urls
+// Prepare firstpage text and re-write urls.
 $firstpagetext = $moduleinstance->firstpage;
 $contextid = $modulecontext->id;
 $firstpagetext = file_rewrite_pluginfile_urls($firstpagetext, 
@@ -105,7 +102,7 @@ $firstpagetext = file_rewrite_pluginfile_urls($firstpagetext,
         $contextid, 'mod_simplelesson', 
         'firstpage', $moduleinstance->id);
 
-// Enable media filters
+// Enable media filters.
 $formatoptions = new stdClass;
 $formatoptions->noclean = true;
 $formatoptions->overflowdiv = true;
@@ -113,7 +110,7 @@ $formatoptions->context = $modulecontext;
 $firstpagetext = format_text($firstpagetext, 
         $moduleinstance->firstpageformat, $formatoptions);
 
-// Get the page links 
+// Get the page links. 
 $page_links = \mod_simplelesson\local\utilities::fetch_page_links(
             $moduleinstance->id, $course->id, true);
 $has_pages = (count($page_links) != 0);
@@ -124,22 +121,19 @@ $show_index = (int) $moduleinstance->show_index;
 echo $renderer->fetch_firstpage($firstpagetext, 
         $show_index, $page_links);
 if ($has_pages) {
-    // Get the record # for the first page
+    // Get the record # for the first page.
     $pageid = 
             \mod_simplelesson\local\utilities::get_page_id_from_sequence(
                     $moduleinstance->id, 1);
     echo $renderer->fetch_firstpage_link($course->id, 
             $moduleinstance->id, $pageid);
 }
-//if we are teacher we see buttons
+//if we are teacher we see buttons.
 if(has_capability('mod/simplelesson:manage', $modulecontext)) {
-    echo $renderer->fetch_module_edit_button($cm->id);
-    //if there are no pages show an add link
-    if (!$has_pages) {
-        echo $renderer->add_firstpage_button($moduleinstance->id, 
-                $course->id);
-    } 
+
+    echo $renderer->lesson_editing_links($course->id, $cm->id,
+            $moduleinstance->id);
 }
 
-// Finish the page
+// Finish the page.
 echo $renderer->footer();

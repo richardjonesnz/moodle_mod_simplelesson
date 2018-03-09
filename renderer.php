@@ -145,27 +145,48 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         return $html;
     }
     /**
-     * Returns add first page button, used when no pages exist yet
+     * Returns the action links for lesson editing 
+     * for the first page/intro.
      *
-     * @param int $simplelesson id
      * @param int $courseid
+     * @param int $simplelesson id
      * @return string
      */
-    public function add_firstpage_button($simplelessonid, $courseid) {
+    public function lesson_editing_links($courseid,
+            $moduleid, $simplelessonid) {
 
         $html =  $this->output->box_start();
-        
+        $links = array();
+
+        $html .= html_writer::start_div(
+                MOD_SIMPLELESSON_CLASS . '_lesson_edit');
+        $html .= '<p>' . get_string('edit_lesson', MOD_SIMPLELESSON_LANG) . '</p>';
+        // instance settings
+        $url = new moodle_url('/course/modedit.php', 
+                array('update' => $moduleid));
+        $links[] = html_writer::link($url,get_string('edit_settings', MOD_SIMPLELESSON_LANG));
+
+        // add page
         $url = new moodle_url('/mod/simplelesson/add_page.php', 
                 array('courseid' => $courseid, 
                       'simplelessonid' => $simplelessonid,
                       'sequence' => 1));
-        $link = html_writer::link($url,get_string('addfirstpage', MOD_SIMPLELESSON_LANG));
-        $text = '<p>' . get_string('nopages', MOD_SIMPLELESSON_LANG) . '</p>' . $link;
-        $html .=  html_writer::div($text, MOD_SIMPLELESSON_CLASS . '_content');
+        $links[] = html_writer::link($url,get_string('addpage', MOD_SIMPLELESSON_LANG));
+        
+        // edit lesson (manage pages)
+        $url = new moodle_url('/mod/simplelesson/edit.php', 
+                array('courseid' => $courseid, 
+                      'simplelessonid' => $simplelessonid));
+        $links[] = html_writer::link($url, get_string('manage_pages', MOD_SIMPLELESSON_LANG));
+        
+        $html .= html_writer::alist($links, null, 'ul'); 
+        $html .=  html_writer::end_div();
+
         $html .=  $this->output->box_end();
         
         return $html;
     }
+
     /**
      * Show the current page
      *
@@ -291,5 +312,71 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $html .=  $this->output->box_end();  
         
         return $html;    
+    }
+
+    /**
+     * Returns a list of pages and editing actions
+     *
+     * @param string $courseid
+     * @param object $simplelessonid 
+     * @return string html link
+     */
+    public function page_management($courseid, $simplelesson) {
+    
+        $activityname = format_string($simplelesson->name, true);   
+        $this->page->set_title($activityname);
+
+        $table = new html_table();
+        $table->head = array(
+                get_string('pagetitle', MOD_SIMPLELESSON_LANG),
+                get_string('nextpage', MOD_SIMPLELESSON_LANG),
+                get_string('prevpage', MOD_SIMPLELESSON_LANG),
+                get_string('actions', MOD_SIMPLELESSON_LANG));
+        $table->align = 
+                array('left', 'left', 'left', 'center');
+        $table->wrap = array('', 'nowrap', '', 'nowrap');
+        $table->tablealign = 'center';
+        $table->cellspacing = 0;
+        $table->cellpadding = '2px';
+        $table->width = '80%';
+        $table->data = array();
+        $numpages = 
+                \mod_simplelesson\local\utilities::count_pages(
+                $simplelesson->id);
+        $sequence = 1;
+        
+        while ($sequence <= $numpages) {
+            $pageid = 
+                    \mod_simplelesson\local\utilities::
+                    get_page_id_from_sequence($simplelesson->id, 
+                    $sequence);
+            $url = new moodle_url('/mod/lesson/edit.php', array(
+                'courseid'     => $courseid,
+                'simplelessonid'   => $simplelesson->id
+            ));
+            $data = array();
+            $all_data = \mod_simplelesson\local\utilities::
+                    get_page_record($pageid);
+            $data[] = $all_data->pagetitle;
+            $data[] = $all_data->nextpageid;
+            $data[] = $all_data->prevpageid;
+            $data[] = 'actionlink';
+            /*
+            $data[] = html_writer::link($url, format_string($page->title, true), array('id' => 'lesson-' . $page->id));
+            $data[] = $qtypes[$page->qtype];
+            $data[] = implode("<br />\n", $page->jumps);
+            if(has_capability('mod/simplelesson:manage', 
+                    $modulecontext)) {
+                $data[] = $this->page_action_links($page, $npages, true);
+            } else {
+                $data[] = '';
+            }
+            */
+            $table->data[] = $data;
+            $sequence++;
+        }
+
+        return html_writer::table($table);
+
     }
 }

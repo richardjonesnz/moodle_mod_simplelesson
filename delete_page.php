@@ -92,4 +92,4 @@ for ($p = 0; $p < sizeof($pagestochange); $p++) {
             'id' => $pagestochange[$p]));
 }
 // Go back to introductory page
-redirect($return_view, get_string('deleted'), 2);
+redirect($return_view, get_string('page_deleted', MOD_SIMPLELESSON_LANG), 2);

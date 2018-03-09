@@ -64,7 +64,7 @@ $string['simplelesson:itemview'] = 'View items';
 $string['simplelesson:itemedit'] = 'Edit items';
 
 // First page and page editing strings
-$string['addfirstpage'] = 'Add the first page';
+$string['addpage'] = 'Add a page';
 $string['gotofirstpage'] = 'Continue the lesson';
 $string['gotonextpage'] = 'Next page';
 $string['gotoprevpage'] = 'Previous page';
@@ -81,12 +81,22 @@ $string['gotodeletepage'] = 'Delete page';
 $string['page_adding'] = 'Adding page';
 $string['page_saved'] = 'Page saved';
 $string['page_updated'] = 'Page updated';
+$string['page_deleted'] = 'Page deleted';
 $string['page_index_header'] = 'Index of pages:';
 $string['homelink'] = 'Home page';
 $string['getnextpage'] = 'Select link to next page';
 $string['getprevpage'] = 'Select link to previous page';
 $string['afterpage'] = 'Add after page';
 $string['nolink'] = 'None';
+
+// Lesson editing (page management)
+$string['edit_lesson'] = 'Simple Lesson editing';
+$string['lesson_editing'] = 'Editing a Simple lesson';
+$string['manage_pages'] = 'Manage lesson pages';
+$string['pagetitle'] = 'page title';
+$string['nextpage'] = 'Next page id';
+$string['prevpage'] = 'Previous page id';
+$string['actions'] = 'Actions';
 
 $string['id']='ID';
 $string['name']='Name';
