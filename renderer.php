@@ -276,6 +276,15 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $links[] = html_writer::link($link, 
                 get_string('gotoaddpage', MOD_SIMPLELESSON_LANG));
         
+        // delete link
+        $link = 
+                new moodle_url('/mod/simplelesson/delete_page.php', 
+                array('courseid' => $courseid, 
+                'simplelessonid' => $data->simplelessonid,
+                'sequence' => $data->sequence,
+                'pageid' => $data->id));    
+        $links[] = html_writer::link($link, 
+                get_string('gotodeletepage', MOD_SIMPLELESSON_LANG));       
         $html .= html_writer::alist($links, null, 'ul');
         $html .= html_writer::end_div();  // action links 
 

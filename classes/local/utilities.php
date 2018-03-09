@@ -85,14 +85,16 @@ class utilities  {
         $pagecount = self::count_pages($simplelessonid);
         if ($pagecount != 0) {
             for ($p = 1; $p <= $pagecount; $p++ ) {
-                $pageid = self::get_page_id_from_sequence($simplelessonid, $p);
+                $pageid = self::get_page_id_from_sequence(
+                        $simplelessonid, $p);
                 $data = self::get_page_record($pageid);
                 $page_url = new 
                         \moodle_url('/mod/simplelesson/showpage.php', 
                         array('courseid' => $courseid, 
                         'simplelessonid' => $data->simplelessonid, 
                         'pageid' => $pageid));
-                $link = \html_writer::link($page_url, $data->pagetitle);
+                $link = \html_writer::link($page_url, 
+                        $data->pagetitle);
                 $page_links[] = $link;   
            }
         }
@@ -198,12 +200,13 @@ class utilities  {
      * @return int pageid 
      */
 
-    public static function get_page_id_from_sequence($simplelessonid, $sequence) {
+    public static function get_page_id_from_sequence($simplelessonid, 
+            $sequence) {
         global $DB;  
-        $page = $DB->get_record('simplelesson_pages', 
+        $data = $DB->get_record('simplelesson_pages', 
                 array('simplelessonid' => $simplelessonid, 
-                      'sequence' => $sequence));
-        return $page->id;
+                'sequence' => $sequence));
+        return $data->id;
     }
 
     /** 
@@ -216,5 +219,28 @@ class utilities  {
         global $DB;
         return $DB->get_record('simplelesson_pages', 
                 array('id' => $pageid), '*', MUST_EXIST);
+    }
+    /** 
+     * Given a simplelesson, return the page data
+     *
+     * @param int $simplelessonid the simplelesson instance
+     * @return array of page records for the simplelesson
+     */
+    public static function get_page_records($simplelessonid) {
+        global $DB;
+        // Count the content pages and get the sequence id's
+        $pagecount = self::count_pages($simplelessonid);
+        $page_records = array();
+
+        if ($pagecount != 0) {
+            for ($p = 1; $p <= $pagecount; $p++ ) {
+                $pageid = self::get_page_id_from_sequence($simplelessonid, $p);
+                $data = self::get_page_record($pageid);
+                $page_records['pagetitle'] = $data->pagetitle;
+                $page_records['sequence'] = $data->sequence;
+                $page_records['pageid'] = $data->id;   
+           }
+        }
+       return $page_records;
     }
 }

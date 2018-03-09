@@ -16,10 +16,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Add a page at the end of the sequence
- *
- * TODO - convert links to drop-list of actions 
- * (edit, delete, add before, add after, copy page, restore)
+ * delete current page, 
+ * adjusting sequence numbers as necessary
  *
  * @package   mod_simplelesson
  * @copyright 2018 Richard Jones https://richardnz.net
@@ -29,11 +27,14 @@
 require_once('../../config.php');
 require_once('edit_page_form.php');
 
+global $DB;
+
 //fetch URL parameters
 $courseid = required_param('courseid', PARAM_INT);
 $simplelessonid = required_param('simplelessonid', PARAM_INT); 
 // sequence in which pages are added to this lesson
 $sequence = required_param('sequence', PARAM_INT);
+$pageid = required_param('pageid', PARAM_INT);
 
 // Set course related variables
 $moduleinstance  = $DB->get_record('simplelesson', array('id' => $simplelessonid), '*', MUST_EXIST);
@@ -41,7 +42,7 @@ $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 $cm = get_coursemodule_from_instance('simplelesson', $simplelessonid, $courseid, false, MUST_EXIST);
 
 //set up the page
-$PAGE->set_url('/mod/simplelesson/add_page.php', 
+$PAGE->set_url('/mod/simplelesson/delete_page.php', 
         array('courseid' => $courseid, 
               'simplelessonid' => $simplelessonid, 
               'sequence' => $sequence));
@@ -55,35 +56,40 @@ $PAGE->set_pagelayout('course');
 $return_view = new moodle_url('/mod/simplelesson/view.php', 
         array('n' => $simplelessonid));
 
-//get the page editing form
-$mform = new simplelesson_edit_page_form(null, 
-        array('courseid' => $courseid, 
-              'simplelessonid' => $simplelessonid,
-              'pageid' => 0,
-              'sequence' => $sequence,
-              'context'=> $modulecontext));
 
-//if the cancel button was pressed
-if ($mform->is_cancelled()) {
-    redirect($return_view, get_string('cancelled'), 2);
+// Confirm dialog needed
+// see: https://docs.moodle.org/dev/AMD_Modal
+
+// Use set field to decrement the sequence numbers 
+// from deleted page to last page.
+$DB->delete_records('simplelesson_pages',  
+        array('simplelessonid'=>$simplelessonid,
+        'id' => $pageid));
+
+$lastpage = 
+        \mod_simplelesson\local\utilities::count_pages($simplelessonid);
+$lastpage++;
+// Note the id's of pages to change
+// get_page_id_from sequence only works if sequence is unique.
+$pagestochange = array();
+// We've deleted a page so lastpage is one short in terms
+// of it's sequence number.
+for ($p = $sequence + 1; $p <= $lastpage ; $p++) {
+    $thispage = \mod_simplelesson\local\utilities::
+            get_page_id_from_sequence($simplelessonid, $p);
+    $pagestochange[] = $thispage;
 }
 
-// if we have data, then our job here is to save it and return
-// We will always add pages at the end and have 
-// a "sequencing" page somewhere
-if ($data = $mform->get_data()) {
-    $last_page = \mod_simplelesson\local\utilities::count_pages(
-      $moduleinstance->id);
-    $data->sequence = $last_page + 1;
-    $data->simplelessonid = $simplelessonid;
-    $data->nextpageid = (int) $data->nextpageid;
-    $data->prevpageid = (int) $data->prevpageid; 
-    \mod_simplelesson\local\utilities::add_page_record($data, $modulecontext);
-    redirect($return_view, get_string('page_saved', MOD_SIMPLELESSON_LANG), 2);
+// Change sequence numbers (decrement from deleted+1 to end).
+for ($p = 0; $p < sizeof($pagestochange); $p++) {
+    $page_sequence = $DB->get_field('simplelesson_pages', 
+            'sequence',  
+            array('simplelessonid'=>$simplelessonid,
+            'id' => $pagestochange[$p]));
+    $DB->set_field('simplelesson_pages', 
+            'sequence', ($page_sequence - 1),  
+            array('simplelessonid'=>$simplelessonid,
+            'id' => $pagestochange[$p]));
 }
-
-echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('page_adding', MOD_SIMPLELESSON_LANG), 2);
-$mform->display();
-echo $OUTPUT->footer();
-return;
+// Go back to introductory page
+redirect($return_view, get_string('deleted'), 2);
