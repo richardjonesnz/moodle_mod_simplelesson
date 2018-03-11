@@ -257,6 +257,15 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
             // Just put out the link text
             $links[] = get_string('gotonextpage', MOD_SIMPLELESSON_LANG);
         }
+
+        // Manage pages link
+        $return_view = new moodle_url('/mod/simplelesson/edit.php', 
+                array('courseid' => $courseid, 
+                'simplelessonid' => $data->simplelessonid));
+        
+        $links[] = html_writer::link($return_view, 
+                    get_string('manage_pages', MOD_SIMPLELESSON_LANG));
+        
         $html .= html_writer::alist($links, null, 'ul');
         $html .= html_writer::end_div();  // pagelinks 
 
@@ -321,19 +330,21 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      * @param object $simplelessonid 
      * @return string html link
      */
-    public function page_management($courseid, $simplelesson) {
+    public function page_management($courseid, 
+            $simplelesson, $context) {
     
         $activityname = format_string($simplelesson->name, true);   
         $this->page->set_title($activityname);
 
         $table = new html_table();
         $table->head = array(
+                get_string('sequence', MOD_SIMPLELESSON_LANG),
                 get_string('pagetitle', MOD_SIMPLELESSON_LANG),
                 get_string('nextpage', MOD_SIMPLELESSON_LANG),
                 get_string('prevpage', MOD_SIMPLELESSON_LANG),
                 get_string('actions', MOD_SIMPLELESSON_LANG));
         $table->align = 
-                array('left', 'left', 'left', 'center');
+                array('left', 'left', 'left', 'left', 'center');
         $table->wrap = array('', 'nowrap', '', 'nowrap');
         $table->tablealign = 'center';
         $table->cellspacing = 0;
@@ -357,6 +368,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
             $data = array();
             $all_data = \mod_simplelesson\local\utilities::
                     get_page_record($pageid);
+            $data[] = $all_data->sequence;        
             $data[] = $all_data->pagetitle;
             $data[] = $all_data->nextpageid;
             $data[] = $all_data->prevpageid;
@@ -364,14 +376,14 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
             /*
             $data[] = html_writer::link($url, format_string($page->title, true), array('id' => 'lesson-' . $page->id));
             $data[] = $qtypes[$page->qtype];
-            $data[] = implode("<br />\n", $page->jumps);
+            $data[] = implode("<br />\n", $page->jumps); */
             if(has_capability('mod/simplelesson:manage', 
-                    $modulecontext)) {
-                $data[] = $this->page_action_links($page, $npages, true);
+                    $context)) {
+                $data[] = $this->page_action_links(
+                        $courseid, $simplelesson->id, $all_data);
             } else {
                 $data[] = '';
             }
-            */
             $table->data[] = $data;
             $sequence++;
         }
@@ -379,4 +391,55 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         return html_writer::table($table);
 
     }
+ /**
+     * Returns HTML to display action links for a page
+     *
+     * @param lesson_page $page
+     * @param bool $printmove
+     * @param bool $printaddpage
+     * @return string
+     */
+    public function page_action_links(
+            $courseid, $simplelessonid, $data) {
+        global $CFG;
+        $actions = array();
+
+        $url = new moodle_url('/mod/simplelesson/edit_page.php', 
+                array('courseid' => $courseid,
+                'simplelessonid' => $simplelessonid, 
+                'sequence' => $data->sequence,
+                'pageid' => $data->id));
+        $label = get_string('gotoeditpage', MOD_SIMPLELESSON_LANG);
+        $img = $this->output->pix_icon('t/edit', $label);
+        $actions[] = html_writer::link($url, $img, array('title' => $label));
+
+        // Duplicate action. 
+        /*
+        $url = new moodle_url('/mod/lesson/lesson.php', array('id' => $this->page->cm->id, 'pageid' => $page->id,
+                'action' => 'duplicate', 'sesskey' => sesskey()));
+        $label = get_string('duplicatepagenamed', 'lesson', format_string($page->title));
+        $img = $this->output->pix_icon('e/copy', $label, 'mod_lesson');
+        $actions[] = html_writer::link($url, $img, array('title' => $label));
+        */
+        // Preview page
+        $url = new moodle_url('/mod/simplelesson/showpage.php', 
+                array('courseid' => $courseid,
+                'simplelessonid' => $simplelessonid, 
+                'pageid' => $data->id));
+        $label = get_string('showpage', MOD_SIMPLELESSON_LANG);
+        $img = $this->output->pix_icon('t/preview', $label);
+        $actions[] = html_writer::link($url, $img, array('title' => $label));
+        
+        // Delete page
+        $url = new moodle_url('/mod/simplelesson/delete_page.php',
+                array('courseid' => $courseid,
+                'simplelessonid' => $simplelessonid, 
+                'sequence' => $data->sequence,
+                'pageid' => $data->id));
+        $label = get_string('gotodeletepage', MOD_SIMPLELESSON_LANG);
+        $img = $this->output->pix_icon('t/delete', $label);
+        $actions[] = html_writer::link($url, $img, array('title' => $label));
+
+        return implode(' ', $actions);
+    }   
 }

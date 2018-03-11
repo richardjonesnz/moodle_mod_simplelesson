@@ -50,7 +50,8 @@ $renderer = $PAGE->get_renderer('mod_simplelesson');
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('lesson_editing', MOD_SIMPLELESSON_LANG), 2);
 
-echo $renderer->page_management($course->id, $moduleinstance );
+echo $renderer->page_management($course->id, 
+        $moduleinstance, $modulecontext);
 
 echo $OUTPUT->footer();
 return;

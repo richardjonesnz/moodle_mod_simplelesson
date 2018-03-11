@@ -94,9 +94,11 @@ $string['edit_lesson'] = 'Simple Lesson editing';
 $string['lesson_editing'] = 'Editing a Simple lesson';
 $string['manage_pages'] = 'Manage lesson pages';
 $string['pagetitle'] = 'page title';
-$string['nextpage'] = 'Next page id';
-$string['prevpage'] = 'Previous page id';
+$string['nextpage'] = 'Next page';
+$string['prevpage'] = 'Previous page';
 $string['actions'] = 'Actions';
+$string['showpage'] = 'Preview page';
+$string['sequence'] = 'Sequence';
 
 $string['id']='ID';
 $string['name']='Name';
