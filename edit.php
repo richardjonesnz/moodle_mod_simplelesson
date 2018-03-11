@@ -24,10 +24,12 @@
  */
 
 require_once('../../config.php');
-
+global $DB;
 //fetch URL parameters.
 $courseid = required_param('courseid', PARAM_INT);
 $simplelessonid = required_param('simplelessonid', PARAM_INT); 
+$sequence = optional_param('sequence', 0, PARAM_INT); 
+$action = optional_param('action', 'none', PARAM_TEXT);
 
 // Set course related variables.
 $moduleinstance  = $DB->get_record('simplelesson', array('id' => $simplelessonid), '*', MUST_EXIST);
@@ -50,6 +52,18 @@ $renderer = $PAGE->get_renderer('mod_simplelesson');
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('lesson_editing', MOD_SIMPLELESSON_LANG), 2);
 
+// Check the action:
+// The up and down arrows are only shown for the relevant
+// sequence positions so we don't have to check that
+if ( ($sequence != 0) && ($action != 'none') ) {
+    if($action == 'move_up') {
+    \mod_simplelesson\local\utilities::move_page_up(
+            $simplelessonid, $sequence);                            
+    } else if ($action == 'move_down') { 
+    \mod_simplelesson\local\utilities::move_page_down(
+            $simplelessonid, $sequence);                        
+    }
+}
 echo $renderer->page_management($course->id, 
         $moduleinstance, $modulecontext);
 

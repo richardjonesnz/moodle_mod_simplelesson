@@ -243,4 +243,77 @@ class utilities  {
         }
        return $page_records;
     }
+    /** 
+     * Given a simplelesson and sequence number
+     * Move the page by exchanging sequence numbers
+     *
+     * @param int $simplelessonid the simplelesson instance
+     * @param int $sequence the page sequence number
+     * @return none
+     */
+    public static function move_page_up($simplelessonid, $sequence) {
+        global $DB;
+        
+        $pageid_up = self::get_page_id_from_sequence(
+                $simplelessonid, $sequence);
+        $pageid_down = self::get_page_id_from_sequence(
+                $simplelessonid, ($sequence - 1));
+
+        self::decrement_page_sequence($pageid_up);
+        self::increment_page_sequence($pageid_down);
+    }
+
+    /** 
+     * Given a simplelesson and sequence number
+     * Move the page by exchanging sequence numbers
+     *
+     * @param int $simplelessonid the simplelesson instance
+     * @param int $sequence the page sequence number
+     * @return none
+     */
+    public static function move_page_down($simplelessonid, $sequence) {
+        global $DB;
+        
+        $pageid_down = self::get_page_id_from_sequence(
+                $simplelessonid, $sequence);
+        $pageid_up = self::get_page_id_from_sequence(
+                $simplelessonid, ($sequence + 1));
+
+        self::increment_page_sequence($pageid_down);
+        self::decrement_page_sequence($pageid_up);
+    }
+     
+   /** 
+     * Given a page record id
+     * decrease the sequence number
+     *
+     * @param int $pageid
+     * @return none
+     */  
+    public static function decrement_page_sequence($pageid) {
+        global $DB;
+        $sequence = $DB->get_field('simplelesson_pages', 
+            'sequence',  
+            array('id' => $pageid));
+        $DB->set_field('simplelesson_pages', 
+            'sequence', ($sequence - 1),  
+            array('id' => $pageid));
+    }
+   /** 
+     * Given a page record id
+     * increase the sequence number
+     *
+     * @param int $pageid
+     * @return none
+     */  
+    public static function increment_page_sequence($pageid) {
+        global $DB;
+        $sequence = $DB->get_field('simplelesson_pages', 
+            'sequence',  
+            array('id' => $pageid));
+        $DB->set_field('simplelesson_pages', 
+            'sequence', ($sequence + 1),  
+            array('id' => $pageid));
+    }
+
 }

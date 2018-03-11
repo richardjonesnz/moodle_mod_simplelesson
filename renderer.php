@@ -344,7 +344,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
                 get_string('prevpage', MOD_SIMPLELESSON_LANG),
                 get_string('actions', MOD_SIMPLELESSON_LANG));
         $table->align = 
-                array('left', 'left', 'left', 'left', 'center');
+                array('left', 'left', 'left', 'left', 'left');
         $table->wrap = array('', 'nowrap', '', 'nowrap');
         $table->tablealign = 'center';
         $table->cellspacing = 0;
@@ -372,7 +372,6 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
             $data[] = $all_data->pagetitle;
             $data[] = $all_data->nextpageid;
             $data[] = $all_data->prevpageid;
-            $data[] = 'actionlink';
             /*
             $data[] = html_writer::link($url, format_string($page->title, true), array('id' => 'lesson-' . $page->id));
             $data[] = $qtypes[$page->qtype];
@@ -421,6 +420,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $img = $this->output->pix_icon('e/copy', $label, 'mod_lesson');
         $actions[] = html_writer::link($url, $img, array('title' => $label));
         */
+
         // Preview page
         $url = new moodle_url('/mod/simplelesson/showpage.php', 
                 array('courseid' => $courseid,
@@ -440,6 +440,29 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $img = $this->output->pix_icon('t/delete', $label);
         $actions[] = html_writer::link($url, $img, array('title' => $label));
 
+        // Move page up
+        if ($data->sequence != 1) {
+         $url = new moodle_url('/mod/simplelesson/edit.php', 
+                array('courseid' => $courseid,
+                'simplelessonid' => $simplelessonid, 
+                'sequence' => $data->sequence,
+                'action' => 'move_up'));
+        $label = get_string('move_up', MOD_SIMPLELESSON_LANG);
+        $img = $this->output->pix_icon('t/up', $label);
+        $actions[] = html_writer::link($url, $img, array('title' => $label));   
+        }
+
+        // Move down
+        if (!\mod_simplelesson\local\utilities::is_last_page($data)) {
+         $url = new moodle_url('/mod/simplelesson/edit.php', 
+                array('courseid' => $courseid,
+                'simplelessonid' => $simplelessonid,
+                'sequence' => $data->sequence, 
+                'action' => 'move_down'));
+        $label = get_string('move_down', MOD_SIMPLELESSON_LANG);
+        $img = $this->output->pix_icon('t/down', $label);
+        $actions[] = html_writer::link($url, $img, array('title' => $label));   
+        }
         return implode(' ', $actions);
     }   
 }

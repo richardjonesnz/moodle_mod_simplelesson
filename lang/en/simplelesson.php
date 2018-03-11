@@ -99,6 +99,8 @@ $string['prevpage'] = 'Previous page';
 $string['actions'] = 'Actions';
 $string['showpage'] = 'Preview page';
 $string['sequence'] = 'Sequence';
+$string['move_up'] = 'Move page up';
+$string['move_down'] = 'Move page down';
 
 $string['id']='ID';
 $string['name']='Name';
