@@ -208,6 +208,21 @@ class utilities  {
                 'sequence' => $sequence));
         return $data->id;
     }
+    /** 
+     * Given a lesson id and page record, find that sequence number
+     *
+     * @param int $simplelessonid the lesson id
+     * @param int $pageid
+     * @return int where the page is in the lesson sequence 
+     */
+
+    public static function get_page_sequence_from_id(
+            $simplelessonid, $pageid) {
+        global $DB;  
+        $sequence = $DB->get_field('simplelesson_pages', 
+            'sequence',  array('id' => $pageid));
+        return $sequence;    
+    }
 
     /** 
      * Given a page id return the data for that page record
@@ -285,7 +300,7 @@ class utilities  {
      
    /** 
      * Given a page record id
-     * decrease the sequence number
+     * decrease the sequence number by 1
      *
      * @param int $pageid
      * @return none
@@ -301,7 +316,7 @@ class utilities  {
     }
    /** 
      * Given a page record id
-     * increase the sequence number
+     * increase the sequence number by 1
      *
      * @param int $pageid
      * @return none

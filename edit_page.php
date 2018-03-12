@@ -52,12 +52,14 @@ $modulecontext = context_module::instance($cm->id);
 $PAGE->set_context($modulecontext);
 $PAGE->set_pagelayout('course');
 
-
-
 $return_showpage = new moodle_url('/mod/simplelesson/showpage.php', 
         array('courseid' => $courseid, 
               'simplelessonid' => $simplelessonid, 
               'pageid' => $pageid));
+// Page link data
+$page_titles = \mod_simplelesson\local\utilities::fetch_page_titles(
+                $simplelessonid,
+                $pageid);
 
 //get the page editing form
 $mform = new simplelesson_edit_page_form(null, 
@@ -65,7 +67,8 @@ $mform = new simplelesson_edit_page_form(null,
               'simplelessonid' => $simplelessonid,
               'pageid'  => $pageid,
               'sequence' => $sequence,
-              'context'=> $modulecontext));
+              'context' => $modulecontext,
+              'page_titles' => $page_titles));
 
 //if the cancel button was pressed
 if ($mform->is_cancelled()) {

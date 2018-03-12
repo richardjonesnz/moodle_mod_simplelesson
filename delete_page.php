@@ -35,6 +35,7 @@ $simplelessonid = required_param('simplelessonid', PARAM_INT);
 // sequence in which pages are added to this lesson
 $sequence = required_param('sequence', PARAM_INT);
 $pageid = required_param('pageid', PARAM_INT);
+$returnto = optional_param('returnto', 'view', PARAM_TEXT);
 
 // Set course related variables
 $moduleinstance  = $DB->get_record('simplelesson', array('id' => $simplelessonid), '*', MUST_EXIST);
@@ -56,6 +57,9 @@ $PAGE->set_pagelayout('course');
 $return_view = new moodle_url('/mod/simplelesson/view.php', 
         array('n' => $simplelessonid));
 
+$return_edit = new moodle_url('/mod/simplelesson/edit.php', 
+        array('courseid' => $courseid, 
+        'simplelessonid' => $simplelessonid));
 
 // Confirm dialog needed
 // see: https://docs.moodle.org/dev/AMD_Modal
@@ -68,7 +72,7 @@ $DB->delete_records('simplelesson_pages',
 
 $lastpage = 
         \mod_simplelesson\local\utilities::count_pages($simplelessonid);
-$lastpage++;
+$lastpage++; // last page sequence number
 // Note the id's of pages to change
 // get_page_id_from sequence only works if sequence is unique.
 $pagestochange = array();
@@ -80,16 +84,16 @@ for ($p = $sequence + 1; $p <= $lastpage ; $p++) {
     $pagestochange[] = $thispage;
 }
 
-// Change sequence numbers (decrement from deleted+1 to end).
+// Change sequence numbers (decrement from deleted + 1 to end).
 for ($p = 0; $p < sizeof($pagestochange); $p++) {
-    $page_sequence = $DB->get_field('simplelesson_pages', 
-            'sequence',  
-            array('simplelessonid'=>$simplelessonid,
-            'id' => $pagestochange[$p]));
-    $DB->set_field('simplelesson_pages', 
-            'sequence', ($page_sequence - 1),  
-            array('simplelessonid'=>$simplelessonid,
-            'id' => $pagestochange[$p]));
+
+   \mod_simplelesson\local\utilities::
+           decrement_page_sequence($pagestochange[$p]); 
 }
-// Go back to introductory page
+// Go back to page where request came from
+if ($returnto == 'edit') {
+    redirect($return_edit, 
+            get_string('page_deleted', MOD_SIMPLELESSON_LANG), 2);    
+}
+// default
 redirect($return_view, get_string('page_deleted', MOD_SIMPLELESSON_LANG), 2);

@@ -55,17 +55,12 @@ class simplelesson_edit_page_form extends moodleform {
         $mform->addRule('pagecontents_editor', get_string('required'), 
                 'required', null, 'client');
 
+        $mform->addElement('select', 'prevpageid', get_string('getprevpage', MOD_SIMPLELESSON_LANG), $this->_customdata['page_titles']);
+        $mform->addElement('select', 'nextpageid', get_string('getnextpage', MOD_SIMPLELESSON_LANG), $this->_customdata['page_titles']);
+        
         // To add, question picker
         // need a utility function to scan the question bank
 
-        // Page link data
-        $page_titles = \mod_simplelesson\local\utilities::fetch_page_titles(
-                $this->_customdata['simplelessonid'],
-                $this->_customdata['pageid']);
-        
-        $mform->addElement('select', 'prevpageid', get_string('getprevpage', MOD_SIMPLELESSON_LANG), $page_titles);
-        $mform->addElement('select', 'nextpageid', get_string('getnextpage', MOD_SIMPLELESSON_LANG), $page_titles);
-        
         $mform->setType('nextpage', PARAM_TEXT);  
         $mform->setType('prevpage', PARAM_TEXT);   
 

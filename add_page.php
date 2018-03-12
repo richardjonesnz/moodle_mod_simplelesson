@@ -55,13 +55,19 @@ $PAGE->set_pagelayout('course');
 $return_view = new moodle_url('/mod/simplelesson/view.php', 
         array('n' => $simplelessonid));
 
+// Page link data
+$page_titles = \mod_simplelesson\local\utilities::fetch_page_titles(
+                $simplelessonid,
+                0);
+
 //get the page editing form
 $mform = new simplelesson_edit_page_form(null, 
         array('courseid' => $courseid, 
               'simplelessonid' => $simplelessonid,
               'pageid' => 0,
               'sequence' => $sequence,
-              'context'=> $modulecontext));
+              'context' => $modulecontext,
+              'page_titles' => $page_titles));
 
 //if the cancel button was pressed
 if ($mform->is_cancelled()) {
