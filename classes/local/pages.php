@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Utilities for simplelesson
+ * Page utilities for simplelesson
  *
  * @package    mod_simplelesson
- * @copyright 2015 Justin Hunt, modified 2018 Richard Jones https://richardnz.net
+ * @copyright  Richard Jones https://richardnz.net
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace mod_simplelesson\local;
@@ -31,7 +31,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2018 Richard Jones https://richardnz.net
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class utilities  {
+class pages  {
 
     /** 
      * Get the page titles for the prev/next drop downs
@@ -122,7 +122,7 @@ class utilities  {
         return ($data->sequence == self::count_pages($data->simplelessonid));
     }
     /** 
-     * Verify page record exsists in database
+     * Verify page record exists in database
      *
      * @param int $pageid the id of a simplelesson page
      * @param int $simplelessonid the id of a simplelesson
@@ -314,6 +314,7 @@ class utilities  {
             'sequence', ($sequence - 1),  
             array('id' => $pageid));
     }
+
    /** 
      * Given a page record id
      * increase the sequence number by 1
@@ -324,11 +325,40 @@ class utilities  {
     public static function increment_page_sequence($pageid) {
         global $DB;
         $sequence = $DB->get_field('simplelesson_pages', 
-            'sequence',  
-            array('id' => $pageid));
+                'sequence',  
+                array('id' => $pageid));
         $DB->set_field('simplelesson_pages', 
-            'sequence', ($sequence + 1),  
-            array('id' => $pageid));
+                'sequence', ($sequence + 1),  
+                array('id' => $pageid));
     }
-
+    /** 
+     * Given a category id
+     * return an array of questions from that category
+     *
+     * @param int $categoryid
+     * @return array of objects
+     */  
+    public static function get_questions($categoryid) {
+        global $DB;
+        return $DB->get_records('question',
+              array('category' => $categoryid));
+    }
+    /** 
+     * Given a question id and page id
+     * save if data is unique
+     *
+     * @param object $qdata
+     * @return id of inserted record or false
+     */    
+    public static function save_question($qdata) {
+        global $DB;
+        $table = 'simplelesson_questions';
+        $condition = array('qid' => $qdata->qid, 
+                'pageid' =>$qdata->pageid);
+        // Check if this question was already added to this page
+        if (!$DB->get_record($table, $condition, IGNORE_MISSING)) {
+            return $DB->insert_record($table, $qdata);
+        }
+        return false;
+    }
 }

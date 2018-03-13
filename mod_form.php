@@ -40,7 +40,7 @@ class mod_simplelesson_mod_form extends moodleform_mod {
      * Defines forms elements
      */
     public function definition() {
-        global $CFG;
+        global $CFG, $DB;
 
         $mform = $this->_form;
 
@@ -69,7 +69,7 @@ class mod_simplelesson_mod_form extends moodleform_mod {
         //-------------------------------------------------------------------------------
         // Adding the rest of simplelesson settings, spreading all them into this fieldset
         // or adding more fieldsets ('header' elements) if needed for better logic
-        $mform->addElement('static', 'label1', 'simplelessonsettings', get_string('simplelessonsettings', MOD_SIMPLELESSON_LANG));
+        //$mform->addElement('static', 'label1', 'simplelessonsettings', get_string('simplelessonsettings', MOD_SIMPLELESSON_LANG));
         $mform->addElement('text', 'lessontitle', get_string('lessontitle', MOD_SIMPLELESSON_LANG), array('size'=>'64'));
         $mform->addRule('lessontitle', null, 'required', null, 'client');
         $mform->addHelpButton('lessontitle', 'lessontitle', MOD_SIMPLELESSON_LANG);
@@ -91,11 +91,27 @@ class mod_simplelesson_mod_form extends moodleform_mod {
                 get_string('show_index_text', MOD_SIMPLELESSON_LANG),
                 null, array(0, 1));
 
+        $categories = array();
+        $cats = $DB->get_records('question_categories', 
+                null, null, 'id, name');
+        foreach ($cats as $cat) {
+            $questions = $DB->count_records(
+                    'question', array('category' => $cat->id));
+            if ($questions > 0) {
+                $categories[$cat->id] = $cat->name . ' (' . $questions . ')';
+            }
+        }
+        $mform->addElement('select', 'category', get_string('category_select', MOD_SIMPLELESSON_LANG), $categories);
+        
+        $mform->addHelpButton('category', 'category', MOD_SIMPLELESSON_LANG);
+        $mform->setType('category', PARAM_INT);
+
 		//attempts
         $attemptoptions = array(0 => get_string('unlimited', MOD_SIMPLELESSON_LANG),
                             1 => '1',2 => '2',3 => '3',4 => '4',5 => '5',);
         $mform->addElement('select', 'maxattempts', get_string('maxattempts', MOD_SIMPLELESSON_LANG), $attemptoptions);
-		
+        $mform->setType('maxattempts', PARAM_INT);
+        
 		// Grade.
         $this->standard_grading_coursemodule_elements();
         
@@ -116,8 +132,7 @@ class mod_simplelesson_mod_form extends moodleform_mod {
         // add standard buttons, common to all modules
         $this->add_action_buttons();
     }
-	
-	
+		
     /**
      * This adds completion rules
 	 * The values here are just dummies. They don't work in this project until you implement some sort of grading
@@ -143,7 +158,6 @@ class mod_simplelesson_mod_form extends moodleform_mod {
 	function data_preprocessing(&$default_values) {
         if ($this->current->instance) {
             $context = $this->context;
-            error_log('mod_form: ' . $context->id);
             $editoroptions = simplelesson_get_editor_options($context);
             $default_values = (object) $default_values;
             $default_values = 

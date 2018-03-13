@@ -23,10 +23,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
-
 
 $id = optional_param('id', 0, PARAM_INT); // course_module ID, or
 $n  = optional_param('n', 0, PARAM_INT);  // simplelesson instance ID 
@@ -111,7 +109,7 @@ $firstpagetext = format_text($firstpagetext,
         $moduleinstance->firstpageformat, $formatoptions);
 
 // Get the page links. 
-$page_links = \mod_simplelesson\local\utilities::fetch_page_links(
+$page_links = \mod_simplelesson\local\pages::fetch_page_links(
             $moduleinstance->id, $course->id, true);
 $has_pages = (count($page_links) != 0);
 
@@ -122,12 +120,13 @@ echo $renderer->fetch_firstpage($firstpagetext,
         $show_index, $page_links);
 if ($has_pages) {
     // Get the record # for the first page.
-    $pageid = 
-            \mod_simplelesson\local\utilities::get_page_id_from_sequence(
-                    $moduleinstance->id, 1);
+    $pageid = \mod_simplelesson\local\pages::
+            get_page_id_from_sequence(
+            $moduleinstance->id, 1);
     echo $renderer->fetch_firstpage_link($course->id, 
             $moduleinstance->id, $pageid);
 }
+
 //if we are teacher we see buttons.
 if(has_capability('mod/simplelesson:manage', $modulecontext)) {
 

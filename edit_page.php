@@ -57,11 +57,10 @@ $return_showpage = new moodle_url('/mod/simplelesson/showpage.php',
               'simplelessonid' => $simplelessonid, 
               'pageid' => $pageid));
 // Page link data
-$page_titles = \mod_simplelesson\local\utilities::fetch_page_titles(
+$page_titles = \mod_simplelesson\local\pages::fetch_page_titles(
                 $simplelessonid,
                 $pageid);
 
-//get the page editing form
 $mform = new simplelesson_edit_page_form(null, 
         array('courseid' => $courseid, 
               'simplelessonid' => $simplelessonid,
@@ -82,13 +81,13 @@ if ($data = $mform->get_data()) {
     $data->nextpageid = (int) $data->nextpageid;
     $data->prevpageid = (int) $data->prevpageid;  
     $data->id = $pageid;
-    \mod_simplelesson\local\utilities::update_page_record($data, $modulecontext);
+    \mod_simplelesson\local\pages::update_page_record($data, $modulecontext);
     redirect($return_showpage, 
             get_string('page_updated', MOD_SIMPLELESSON_LANG), 2);
 }
 
 $data = new stdClass();
-$data = \mod_simplelesson\local\utilities::get_page_record($pageid);
+$data = \mod_simplelesson\local\pages::get_page_record($pageid);
 $data->id = $pageid;
 $pagecontentsoptions = simplelesson_get_editor_options($modulecontext);
 

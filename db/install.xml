@@ -22,12 +22,24 @@
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="show_index" TYPE="int" LENGTH="2" NOTNULL="false"
          UNSIGNED="true" SEQUENCE="false" /></FIELDS>
+         <FIELD NAME="category" TYPE="int" LENGTH="2" NOTNULL="false" DEFAULT="0" 
+         UNSIGNED="true" SEQUENCE="false" /></FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
       </INDEXES>
+    </TABLE>
+    <TABLE NAME="simplelesson_questions" COMMENT="Associates question id with page id">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="qid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="question id from mdl_question"/>
+        <FIELD NAME="pageid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="simplelesson page this question belongs to (if any)"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
     </TABLE>
     <TABLE NAME="simplelesson_attempt" COMMENT="user attempt data for simplelesson">
       <FIELDS>

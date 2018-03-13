@@ -71,7 +71,7 @@ $DB->delete_records('simplelesson_pages',
         'id' => $pageid));
 
 $lastpage = 
-        \mod_simplelesson\local\utilities::count_pages($simplelessonid);
+        \mod_simplelesson\local\pages::count_pages($simplelessonid);
 $lastpage++; // last page sequence number
 // Note the id's of pages to change
 // get_page_id_from sequence only works if sequence is unique.
@@ -79,7 +79,7 @@ $pagestochange = array();
 // We've deleted a page so lastpage is one short in terms
 // of it's sequence number.
 for ($p = $sequence + 1; $p <= $lastpage ; $p++) {
-    $thispage = \mod_simplelesson\local\utilities::
+    $thispage = \mod_simplelesson\local\pages::
             get_page_id_from_sequence($simplelessonid, $p);
     $pagestochange[] = $thispage;
 }
@@ -87,7 +87,7 @@ for ($p = $sequence + 1; $p <= $lastpage ; $p++) {
 // Change sequence numbers (decrement from deleted + 1 to end).
 for ($p = 0; $p < sizeof($pagestochange); $p++) {
 
-   \mod_simplelesson\local\utilities::
+   \mod_simplelesson\local\pages::
            decrement_page_sequence($pagestochange[$p]); 
 }
 // Go back to page where request came from

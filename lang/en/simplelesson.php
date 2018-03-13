@@ -47,6 +47,9 @@ $string['firstpage_help'] ='Add some snappy text and any necessary instructions 
 $string['defaultfirstpagetext'] = 'Introductory text for the first page';
 $string['lessontitle'] = 'Lesson title';
 $string['lessontitle_help'] = 'Lesson title - appears on first page only';
+$string['category'] = 'Select question category';
+$string['category_help'] = 'You can use only one category per simplelesson, if necessary, create a special category for this simple lesson';
+$string['category_select'] = 'Select question category';
 $string['maxattempts'] ='Max. Attempts';
 $string['unlimited'] ='unlimited';
 $string['show_index'] ='Display page index';
@@ -101,6 +104,14 @@ $string['showpage'] = 'Preview page';
 $string['sequence'] = 'Sequence';
 $string['move_up'] = 'Move page up';
 $string['move_down'] = 'Move page down';
+
+// Question selection and placement (question management)
+$string['manage_questions'] = 'Manage lesson questions';
+$string['add_question'] = 'Add question';
+$string['question_adding'] = 'Adding a question';
+$string['questions_added'] = 'Questions added';
+$string['question_select'] = 'Select question';
+$string['select_questions'] = 'Check the questions you wish to include in this lesson';
 
 $string['id']='ID';
 $string['name']='Name';

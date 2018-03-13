@@ -178,7 +178,12 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
                 array('courseid' => $courseid, 
                       'simplelessonid' => $simplelessonid));
         $links[] = html_writer::link($url, get_string('manage_pages', MOD_SIMPLELESSON_LANG));
-        
+ 
+        // question picker (manage questions)
+        $url = new moodle_url('/mod/simplelesson/questions.php', 
+                array('courseid' => $courseid, 
+                      'simplelessonid' => $simplelessonid));
+        $links[] = html_writer::link($url, get_string('manage_questions', MOD_SIMPLELESSON_LANG));       
         $html .= html_writer::alist($links, null, 'ul'); 
         $html .=  html_writer::end_div();
 
@@ -352,13 +357,13 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $table->width = '80%';
         $table->data = array();
         $numpages = 
-                \mod_simplelesson\local\utilities::count_pages(
+                \mod_simplelesson\local\pages::count_pages(
                 $simplelesson->id);
         $sequence = 1;
         
         while ($sequence <= $numpages) {
             $pageid = 
-                    \mod_simplelesson\local\utilities::
+                    \mod_simplelesson\local\pages::
                     get_page_id_from_sequence($simplelesson->id, 
                     $sequence);
             $url = new moodle_url('/mod/lesson/edit.php', array(
@@ -366,13 +371,13 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
                 'simplelessonid'   => $simplelesson->id
             ));
             $data = array();
-            $all_data = \mod_simplelesson\local\utilities::
+            $all_data = \mod_simplelesson\local\pages::
                     get_page_record($pageid);
             // Change page id's to sequence numbers for display
-            $prevpage = \mod_simplelesson\local\utilities::
+            $prevpage = \mod_simplelesson\local\pages::
                     get_page_sequence_from_id($simplelesson->id,
                     $all_data->prevpageid);
-            $nextpage = \mod_simplelesson\local\utilities::
+            $nextpage = \mod_simplelesson\local\pages::
                     get_page_sequence_from_id($simplelesson->id,
                     $all_data->nextpageid);
  
@@ -450,7 +455,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         }
 
         // Move down
-        if (!\mod_simplelesson\local\utilities::is_last_page($data)) {
+        if (!\mod_simplelesson\local\pages::is_last_page($data)) {
          $url = new moodle_url('/mod/simplelesson/edit.php', 
                 array('courseid' => $courseid,
                 'simplelessonid' => $simplelessonid,
@@ -461,5 +466,25 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $actions[] = html_writer::link($url, $img, array('title' => $label));   
         }
         return implode(' ', $actions);
-    }   
+    } 
+    /**
+     * Returns the html for the add question link
+     * module's instance settings page
+     * @param int $courseid 
+     * @param int $moduleid 
+     * @return string
+     */
+    public function fetch_question_add_link($courseid, $moduleid) {
+        $html = '';
+        $html .= html_writer::start_div(
+                MOD_SIMPLELESSON_CLASS . '_questions');
+        $url = new moodle_url('/mod/simplelesson/add_question.php', 
+                array('courseid' => $courseid, 
+                'simplelessonid' => $moduleid));
+        $html .= html_writer::link($url,get_string('add_question', MOD_SIMPLELESSON_LANG));
+
+        $html .= html_writer::end_div();
+
+        return $html;
+    }  
 }

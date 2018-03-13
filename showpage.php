@@ -51,7 +51,7 @@ $PAGE->set_heading(format_string($course->fullname));
 
 echo $OUTPUT->header();
 
-$data = \mod_simplelesson\local\utilities::get_page_record($pageid);
+$data = \mod_simplelesson\local\pages::get_page_record($pageid);
 
 // Prepare page text, re-write urls
 $contextid = $modulecontext->id;
@@ -59,11 +59,11 @@ $data->pagecontents = file_rewrite_pluginfile_urls($data->pagecontents, 'pluginf
         $contextid, 'mod_simplelesson', 'pagecontents', $pageid);
 $renderer = $PAGE->get_renderer('mod_simplelesson');
 
-$page_links = \mod_simplelesson\local\utilities::fetch_page_links(
+$page_links = \mod_simplelesson\local\pages::fetch_page_links(
         $moduleinstance->id, $course->id, false);
 
 // Now show this page
-$data = \mod_simplelesson\local\utilities::get_page_record($pageid);
+$data = \mod_simplelesson\local\pages::get_page_record($pageid);
 $data->pagecontents = file_rewrite_pluginfile_urls($data->pagecontents, 
         'pluginfile.php', $contextid, 'mod_simplelesson', 'pagecontents', 
         $pageid);

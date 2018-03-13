@@ -93,6 +93,48 @@ function xmldb_simplelesson_upgrade($oldversion) {
 
         upgrade_mod_savepoint(true, 2018030504, 'simplelesson');
     }
+    // Add field for category
+    if ($oldversion < 2018031306) {
+
+        // Define editor fields for firstpage to be added to simplelesson
+        $table = new xmldb_table('simplelesson');
+        $field = new xmldb_field('category', 
+                XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, 
+                XMLDB_NOTNULL, null, '0', null);
+ 
+        if (!$dbman->field_exists($table, $field)) {
+                $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2018031306, 'simplelesson');
+    }
+    // Add table to link questions and pages
+    if ($oldversion < 2018031308) {
+
+        // Define editor fields for new table
+        $fields = array();
+
+        $table = new xmldb_table('simplelesson_questions');
+
+        $fields[] = new xmldb_field('id', 
+                XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, 
+                XMLDB_NOTNULL, XMLDB_SEQUENCE);
+ 
+        $fields[] = new xmldb_field('qid', 
+                XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, 
+                XMLDB_NOTNULL, null, '0', null);
+
+        $fields[] = new xmldb_field('pageid', 
+                XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, 
+                XMLDB_NOTNULL, null, '0', null);
+
+        foreach ($fields as $field) {
+            if (!$dbman->field_exists($table, $field)) {
+                    $dbman->add_field($table, $field);
+            }
+        }
+        upgrade_mod_savepoint(true, 2018031308, 'simplelesson');
+    }
     // Final return of upgrade result (true, all went good) to Moodle.
     return true;
 }
