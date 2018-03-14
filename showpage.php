@@ -77,6 +77,12 @@ $data->pagecontents = format_text($data->pagecontents, $data->pagecontentsformat
 
 $show_index = (int) $moduleinstance->show_index;    
 echo $renderer->show_page($data, $show_index, $page_links);
+$question = \mod_simplelesson\local\questions::
+        page_has_question($simplelessonid, $pageid);
+
+if ($question != 0) {
+    echo $renderer->show_question($question);
+}
 echo $renderer->show_page_nav_links($data, $courseid);
 
 // If we have the capability, show the action links

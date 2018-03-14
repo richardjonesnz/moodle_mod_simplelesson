@@ -112,6 +112,16 @@ $string['question_adding'] = 'Adding a question';
 $string['questions_added'] = 'Questions added';
 $string['question_select'] = 'Select question';
 $string['select_questions'] = 'Check the questions you wish to include in this lesson';
+$string['qnumber'] = '#';
+$string['question_name'] = 'Question name';
+$string['question_text'] = 'Question text';
+$string['question_editing'] = 'Manage questions';
+$string['pagetitle'] = 'Page title';
+$string['pagetitle_help'] = 'Select the page title where you want to place this question (one question per page only).';
+$string['selecting_page'] = 'Select page';
+$string['editing_question'] = 'Select the page for this question: {$a}';
+$string['setpage'] = 'Set page';
+$string['pagehasquestion'] = 'Another page already has this question'; 
 
 $string['id']='ID';
 $string['name']='Name';

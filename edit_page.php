@@ -52,14 +52,15 @@ $modulecontext = context_module::instance($cm->id);
 $PAGE->set_context($modulecontext);
 $PAGE->set_pagelayout('course');
 
-$return_showpage = new moodle_url('/mod/simplelesson/showpage.php', 
+$return_showpage = new moodle_url(
+        '/mod/simplelesson/showpage.php', 
         array('courseid' => $courseid, 
-              'simplelessonid' => $simplelessonid, 
-              'pageid' => $pageid));
+        'simplelessonid' => $simplelessonid, 
+        'pageid' => $pageid));
 // Page link data
 $page_titles = \mod_simplelesson\local\pages::fetch_page_titles(
                 $simplelessonid,
-                $pageid);
+                $pageid, true);
 
 $mform = new simplelesson_edit_page_form(null, 
         array('courseid' => $courseid, 

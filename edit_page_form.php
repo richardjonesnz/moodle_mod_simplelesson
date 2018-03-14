@@ -58,8 +58,6 @@ class simplelesson_edit_page_form extends moodleform {
         $mform->addElement('select', 'prevpageid', get_string('getprevpage', MOD_SIMPLELESSON_LANG), $this->_customdata['page_titles']);
         $mform->addElement('select', 'nextpageid', get_string('getnextpage', MOD_SIMPLELESSON_LANG), $this->_customdata['page_titles']);
         
-        // To add, question picker
-        
         $mform->setType('nextpage', PARAM_TEXT);  
         $mform->setType('prevpage', PARAM_TEXT);   
 

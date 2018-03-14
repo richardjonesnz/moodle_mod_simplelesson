@@ -24,6 +24,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright 2015 Justin Hunt, modified 2018 Richard Jones https://richardnz.net
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 class mod_simplelesson_renderer extends plugin_renderer_base {
 
 	/**
@@ -180,9 +181,10 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $links[] = html_writer::link($url, get_string('manage_pages', MOD_SIMPLELESSON_LANG));
  
         // question picker (manage questions)
-        $url = new moodle_url('/mod/simplelesson/questions.php', 
+        $url = new moodle_url(
+                '/mod/simplelesson/edit_questions.php', 
                 array('courseid' => $courseid, 
-                      'simplelessonid' => $simplelessonid));
+                'simplelessonid' => $simplelessonid));
         $links[] = html_writer::link($url, get_string('manage_questions', MOD_SIMPLELESSON_LANG));       
         $html .= html_writer::alist($links, null, 'ul'); 
         $html .=  html_writer::end_div();
@@ -483,6 +485,94 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
                 'simplelessonid' => $moduleid));
         $html .= html_writer::link($url,get_string('add_question', MOD_SIMPLELESSON_LANG));
 
+        $html .= html_writer::end_div();
+
+        return $html;
+    }  
+
+    /**
+     * Returns a list of questions and editing actions
+     *
+     * @param string $courseid
+     * @param int $simplelessonid
+     * @param object array questions 
+     * @return string html link
+     */
+    public function question_management($courseid, 
+            $simplelessonid, $questions) {
+
+        $table = new html_table();
+        $table->head = array(
+        get_string('qnumber', MOD_SIMPLELESSON_LANG),
+        get_string('question_name', MOD_SIMPLELESSON_LANG),
+        get_string('question_text', MOD_SIMPLELESSON_LANG),
+        get_string('pagetitle', MOD_SIMPLELESSON_LANG),
+        get_string('setpage', MOD_SIMPLELESSON_LANG));
+        $table->align = 
+                array('left', 'left', 'left', 'left', 'left');
+        $table->wrap = array('nowrap', '', '', 'nowrap', 'nowrap');
+        $table->tablealign = 'center';
+        $table->cellspacing = 0;
+        $table->cellpadding = '2px';
+        $table->width = '80%';
+        $table->data = array();
+
+        foreach ($questions as $question) {
+            $data = array();
+            $data[] = $question->qid;
+            $data[] = $question->name;
+            if (strlen($question->questiontext) > 100) {
+                $data[] = substr($question->questiontext, 
+                        0, 95) . '...';
+            } else {
+                $data[] = $question->questiontext;        
+            }
+            if ($question->pageid == 0) {
+                $data[] = '-';
+            } else {
+                $data[] = \mod_simplelesson\local\pages::
+                        get_page_title($question->pageid);       
+            }
+            $url = new moodle_url(
+                    '/mod/simplelesson/edit_questions.php',
+                    array('courseid' => $courseid,
+                    'simplelessonid' => $simplelessonid,
+                    'action' => 'edit',
+                    'actionitem' => $question->qid));
+            $data[] = html_writer::link($url, 
+                    get_string('setpage',
+                    MOD_SIMPLELESSON_LANG));
+
+            $table->data[] = $data;            
+        } 
+        
+        return html_writer::table($table);
+    }
+    /**
+     * Returns the html for the redirect to view page
+     * @param int $courseid 
+     * @return string
+     */
+    public function fetch_question_return_link($simplelessonid) {
+        $html = '';
+        $html .= html_writer::start_div(
+                MOD_SIMPLELESSON_CLASS . '_question');
+        $url = new moodle_url('/mod/simplelesson/view.php', 
+                array('n' => $simplelessonid,
+                      ));
+        $html .= html_writer::link($url,get_string('homelink', MOD_SIMPLELESSON_LANG));
+        return $html;
+    }  
+    /**
+     * Display the question on the page
+     * @param int $qid - the id of the question 
+     * @return string, html representing the question
+     */
+    public function show_question($qid) {
+        $html = '';
+        $html .= html_writer::start_div(
+                MOD_SIMPLELESSON_CLASS . '_page_question');
+        $html .= 'question here: '. $qid;
         $html .= html_writer::end_div();
 
         return $html;

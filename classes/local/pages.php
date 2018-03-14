@@ -49,8 +49,9 @@ class pages  {
             for ($p = 1; $p <= $pagecount; $p++ ) {
                 $pid = self::get_page_id_from_sequence($simplelessonid, $p);
                 $data = self::get_page_record($pid);
-                // head 'em off at the pass, don't add link to self
-                if ($pid != $pageid) { 
+                // head 'em off at the pass, don't add link 
+                // to self
+                if ($pid != $pageid)  { 
                     $page_titles[$pid] = $data->pagetitle;  
                 }
            }
@@ -332,33 +333,17 @@ class pages  {
                 array('id' => $pageid));
     }
     /** 
-     * Given a category id
-     * return an array of questions from that category
+     * Given a page record id
+     * return its title
      *
-     * @param int $categoryid
-     * @return array of objects
+     * @param int $pageid
+     * @return String the title of the page
      */  
-    public static function get_questions($categoryid) {
+    public static function get_page_title($pageid) {
         global $DB;
-        return $DB->get_records('question',
-              array('category' => $categoryid));
+        return $DB->get_field('simplelesson_pages', 
+                'pagetitle',  
+                array('id' => $pageid));
     }
-    /** 
-     * Given a question id and page id
-     * save if data is unique
-     *
-     * @param object $qdata
-     * @return id of inserted record or false
-     */    
-    public static function save_question($qdata) {
-        global $DB;
-        $table = 'simplelesson_questions';
-        $condition = array('qid' => $qdata->qid, 
-                'pageid' =>$qdata->pageid);
-        // Check if this question was already added to this page
-        if (!$DB->get_record($table, $condition, IGNORE_MISSING)) {
-            return $DB->insert_record($table, $qdata);
-        }
-        return false;
-    }
+    
 }

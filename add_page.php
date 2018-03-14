@@ -56,7 +56,7 @@ $return_view = new moodle_url('/mod/simplelesson/view.php',
 // Page link data
 $page_titles = \mod_simplelesson\local\pages::fetch_page_titles(
                 $simplelessonid,
-                0);
+                0, true);
 
 //get the page editing form
 $mform = new simplelesson_edit_page_form(null, 

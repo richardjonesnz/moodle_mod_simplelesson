@@ -74,6 +74,7 @@ if ($data = $mform->get_data()) {
             if ($value != 0) {
                 $qdata->qid = $value;
                 $qdata->pageid = 0; // no page data yet
+                $qdata->simplelessonid = $simplelessonid;
                 $qdataid =
                         \mod_simplelesson\local\questions::
                         save_question($qdata);
