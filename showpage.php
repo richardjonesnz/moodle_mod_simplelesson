@@ -30,6 +30,7 @@ require_once($CFG->libdir.'/resourcelib.php');
 $courseid = required_param('courseid', PARAM_INT);
 $simplelessonid = required_param('simplelessonid', PARAM_INT); 
 $pageid = required_param('pageid', PARAM_INT);
+$mode = optional_param('mode', 'preview', PARAM_TEXT);
 
 $moduleinstance  = $DB->get_record('simplelesson', array('id' => $simplelessonid), '*', MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
@@ -64,8 +65,10 @@ $page_links = \mod_simplelesson\local\pages::fetch_page_links(
 
 // Now show this page
 $data = \mod_simplelesson\local\pages::get_page_record($pageid);
-$data->pagecontents = file_rewrite_pluginfile_urls($data->pagecontents, 
-        'pluginfile.php', $contextid, 'mod_simplelesson', 'pagecontents', 
+$data->pagecontents = file_rewrite_pluginfile_urls(
+        $data->pagecontents, 
+        'pluginfile.php', $contextid, 
+        'mod_simplelesson', 'pagecontents', 
         $pageid);
 
 // Run the content through format_text to enable streaming video
@@ -77,12 +80,43 @@ $data->pagecontents = format_text($data->pagecontents, $data->pagecontentsformat
 
 $show_index = (int) $moduleinstance->show_index;    
 echo $renderer->show_page($data, $show_index, $page_links);
-$question = \mod_simplelesson\local\questions::
+
+$questionid = \mod_simplelesson\local\questions::
         page_has_question($simplelessonid, $pageid);
 
-if ($question != 0) {
-    echo $renderer->show_question($question);
+// If there is a question and this is an attempt, show
+// the question, or just show a placeholder
+
+if ($questionid != 0) {
+    if ($mode == 'preview') {
+        echo $renderer->dummy_question($questionid);
+    } else {
+        $qubaid = \mod_simplelesson\local\attempts::
+                get_usageid($simplelessonid);
+        $quba = \question_engine::load_questions_usage_by_activity($qubaid);
+        //var_dump($quba); exit();
+        $options = \mod_simplelesson\local\displayoptions::get_options(100);
+    }
 }
+// Start the simplified question form.
+    echo html_writer::start_tag('form', array('method' => 'post',
+                'action' => $PAGE->url, 'enctype' => 'multipart/form-data',
+                'id' => 'responseform'));
+    echo html_writer::start_tag('div');
+    echo html_writer::empty_tag('input', array('type' => 'hidden',
+                'name' => 'sesskey', 'value' => sesskey()));
+    echo html_writer::empty_tag('input', array('type' => 'hidden',
+                'name' => 'slots', 'value' => 1));
+    echo html_writer::end_tag('div');
+    // Output the question.
+    echo $quba->render_question(1, $options, 1);
+    echo html_writer::end_tag('form');
+    $PAGE->requires->js_module('core_question_engine'); 
+    $PAGE->requires->strings_for_js(array(
+    'closepreview',
+    ), 'question');
+    $PAGE->requires->yui_module('moodle-question-preview', 'M.question.preview.init');
+
 echo $renderer->show_page_nav_links($data, $courseid);
 
 // If we have the capability, show the action links

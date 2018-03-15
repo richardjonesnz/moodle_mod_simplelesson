@@ -112,18 +112,18 @@ $firstpagetext = format_text($firstpagetext,
 $page_links = \mod_simplelesson\local\pages::fetch_page_links(
             $moduleinstance->id, $course->id, true);
 $has_pages = (count($page_links) != 0);
-
 $show_index = (int) $moduleinstance->show_index;
 
 // Fetch the firstpage stuff
 echo $renderer->fetch_firstpage($firstpagetext, 
         $show_index, $page_links);
+
 if ($has_pages) {
     // Get the record # for the first page.
     $pageid = \mod_simplelesson\local\pages::
             get_page_id_from_sequence(
             $moduleinstance->id, 1);
-    echo $renderer->fetch_firstpage_link($course->id, 
+    echo $renderer->fetch_firstpage_links($course->id, 
             $moduleinstance->id, $pageid);
 }
 

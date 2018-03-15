@@ -154,11 +154,10 @@ $questions = \mod_simplelesson\local\questions::
         fetch_questions($simplelessonid);
 echo $renderer->question_management(
         $courseid, $simplelessonid, $questions);
-echo $renderer->fetch_question_return_link($simplelessonid);
 
-// Add a question link
+// Add page links
 if(has_capability('mod/simplelesson:manage', $modulecontext)) {
-    echo $renderer->fetch_question_add_link($courseid, 
+    echo $renderer->fetch_question_page_links($courseid, 
             $simplelessonid);
 }
 

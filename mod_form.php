@@ -111,8 +111,23 @@ class mod_simplelesson_mod_form extends moodleform_mod {
                             1 => '1',2 => '2',3 => '3',4 => '4',5 => '5',);
         $mform->addElement('select', 'maxattempts', get_string('maxattempts', MOD_SIMPLELESSON_LANG), $attemptoptions);
         $mform->setType('maxattempts', PARAM_INT);
-        
-		// Grade.
+ 
+        // question behaviours
+        $behaviouroptions = array(
+                0 => get_string('immediatefeedback',
+                MOD_SIMPLELESSON_LANG),
+                1 => get_string('deferredfeedback'),
+                MOD_SIMPLELESSON_LANG));
+        $mform->addElement('select', 'behaviour', 
+                get_string('behaviour', MOD_SIMPLELESSON_LANG),
+                $behaviouroptions);
+        $mform->setType('behaviour', PARAM_INT);       
+		
+        // question usage field
+        $mform->addElement('hidden', 'qubaid', 0);
+        $mform->setType('qubaid', PARAM_INT);       
+
+        // Grade.
         $this->standard_grading_coursemodule_elements();
         
         //grade options

@@ -20,10 +20,12 @@
         <FIELD NAME="mingrade" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="completion condition mingrade"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="show_index" TYPE="int" LENGTH="2" NOTNULL="false"
-         UNSIGNED="true" SEQUENCE="false" /></FIELDS>
+        <FIELD NAME="show_index" TYPE="int" LENGTH="2" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" />
          <FIELD NAME="category" TYPE="int" LENGTH="2" NOTNULL="false" DEFAULT="0" 
-         UNSIGNED="true" SEQUENCE="false" /></FIELDS>
+         UNSIGNED="true" SEQUENCE="false" />
+         <FIELD NAME="behaviour" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" DEFAULT="immediatefeedback" COMMENT="Question behaviour"/>
+         <FIELD NAME="qubaid" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="Question usage id"/>
+       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
@@ -36,6 +38,7 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="qid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="question id from mdl_question"/>
         <FIELD NAME="pageid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="simplelesson page this question belongs to (if any)"/>
+        <FIELD NAME="simplelessonid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="simplelesson this question belongs to (if any)"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -66,7 +69,6 @@
         <FIELD NAME="pagetitle" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="" SEQUENCE="false"/>
         <FIELD NAME="pagecontents" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="pagecontentsformat" TYPE="int" LENGTH="2" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="qid" TYPE="int" LENGTH="9" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="18" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="18" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
       </FIELDS>

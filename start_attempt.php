@@ -16,7 +16,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Edit a lesson and its pages
+ * Start a simplelesson attempt (question asnwers recorded)
  *
  * @package   mod_simplelesson
  * @copyright 2018 Richard Jones https://richardnz.net
@@ -24,22 +24,28 @@
  */
 
 require_once('../../config.php');
-global $DB;
-//fetch URL parameters.
+require_once(dirname(__FILE__).'/lib.php');
+require_once($CFG->libdir.'/resourcelib.php');
+//fetch URL parameters
 $courseid = required_param('courseid', PARAM_INT);
 $simplelessonid = required_param('simplelessonid', PARAM_INT); 
-$sequence = optional_param('sequence', 0, PARAM_INT); 
-$action = optional_param('action', 'none', PARAM_TEXT);
+$pageid = required_param('pageid', PARAM_INT);
 
-// Set course related variables.
 $moduleinstance  = $DB->get_record('simplelesson', array('id' => $simplelessonid), '*', MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 $cm = get_coursemodule_from_instance('simplelesson', $simplelessonid, $courseid, false, MUST_EXIST);
 
-//set up the page
-$PAGE->set_url('/mod/simplelesson/edit.php', 
+$return_showpage = new moodle_url(
+        '/mod/simplelesson/showpage.php', 
         array('courseid' => $courseid, 
-              'simplelessonid' => $simplelessonid,));
+        'simplelessonid' => $simplelessonid, 
+        'pageid' => $pageid,
+        'mode' => 'attempt'));
+
+//set up the page
+$PAGE->set_url('/mod/simplelesson/start_attempt.php', 
+        array('courseid' => $courseid, 
+              'simplelessonid' => $simplelessonid));
 
 require_login($course, true, $cm);
 $coursecontext = context_course::instance($courseid);
@@ -47,25 +53,22 @@ $modulecontext = context_module::instance($cm->id);
 
 $PAGE->set_context($modulecontext);
 $PAGE->set_pagelayout('course');
+$PAGE->set_heading(format_string($course->fullname));
 
-$renderer = $PAGE->get_renderer('mod_simplelesson');
-echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('lesson_editing', MOD_SIMPLELESSON_LANG), 2);
+// Check for questions
+$question_entries = \mod_simplelesson\local\questions::
+        fetch_questions($moduleinstance->id);
 
-// Check the action:
-// The up and down arrows are only shown for the relevant
-// sequence positions so we don't have to check that
-if ( ($sequence != 0) && ($action != 'none') ) {
-    if($action == 'move_up') {
-    \mod_simplelesson\local\pages::move_page_up(
-            $simplelessonid, $sequence);                            
-    } else if ($action == 'move_down') { 
-    \mod_simplelesson\local\pages::move_page_down(
-            $simplelessonid, $sequence);                        
-    }
+if (!empty($question_entries)) {
+    $qubaid = \mod_simplelesson\local\attempts::create_usage(
+            $modulecontext, 
+            $moduleinstance->behaviour,
+            $question_entries,
+            $moduleinstance->id);  
 }
-echo $renderer->page_management($course->id, 
-        $moduleinstance, $modulecontext);
-echo $renderer->get_question_manage_link($courseid, $simplelessonid);
+redirect($return_showpage, 
+            get_string('starting_attempt', MOD_SIMPLELESSON_LANG), 2);
+
+echo $OUTPUT->header();
+echo 'put the cancel form in here';
 echo $OUTPUT->footer();
-return;

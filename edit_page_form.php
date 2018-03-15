@@ -66,12 +66,11 @@ class simplelesson_edit_page_form extends moodleform {
         $mform->addElement('hidden', 'simplelessonid', $this->_customdata['simplelessonid']);
         $mform->addElement('hidden', 'pageid', $this->_customdata['pageid']);
         $mform->addElement('hidden', 'sequence', $this->_customdata['sequence']);
-        
+
         $mform->setType('courseid', PARAM_INT);
         $mform->setType('simplelessonid', PARAM_INT);
         $mform->setType('pageid', PARAM_INT);
         $mform->setType('sequence', PARAM_INT);
-
         $this->add_action_buttons($cancel=true);
     }
 

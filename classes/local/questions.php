@@ -57,8 +57,8 @@ class questions  {
         global $DB;
         $table = 'simplelesson_questions';
         $condition = array('qid' => $qdata->qid, 
-                'pageid' =>$qdata->pageid);
-        // Check if this question was already added to this page
+                'simplelessonid' =>$qdata->simplelessonid);
+        // Check if this question was already added to this lesson
         if (!$DB->get_record($table, $condition, IGNORE_MISSING)) {
             return $DB->insert_record($table, $qdata);
         }
@@ -72,7 +72,7 @@ class questions  {
      */    
     public static function fetch_questions($simplelessonid) {
         global $DB;
-        $sql = "SELECT s.id, s.qid, s.pageid, q.name, q.questiontext
+        $sql = "SELECT s.id, s.qid, s.pageid, q.name, q.questiontext, q.defaultmark
                   FROM {simplelesson_questions} s 
                   JOIN {question} q ON s.qid = q.id 
                  WHERE s.simplelessonid = :slid";

@@ -78,9 +78,14 @@ if ($data = $mform->get_data()) {
                 $qdataid =
                         \mod_simplelesson\local\questions::
                         save_question($qdata);
+                if (!$qdataid) {
+                    redirect($return_view, 
+                    get_string(
+                    'duplicatequestion', MOD_SIMPLELESSON_LANG), 2);
+                }
             }
         }                    
-   }
+    }
 
     redirect($return_view, 
             get_string('questions_added', MOD_SIMPLELESSON_LANG), 2);

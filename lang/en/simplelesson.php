@@ -68,7 +68,8 @@ $string['simplelesson:itemedit'] = 'Edit items';
 
 // First page and page editing strings
 $string['addpage'] = 'Add a page';
-$string['gotofirstpage'] = 'Continue the lesson';
+$string['preview'] = 'Preview lesson';
+$string['attempt'] = 'Attempt lesson';
 $string['gotonextpage'] = 'Next page';
 $string['gotoprevpage'] = 'Previous page';
 $string['nopages'] = 'There are no pages yet, add a page';
@@ -104,6 +105,10 @@ $string['showpage'] = 'Preview page';
 $string['sequence'] = 'Sequence';
 $string['move_up'] = 'Move page up';
 $string['move_down'] = 'Move page down';
+$string['question'] = 'Question';
+
+// Attempts
+$string['starting_attempt'] = 'Starting attempt';
 
 // Question selection and placement (question management)
 $string['manage_questions'] = 'Manage lesson questions';
@@ -122,6 +127,8 @@ $string['selecting_page'] = 'Select page';
 $string['editing_question'] = 'Select the page for this question: {$a}';
 $string['setpage'] = 'Set page';
 $string['pagehasquestion'] = 'Another page already has this question'; 
+$string['duplicatequestion'] = 'Lesson already has this question'; 
+$string['dummy_question'] = 'This page will have a question'; 
 
 $string['id']='ID';
 $string['name']='Name';
@@ -129,8 +136,6 @@ $string['timecreated']='Time Created';
 $string['basicheading']='Basic Report';
 $string['overview']='Overview';
 $string['overview_help']='Overview Help';
-$string['view']='View';
-$string['preview']='Preview';
 $string['viewreports']='View Reports';
 $string['reports']='Reports';
 $string['basicreport']='Basic Report';
