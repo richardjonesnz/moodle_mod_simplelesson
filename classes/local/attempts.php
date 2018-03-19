@@ -30,7 +30,7 @@ require_once($CFG->libdir . '/questionlib.php');
 //use question_preview_options;
 defined('MOODLE_INTERNAL') || die();
 /**
- * Utility class for counting pages and so on
+ * Utility class for question usage actions
  *
  * @package    mod_simplelesson
  * @copyright  2018 Richard Jones https://richardnz.net
@@ -39,12 +39,13 @@ defined('MOODLE_INTERNAL') || die();
 class attempts  {
 
     /** 
+     * Creates the question usage for this simple lesson
      * 
-     * 
-     *
-     * @param 
-     * @param 
-     * @return 
+     * @param $context - module context 
+     * @param $behaviour - question behaviour
+     * @param $entries - questions selected by user (edit.php)
+     * @param $simplelessonid - module instance id
+     * @return $qubaid - the id of the question engine usage.
      */
     public static function create_usage($context, 
             $behaviour, $entries, $simplelessonid) {
@@ -60,8 +61,11 @@ class attempts  {
         foreach($entries as $entry) {
             
             $question_def = \question_bank::load_question($entry->qid);
-            // convert qid's to slots
-            $entry->qid = $quba->add_question($question_def, $entry->defaultmark);
+            // convert qid's to slots for pages with questions
+            if ($entry->pageid != 0) {
+                $entry->qid = $quba->add_question(
+                        $question_def, $entry->defaultmark);
+            }
         }
         $quba->start_all_questions();
         \question_engine::
@@ -72,10 +76,28 @@ class attempts  {
                     array('id' => $simplelessonid));
         return $qubaid;
     }
+    /**
+     * Get the slot numbers for the questions
+     *
+     * @param $entries - questions selected by user (edit.php)
+     * @return $slots - array of corresponding slot numbers.
+     *
+     */
+    public static function fetch_slot($entries, $pageid) {
+        $slot = 0;
+        foreach($entries as $entry) {
+            if ($entry->pageid == $pageid) {
+                $slot = $entry->qid;
+            }
+        }
+        return $slot;
+    } 
 
     /**
      * Get the usage id for a simplelesson instance
      *
+     * @param $simplelessonid - module instance id
+     * @return $qubaid - the question usage id associated with this lesson
      */
     public static function get_usageid($simplelessonid) {
         global $DB;

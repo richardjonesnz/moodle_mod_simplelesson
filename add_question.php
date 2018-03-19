@@ -19,6 +19,8 @@
  * Add a question to the lesson and optionally select the page
  * it will be shown on.
  *
+ * This page should have the option to select a category as well.
+ *
  * @package   mod_simplelesson
  * @copyright 2018 Richard Jones https://richardnz.net
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -51,6 +53,9 @@ $PAGE->set_pagelayout('course');
 
 $return_view = new moodle_url('/mod/simplelesson/view.php', 
         array('n' => $simplelessonid));
+$return_manage = new moodle_url('/mod/simplelesson/edit_questions.php', 
+        array('courseid' => $courseid,
+        'simplelessonid' => $simplelessonid));
 
 $questions = \mod_simplelesson\local\questions::
         get_questions($moduleinstance->category);
@@ -69,7 +74,7 @@ if ($data = $mform->get_data()) {
 // Save the checked questions in the simplelesson_questions table.
     $qdata = new stdClass;
     foreach ($data as $key => $value) {
-    // Any key starts qith q and is non-zero is a selected question.
+    // Any key starts with q and is non-zero is a selected question.
         if (substr($key, 0, 1) == 'q') {
             if ($value != 0) {
                 $qdata->qid = $value;
@@ -78,16 +83,12 @@ if ($data = $mform->get_data()) {
                 $qdataid =
                         \mod_simplelesson\local\questions::
                         save_question($qdata);
-                if (!$qdataid) {
-                    redirect($return_view, 
-                    get_string(
-                    'duplicatequestion', MOD_SIMPLELESSON_LANG), 2);
-                }
+
             }
         }                    
     }
 
-    redirect($return_view, 
+    redirect($return_manage, 
             get_string('questions_added', MOD_SIMPLELESSON_LANG), 2);
 }
 

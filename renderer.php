@@ -238,7 +238,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      * @param int $courseid
      * @return string html representation of navigation links
      */
-    public function show_page_nav_links($data, $courseid) {
+    public function show_page_nav_links($data, $courseid, $mode) {
         
         $links = array();
 
@@ -255,7 +255,8 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
             $prev_url = new moodle_url('/mod/simplelesson/showpage.php',
                         array('courseid' => $courseid, 
                         'simplelessonid' => $data->simplelessonid, 
-                        'pageid' => $data->prevpageid));
+                        'pageid' => $data->prevpageid,
+                        'mode' =>$mode));
             $links[] = html_writer::link($prev_url, 
                         get_string('gotoprevpage', MOD_SIMPLELESSON_LANG));
         
@@ -268,7 +269,8 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
             $next_url = new moodle_url('/mod/simplelesson/showpage.php',
                         array('courseid' => $courseid, 
                         'simplelessonid' => $data->simplelessonid, 
-                        'pageid' => $data->nextpageid));
+                        'pageid' => $data->nextpageid,
+                        'mode' =>$mode));
             $links[] = html_writer::link($next_url, 
                         get_string('gotonextpage', MOD_SIMPLELESSON_LANG));
         
@@ -419,25 +421,39 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
 
     }
     /**
-     * Returns HTML to display question management link
+     * Returns HTML to display question management links
      *
      * @param $courseid
      * @param $simplelessonid
-     * @return string
+     * @return string html code for list of links
      */
     public function get_question_manage_link($courseid, 
             $simplelessonid) {
+        
+        $html = '';
+        $links = array();
+        $html .= html_writer::start_div(
+                MOD_SIMPLELESSON_CLASS . '_action_links');
+
+        // Home link
+        $url = new moodle_url('/mod/simplelesson/view.php', 
+                array('n' => $simplelessonid,
+                      ));
+        $links[] = html_writer::link($url,get_string('homelink', MOD_SIMPLELESSON_LANG));
         
         $url = new moodle_url(
                 '/mod/simplelesson/edit_questions.php', 
                 array('courseid' => $courseid, 
                 'simplelessonid' => $simplelessonid));    
-        $link = html_writer::link($url, 
+        $links[] = html_writer::link($url, 
                 get_string('manage_questions', 
                 MOD_SIMPLELESSON_LANG));
-        return html_writer::div($link, MOD_SIMPLELESSON_CLASS . '_action_links');
-    }
 
+        $html .= html_writer::alist($links, null, 'ul');
+        $html .= html_writer::end_div();
+
+        return $html;
+    }
 
  /**
      * Returns HTML to display action links for a page
@@ -602,7 +618,8 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         return $html;
     } 
     /**
-     * Display the question on the page
+     * Display a dummy question on the page
+     * This is a placeholder for th review stage
      * @param int $qid - the id of the question 
      * @return string, html representing the question
      */
@@ -615,5 +632,47 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $html .= html_writer::end_div();
 
         return $html;
-    }   
+    } 
+    /**
+     *
+     * render the question form on a page
+     *
+     */
+    public function render_question_form(
+            $actionurl, $options, $slot, $quba) {
+
+        $headtags = '';
+        $headtags .= $quba->render_question_head_html($slot);
+        $headtags .= question_engine::initialise_js();  
+        
+        // Start the question form.
+        $html = html_writer::start_tag('form', 
+                array('method' => 'post', 'action' => $actionurl,
+                'enctype' => 'multipart/form-data', 
+                'id' => 'responseform'));
+        $html .= html_writer::start_tag('div');
+        $html .= html_writer::empty_tag('input', 
+                array('type' => 'hidden', 
+                'name' => 'sesskey', 'value' => sesskey()));
+        $html .= html_writer::empty_tag('input', 
+                array('type' => 'hidden', 
+                'name' => 'slots', 'value' => $slot));
+        $html .= html_writer::end_tag('div');
+
+        // Output the question.
+        $html .= $quba->render_question($slot, $options, 1);
+
+        // Finish the question form.
+        $html .= html_writer::start_tag('div');
+/* Action buttons on the form
+$html .= html_writer::empty_tag('input', array('type' => 'submit',
+            'name' => 'next', 'value' => get_string('nextquestion', 'qpractice')));
+$html .= html_writer::empty_tag('input', array('type' => 'submit',
+            'name' => 'finish', 'value' => get_string('stoppractice', 'qpractice')));
+*/
+        $html .= html_writer::end_tag('div');
+        $html .= html_writer::end_tag('form');
+
+        return $html;  
+    }
 }

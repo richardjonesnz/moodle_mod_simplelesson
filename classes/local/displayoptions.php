@@ -39,21 +39,17 @@ class displayoptions  {
      * @param int $maxvariant The maximum number of variants previewable.
      * @return array $options the display options
      */
-    public static function get_options($maxvariant) {
+    public static function get_options($feedback) {
 
         $options = array();
         // Question options - note just 1 question in the attempt
         $options = new \question_display_options();
         $options->marks = \question_display_options::MAX_ONLY;
-        $options->markdp = 0; // Display marks to 2 decimal places.
-        $options->feedback = 'immediatefeedback';
+        $options->markdp = 0; // Mark display
+        $options->feedback = $feedback;
         $options->generalfeedback = \question_display_options::HIDDEN;
-        $options->variant = $maxvariant;
-        if ($options->variant) {
-            $options->variant = min($maxvariant, max(1, $options->variant));
-        }  else {
-            $options->variant = rand(1, $maxvariant);
-        } 
+        $options->variant = 100;
+        
         return $options;
     }
 }
