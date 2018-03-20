@@ -77,24 +77,6 @@ class attempts  {
         return $qubaid;
     }
     /**
-     * Get the slot numbers for the questions
-     * Need to relate slot sequence to page id
-     *
-     * @param $entries - questions selected by user (edit.php)
-     * @return $slots - array of corresponding slot numbers.
-     *
-     */
-    public static function fetch_slot($entries, $pageid) {
-        $slot = 0;
-        foreach($entries as $entry) {
-            if ($entry->pageid == $pageid) {
-                $slot = $entry->qid;
-            }
-        }
-        return $slot;
-    } 
-
-    /**
      * Get the usage id for a simplelesson instance
      *
      * @param $simplelessonid - module instance id

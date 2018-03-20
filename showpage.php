@@ -103,19 +103,34 @@ if ($questionid != 0) {
         echo $renderer->dummy_question(
                 $questionid, $mode);
     } else {
+        // Sort the usage and slots
         $qubaid = \mod_simplelesson\local\attempts::
                 get_usageid($simplelessonid);
         $quba = \question_engine::load_questions_usage_by_activity($qubaid);
         // get the slot for the lesson and page
         $slot = mod_simplelesson\local\questions::get_slot($simplelessonid, $pageid);
-        echo 'slot: ' . $slot;
+
         $options = \mod_simplelesson\local\displayoptions::
                 get_options($feedback); 
 
         $actionurl = $PAGE->url;
+
         echo $renderer->render_question_form(
                 $actionurl, $options, $slot, $quba);
         
+        // Check if data submitted
+        if (data_submitted()) {
+            $transaction = $DB->start_delegated_transaction();
+            $quba->finish_question($slot);
+            question_engine::save_questions_usage_by_activity($quba);
+            // Record results here  
+            $transaction->allow_commit(); 
+            redirect($actionurl);
+             
+        } else {
+            // Probably just re-visiting or refreshing page
+            $question = $quba->get_question($slot);
+        }
     }
 }
 

@@ -636,7 +636,6 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $html .= html_writer::start_div(
                 MOD_SIMPLELESSON_CLASS . '_page_question');
         $html .= get_string('dummy_question', MOD_SIMPLELESSON_LANG);
-        $html .= '<p>'. $questionid . '<p>';
         $html .= html_writer::end_div();
 
         return $html;
