@@ -106,6 +106,7 @@ $string['sequence'] = 'Sequence';
 $string['move_up'] = 'Move page up';
 $string['move_down'] = 'Move page down';
 $string['question'] = 'Question';
+$string['question_name'] = 'Name';
 
 // Attempts
 $string['starting_attempt'] = 'Starting attempt';

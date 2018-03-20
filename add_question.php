@@ -58,7 +58,7 @@ $return_manage = new moodle_url('/mod/simplelesson/edit_questions.php',
         'simplelessonid' => $simplelessonid));
 
 $questions = \mod_simplelesson\local\questions::
-        get_questions($moduleinstance->category);
+        get_questions_from_category($moduleinstance->category);
 //var_dump($questions);
 $mform = new simplelesson_add_question_form(null, 
         array('courseid' => $courseid, 

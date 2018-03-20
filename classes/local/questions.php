@@ -40,7 +40,7 @@ class questions  {
      * @param int $categoryid
      * @return array of objects
      */  
-    public static function get_questions($categoryid) {
+    public static function get_questions_from_category($categoryid) {
         global $DB;
         return $DB->get_records('question',
               array('category' => $categoryid));
@@ -129,24 +129,25 @@ class questions  {
      */  
     public static function set_slots($simplelessonid) {
         global $DB;
-        $pagecount = \mod_simplelesson\local\pages::
-                count_pages($simplelessonid);
+
+        // Get the records to change in order of sequence
+        // Using the pageid to avoid setting null pageid's
+        $sql = "SELECT q.id, q.qid, q.pageid, q.slot
+                  FROM {simplelesson_questions} q 
+                  JOIN {simplelesson_pages} p ON q.pageid = p.id
+                 WHERE q.simplelessonid = :slid
+              ORDER BY p.sequence ASC";
+        
+        $questions = $DB->get_records_sql($sql,
+                array('slid' => $simplelessonid));
+        // Allocate slots to those page which have questions        
         $slot = 1;
-        for ($p = 1; $p <= $pagecount; $p++) {
-            $pageid = 
-                    \mod_simplelesson\local\pages::
-                    get_page_id_from_sequence(
-                    $simplelessonid,$p);
-            if (self::page_has_question($simplelessonid, 
-                    $pageid)) {
-                $data = $DB->get_record('simplelesson_questions', 
-                        array('simplelessonid' => $simplelessonid,
-                        'pageid' => $pageid), '*', MUST_EXIST);
-                $data->slot = $slot;
-                $DB->update_record('simplelesson_questions', $data);
-                $slot++;
-            }
+        foreach($questions as $question) {
+            $question->slot = $slot;
+            $DB->update_record('simplelesson_questions', $question);
+            $slot++;
         }
+        //var_dump($questions);exit();
     }  
     /** 
      * Given a simplelessonid and pageid 
@@ -159,10 +160,10 @@ class questions  {
     public static function get_slot($simplelessonid, 
             $pageid) {
         global $DB;
-            return $DB->get_field('simplelesson_questions', 
-                    'slot', array(
-                    'simplelessonid' => $simplelessonid,
-                    'pageid' => $pageid));
+        return $DB->get_field('simplelesson_questions', 
+                'slot', array(
+                'simplelessonid' => $simplelessonid,
+                'pageid' => $pageid));
     }  
     /** 
      * Given a simplelesson and page find out if
@@ -183,5 +184,19 @@ class questions  {
             return 0;
         }   
         return $q->qid;
-    }      
+    } 
+    /** 
+     * Given a question id find the name
+     *
+     * @param int $qid - the question id
+     * @return string $name the name of the question
+     */  
+    public static function fetch_question_name($qid) {
+        global $DB;
+        $data = $DB->get_record('question',
+                  array('id' => $qid),
+                  'name', MUST_EXIST);
+        return $data->name;
+    } 
+
 }

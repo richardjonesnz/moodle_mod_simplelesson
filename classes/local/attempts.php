@@ -61,9 +61,9 @@ class attempts  {
         foreach($entries as $entry) {
             
             $question_def = \question_bank::load_question($entry->qid);
-            // convert qid's to slots for pages with questions
+            // add questions that have page id's
             if ($entry->pageid != 0) {
-                $entry->qid = $quba->add_question(
+                $id = $quba->add_question(
                         $question_def, $entry->defaultmark);
             }
         }

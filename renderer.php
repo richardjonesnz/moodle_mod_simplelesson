@@ -364,11 +364,13 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
                 get_string('prevpage', MOD_SIMPLELESSON_LANG),
                 get_string('nextpage', MOD_SIMPLELESSON_LANG),
                 get_string('question', MOD_SIMPLELESSON_LANG),
+                get_string('question_name', MOD_SIMPLELESSON_LANG),
                 get_string('actions', MOD_SIMPLELESSON_LANG));
         $table->align = 
                 array('left', 'left', 'left', 
-                'left', 'left', 'left');
-        $table->wrap = array('', 'nowrap', '', 'nowrap');
+                'left', 'left', 'left', 'left');
+        $table->wrap = 
+                array('', 'nowrap', '', 'nowrap', '', '','');
         $table->tablealign = 'center';
         $table->cellspacing = 0;
         $table->cellpadding = '2px';
@@ -406,6 +408,12 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
             $data[] = $prevpage;
             $data[] = $nextpage;
             $data[] = $qid;
+            if ($qid != 0) {
+                $data[] = mod_simplelesson\local\questions::
+                        fetch_question_name($qid);
+            } else {
+                $data[] = '-';
+            }
             if(has_capability('mod/simplelesson:manage', 
                     $context)) {
                 $data[] = $this->page_action_links(

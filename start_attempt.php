@@ -68,6 +68,7 @@ if (!empty($question_entries)) {
 }
 // save slots here
 \mod_simplelesson\local\questions::set_slots($simplelessonid);
+
 redirect($return_showpage, 
             get_string('starting_attempt', MOD_SIMPLELESSON_LANG), 2);
 
