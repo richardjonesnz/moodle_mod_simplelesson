@@ -121,6 +121,50 @@ class questions  {
                     array('id' => $data->id));
     }  
     /** 
+     * Given a simplelessonid update the slots field
+     * for the lesson pages.
+     *
+     * @param int $simplelessonid the module instance id
+     * @return none
+     */  
+    public static function set_slots($simplelessonid) {
+        global $DB;
+        $pagecount = \mod_simplelesson\local\pages::
+                count_pages($simplelessonid);
+        $slot = 1;
+        for ($p = 1; $p <= $pagecount; $p++) {
+            $pageid = 
+                    \mod_simplelesson\local\pages::
+                    get_page_id_from_sequence(
+                    $simplelessonid,$p);
+            if (self::page_has_question($simplelessonid, 
+                    $pageid)) {
+                $data = $DB->get_record('simplelesson_questions', 
+                        array('simplelessonid' => $simplelessonid,
+                        'pageid' => $pageid), '*', MUST_EXIST);
+                $data->slot = $slot;
+                $DB->update_record('simplelesson_questions', $data);
+                $slot++;
+            }
+        }
+    }  
+    /** 
+     * Given a simplelessonid and pageid 
+     * return the slot number
+     *
+     * @param int $simplelesson the module instance
+     * @param int $pageid the page
+     * @return int a slot number from the table
+     */  
+    public static function get_slot($simplelessonid, 
+            $pageid) {
+        global $DB;
+            return $DB->get_field('simplelesson_questions', 
+                    'slot', array(
+                    'simplelessonid' => $simplelessonid,
+                    'pageid' => $pageid));
+    }  
+    /** 
      * Given a simplelesson and page find out if
      * it has a question entry in the questions table
      *

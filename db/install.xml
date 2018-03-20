@@ -35,10 +35,11 @@
     </TABLE>
     <TABLE NAME="simplelesson_questions" COMMENT="Associates question id with page id">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="qid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="question id from mdl_question"/>
-        <FIELD NAME="pageid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="simplelesson page this question belongs to (if any)"/>
-        <FIELD NAME="simplelessonid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="simplelesson this question belongs to (if any)"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="qid" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="question id from mdl_question"/>
+        <FIELD NAME="pageid" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="simplelesson page this question belongs to (if any)"/>
+        <FIELD NAME="simplelessonid" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="simplelesson this question belongs to (if any)"/>
+        <FIELD NAME="slot" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="question usage attempt slot"/>      
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

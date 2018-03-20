@@ -84,11 +84,13 @@ $formatoptions->overflowdiv = true;
 $formatoptions->context = $modulecontext;
 $data->pagecontents = format_text($data->pagecontents, $data->pagecontentsformat, $formatoptions);
 
+// Don't show the index during an attempt
 if ($mode != 'attempt') {
     $show_index = (int) $moduleinstance->show_index;    
 } else {
     $show_index = 0;
 }
+
 echo $renderer->show_page($data, $show_index, $page_links);
 
 $questionid = \mod_simplelesson\local\questions::
@@ -96,20 +98,16 @@ $questionid = \mod_simplelesson\local\questions::
 
 // If there is a question and this is an attempt, show
 // the question, or just show a placeholder
-
 if ($questionid != 0) {
     if ($mode == 'preview') {
         echo $renderer->dummy_question(
                 $questionid, $mode);
     } else {
-        // Get the slot for this page, one question per page
-        // The slot number is the same as the page sequence
-        $slot = \mod_simplelesson\local\pages::
-                get_page_sequence_from_id(
-                $simplelessonid, $pageid);
         $qubaid = \mod_simplelesson\local\attempts::
                 get_usageid($simplelessonid);
         $quba = \question_engine::load_questions_usage_by_activity($qubaid);
+        // get the slot for the lesson and page
+        $slot = mod_simplelesson\local\questions::get_slot($simplelessonid, $pageid);
         echo 'slot: ' . $slot;
         $options = \mod_simplelesson\local\displayoptions::
                 get_options($feedback); 

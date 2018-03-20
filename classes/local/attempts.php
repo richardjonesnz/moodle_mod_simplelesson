@@ -78,6 +78,7 @@ class attempts  {
     }
     /**
      * Get the slot numbers for the questions
+     * Need to relate slot sequence to page id
      *
      * @param $entries - questions selected by user (edit.php)
      * @return $slots - array of corresponding slot numbers.
