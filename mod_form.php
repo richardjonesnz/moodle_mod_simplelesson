@@ -114,14 +114,14 @@ class mod_simplelesson_mod_form extends moodleform_mod {
  
         // question behaviours
         $behaviouroptions = array(
-                0 => get_string('immediatefeedback',
+                'immediatefeedback' => get_string('immediatefeedback',
                 MOD_SIMPLELESSON_LANG),
-                1 => get_string('deferredfeedback'),
+                'deferredfeedback' => get_string('deferredfeedback',
                 MOD_SIMPLELESSON_LANG));
         $mform->addElement('select', 'behaviour', 
                 get_string('behaviour', MOD_SIMPLELESSON_LANG),
                 $behaviouroptions);
-        $mform->setType('behaviour', PARAM_INT);       
+        $mform->setType('behaviour', PARAM_TEXT);            
 		
         // question usage field
         $mform->addElement('hidden', 'qubaid', 0);

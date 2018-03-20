@@ -55,6 +55,9 @@ $string['unlimited'] ='unlimited';
 $string['show_index'] ='Display page index';
 $string['show_index_text'] ='Will display if checked';
 $string['edit_settings'] ='Edit settings';
+$string['behaviour'] ='Question behaviour';
+$string['immediatefeedback'] ='Immediate feedback';
+$string['deferredfeedback'] ='Deferred feedback';
 
 // Admin settings page
 $string['someadminsetting'] = 'Some Admin Setting';
@@ -145,7 +148,6 @@ $string['exportexcel']='Export to CSV';
 $string['mingradedetails'] = 'The minimum grade required to "complete" this activity.';
 $string['mingrade'] = 'Minimum Grade';
 $string['deletealluserdata'] = 'Delete all user data';
-
 $string['gradeoptions'] ='Grade Options';
 $string['gradenone'] ='No grade';
 $string['gradelowest'] ='lowest scoring attempt';

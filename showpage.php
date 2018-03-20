@@ -125,6 +125,9 @@ if ($questionid != 0) {
             question_engine::save_questions_usage_by_activity($quba);
             // Record results here  
             $transaction->allow_commit(); 
+            
+            // Get a warning because the page
+            // was already started
             redirect($actionurl);
              
         } else {
