@@ -88,4 +88,21 @@ class attempts  {
                 'qubaid',
                 array('id' => $simplelessonid));
     }
+    /**
+     * Return the wanted row from question attempts
+     *
+     * @param $qubaid usage id
+     * @param $slot question attempt slot
+     * @return object corresponding row in question attempts
+     */
+    public static function get_question_attempt_id(
+            $qubaid, $slot) {
+        global $DB;
+
+        $data = $DB->get_record('question_attempts',
+                  array('questionusageid' => $qubaid, 
+                  'slot' => $slot),
+                  '*', MUST_EXIST);
+        return $data;
+    }
 }

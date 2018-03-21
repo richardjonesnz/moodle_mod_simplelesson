@@ -422,9 +422,10 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
             $nextpage = \mod_simplelesson\local\pages::
                     get_page_sequence_from_id($simplelesson->id,
                     $all_data->nextpageid);
-            $qid = \mod_simplelesson\local\questions::
+            $q = \mod_simplelesson\local\questions::
                     page_has_question($simplelesson->id,
                     $pageid);
+            $qid = $q->id;
             $data[] = $all_data->sequence;        
             $data[] = $all_data->pagetitle;
             $data[] = $prevpage;
@@ -668,7 +669,8 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      *
      */
     public function render_question_form(
-            $actionurl, $options, $slot, $quba, $deferred) {
+            $actionurl, $options, $slot, $quba, 
+            $deferred, $starttime) {
 
         $headtags = '';
         $headtags .= $quba->render_question_head_html($slot);
@@ -686,6 +688,9 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $html .= html_writer::empty_tag('input', 
                 array('type' => 'hidden', 
                 'name' => 'slots', 'value' => $slot));
+        $html .= html_writer::empty_tag('input', 
+                array('type' => 'hidden', 
+                'name' => 'starttime', 'value' => $starttime));
         $html .= html_writer::end_tag('div');
 
         // Output the question.

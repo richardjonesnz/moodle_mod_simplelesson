@@ -171,7 +171,7 @@ class questions  {
      *
      * @param int $simplelessonid
      * @param int $pageid
-     * @return int the id of the question or 0
+     * @return object id of the questions table object
      */  
     public static function page_has_question($simplelessonid,
             $pageid) {
@@ -179,11 +179,8 @@ class questions  {
         $q = $DB->get_record('simplelesson_questions',
                   array('pageid' => $pageid, 
                   'simplelessonid' => $simplelessonid),
-                  'qid', IGNORE_MISSING);
-        if (!$q) {
-            return 0;
-        }   
-        return $q->qid;
+                  '*', IGNORE_MISSING);
+        return $q;
     } 
     /** 
      * Given a question id find the name

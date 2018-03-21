@@ -45,7 +45,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="simplelesson_attempt" COMMENT="user attempt data for simplelesson">
+    <TABLE NAME="simplelesson_attempts" COMMENT="user attempt data for simplelesson">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Course simplelesson activity belongs to"/>

@@ -85,7 +85,7 @@ class restore_simplelesson_activity_structure_step extends restore_activity_stru
     }
 
 	
-	protected function process_simplelesson_attempt($data) {
+	protected function process_simplelesson_attempts($data) {
         global $DB;
 
         $data = (object)$data;

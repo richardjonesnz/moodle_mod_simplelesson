@@ -34,7 +34,8 @@ $courseid = required_param('courseid', PARAM_INT);
 $simplelessonid = required_param('simplelessonid', PARAM_INT); 
 $pageid = required_param('pageid', PARAM_INT);
 $mode = optional_param('mode', 'preview', PARAM_TEXT);
-
+$starttime = optional_param('starttime', 0, PARAM_INT);
+global $USER;
 // Get the question feedback type
 //$config = get_config('mod_simplelesson');
 //$feedback = $config->feedback;
@@ -71,9 +72,9 @@ $page_links = \mod_simplelesson\local\pages::fetch_page_links(
         $moduleinstance->id, $course->id, false);
 
 // Sort the usage and slots
-$questionid = \mod_simplelesson\local\questions::
+$question_entry = \mod_simplelesson\local\questions::
         page_has_question($simplelessonid, $pageid);
-if ($questionid != 0) {
+if ($question_entry) {
     $qubaid = \mod_simplelesson\local\attempts::
             get_usageid($simplelessonid);
     $quba = \question_engine::load_questions_usage_by_activity($qubaid);
@@ -86,21 +87,33 @@ if ($questionid != 0) {
             get_options($feedback);
     // Actually not allowing deferred feedback (yet)
     $deferred = $options->feedback == 'deferredfeedback';
-    $actionurl = $PAGE->url;
 } else {
     $slot = 0;
 }
+$actionurl = $PAGE->url;
 
 // Check if data submitted
-if (data_submitted()) {
+if (data_submitted() && confirm_sesskey()) {
     $timenow = time();
     $transaction = $DB->start_delegated_transaction();
     $quba = \question_engine::load_questions_usage_by_activity($qubaid);
     // $quba->finish_question($slot);
     $quba->process_all_actions($timenow);
     question_engine::save_questions_usage_by_activity($quba);
-    // Record results here  
     $transaction->allow_commit(); 
+    
+    // Record results here for each answer
+    $qdata = \mod_simplelesson\local\attempts::
+            get_question_attempt_id($qubaid, $slot); 
+    $answer_data = new stdClass();
+    $answer_data->qatid = $qdata->id;           
+    $answer_data->courseid = $courseid;
+    $answer_data->userid = $USER->id;
+    $answer_data->slqid = $question_entry->id;
+    $answer_data->starttime = $starttime;
+    $answer_data->endtime = $timenow;
+    $DB->insert_record('simplelesson_answers', $answer_data);    
+
     redirect($actionurl);
              
 } else if ($slot !=0) {
@@ -139,7 +152,8 @@ echo $renderer->show_page($data, $show_index, $page_links);
 if ($slot != 0) {
     if ($mode == 'attempt') {
         echo $renderer->render_question_form(
-                $actionurl, $options, $slot, $quba, $deferred);
+                $actionurl, $options, $slot, $quba, 
+                $deferred, time());
     } else {
         echo $renderer->dummy_question(
                 $questionid, $mode);

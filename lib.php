@@ -34,7 +34,7 @@ defined('MOODLE_INTERNAL') || die();
 define('MOD_SIMPLELESSON_FRANKY','mod_simplelesson');
 define('MOD_SIMPLELESSON_LANG','mod_simplelesson');
 define('MOD_SIMPLELESSON_TABLE','simplelesson');
-define('MOD_SIMPLELESSON_USERTABLE','simplelesson_attempt');
+define('MOD_SIMPLELESSON_USERTABLE','simplelesson_attempts');
 define('MOD_SIMPLELESSON_MODNAME','simplelesson');
 define('MOD_SIMPLELESSON_URL','/mod/simplelesson');
 define('MOD_SIMPLELESSON_CLASS','mod_simplelesson');
