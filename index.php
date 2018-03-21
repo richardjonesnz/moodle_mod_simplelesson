@@ -16,17 +16,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This is a one-line short description of the file
+ * Moodle mod Simplelesson
  *
- * You can have a rather longer description of the file as well,
- * if you like, and it can span multiple lines.
+ * A simplified version of the Lesson mod which also allows
+ * questions from the question bank to be included
  *
  * @package    mod_simplelesson
- * @copyright 2015 Justin Hunt, modified 2018 Richard Jones https://richardnz.net
+ * @copyright 2015 Justin Hunt, 2013 Jayesh Anandani, 2018 Richard Jones
+ * Some codified from mod pairwork and mod qpractice.
+ * @link https://richardnz.net
+ *  
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-/// Replace simplelesson with the name of your module and remove this line
 
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');

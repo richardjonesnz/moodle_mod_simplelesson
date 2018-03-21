@@ -250,7 +250,6 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $links[] = html_writer::link($return_view, 
                     get_string('homelink', MOD_SIMPLELESSON_LANG));
         
-        
         if ($data->prevpageid != 0) {
             $prev_url = new moodle_url('/mod/simplelesson/showpage.php',
                         array('courseid' => $courseid, 
@@ -294,7 +293,30 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         
         return $html;    
     }
+    /**
+     * Returns the html for the link from last page
+     * to summary page
+     * @param int $mode preview or attempt
+     * @return string
+     */
+    public function show_last_page_link(
+            $courseid, $simplelessonid, $mode) {
 
+        $html = '';
+        $html .= html_writer::start_div(
+                MOD_SIMPLELESSON_CLASS . '_page');
+        $html .= '<p>' . get_string('gotosummary',
+                MOD_SIMPLELESSON_LANG);
+        $url = new moodle_url('/mod/simplelesson/summary.php', 
+                array('n' => $simplelessonid,
+                'mode' => $mode));
+        $html .= html_writer::link($url,
+                get_string('end_lesson', MOD_SIMPLELESSON_LANG));
+        $html .= '</p>';
+        $html .= html_writer::end_div();
+
+        return $html;
+    }
     /**
      * Returns the link to edit the current page
      *
@@ -646,7 +668,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      *
      */
     public function render_question_form(
-            $actionurl, $options, $slot, $quba) {
+            $actionurl, $options, $slot, $quba, $deferred) {
 
         $headtags = '';
         $headtags .= $quba->render_question_head_html($slot);
@@ -667,16 +689,27 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $html .= html_writer::end_tag('div');
 
         // Output the question.
-        $html .= $quba->render_question($slot, $options, 1);
+        $html .= $quba->render_question($slot, $options, $slot);
 
         // Finish the question form.
         $html .= html_writer::start_tag('div');
-/* Action buttons on the form
-$html .= html_writer::empty_tag('input', array('type' => 'submit',
-            'name' => 'next', 'value' => get_string('nextquestion', 'qpractice')));
-$html .= html_writer::empty_tag('input', array('type' => 'submit',
-            'name' => 'finish', 'value' => get_string('stoppractice', 'qpractice')));
-*/
+        // Action button on the form
+        // We only need this for deferred feedback I think
+        // So we won't implelemnt for now
+        /*
+        if ($deferred) {
+            $html .= html_writer::empty_tag(
+                    'input', array('type' => 'submit',
+                    'name' => 'submit', 
+                    'value' => 
+                    get_string('submit', MOD_SIMPLELESSON_LANG)));
+        }
+        // put this button option in mod form (allow terminate)
+        $html .= html_writer::empty_tag(
+                'input', array('type' => 'submit',
+                'name' => 'finish', 'value' => 
+                get_string('stoplesson', MOD_SIMPLELESSON_LANG)));
+        */
         $html .= html_writer::end_tag('div');
         $html .= html_writer::end_tag('form');
 

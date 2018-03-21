@@ -49,7 +49,7 @@ class displayoptions  {
         $options->feedback = $feedback;
         $options->generalfeedback = \question_display_options::HIDDEN;
         $options->variant = 100;
-        
+        //var_dump($options);exit();
         return $options;
     }
 }

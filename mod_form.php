@@ -30,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/course/moodleform_mod.php');
 require_once($CFG->dirroot.'/mod/simplelesson/lib.php');
-
+require_once($CFG->libdir . '/questionlib.php');
 /**
  * Module instance settings form
  */
@@ -111,7 +111,12 @@ class mod_simplelesson_mod_form extends moodleform_mod {
                             1 => '1',2 => '2',3 => '3',4 => '4',5 => '5',);
         $mform->addElement('select', 'maxattempts', get_string('maxattempts', MOD_SIMPLELESSON_LANG), $attemptoptions);
         $mform->setType('maxattempts', PARAM_INT);
- 
+        // Might use this later:
+        $boptions = question_engine::get_behaviour_options('immediatefeedback');
+        // Not using deferred options (yet)
+        unset($boptions['deferredfeedback']);
+        unset($boptions['deferredcbm']);
+        //returns list of available behavious options
         // question behaviours
         $behaviouroptions = array(
                 'immediatefeedback' => get_string('immediatefeedback',
@@ -120,7 +125,7 @@ class mod_simplelesson_mod_form extends moodleform_mod {
                 MOD_SIMPLELESSON_LANG));
         $mform->addElement('select', 'behaviour', 
                 get_string('behaviour', MOD_SIMPLELESSON_LANG),
-                $behaviouroptions);
+                $boptions);
         $mform->setType('behaviour', PARAM_TEXT);            
 		
         // question usage field

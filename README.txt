@@ -12,6 +12,8 @@ For summative activities use the quiz or lesson.
 
 Note: I've removed some of Justin's niftier features such as the module.js and tab navigation.  Atleast for now.
 
+Some code is modified from mod_qpractice (c) 2013 Jayesh Anandani
+
 Richard Jones
 richardnz@outlook.com
 

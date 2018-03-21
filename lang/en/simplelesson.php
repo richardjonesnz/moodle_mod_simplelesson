@@ -95,6 +95,8 @@ $string['getnextpage'] = 'Select link to next page';
 $string['getprevpage'] = 'Select link to previous page';
 $string['afterpage'] = 'Add after page';
 $string['nolink'] = 'None';
+$string['end_lesson'] = 'Exit lesson';
+$string['gotosummary'] = 'Go to the summary page: ';
 
 // Lesson editing (page management)
 $string['edit_lesson'] = 'Simple Lesson editing';

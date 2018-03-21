@@ -20,12 +20,15 @@
  *
  * @package   mod_simplelesson
  * @copyright 2018 Richard Jones https://richardnz.net
+ * With code modified from mod qpractice 
+ * @copyright  2013 Jayesh Anandani
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require_once('../../config.php');
 require_once(dirname(__FILE__).'/lib.php');
 require_once($CFG->libdir.'/resourcelib.php');
+
 //fetch URL parameters
 $courseid = required_param('courseid', PARAM_INT);
 $simplelessonid = required_param('simplelessonid', PARAM_INT); 
@@ -67,6 +70,44 @@ $renderer = $PAGE->get_renderer('mod_simplelesson');
 $page_links = \mod_simplelesson\local\pages::fetch_page_links(
         $moduleinstance->id, $course->id, false);
 
+// Sort the usage and slots
+$questionid = \mod_simplelesson\local\questions::
+        page_has_question($simplelessonid, $pageid);
+if ($questionid != 0) {
+    $qubaid = \mod_simplelesson\local\attempts::
+            get_usageid($simplelessonid);
+    $quba = \question_engine::load_questions_usage_by_activity($qubaid);
+    // get the slot for the lesson and page
+    $slot = mod_simplelesson\local\questions::
+            get_slot($simplelessonid, $pageid);
+
+    // Display and feedback options
+    $options = \mod_simplelesson\local\displayoptions::
+            get_options($feedback);
+    // Actually not allowing deferred feedback (yet)
+    $deferred = $options->feedback == 'deferredfeedback';
+    $actionurl = $PAGE->url;
+} else {
+    $slot = 0;
+}
+
+// Check if data submitted
+if (data_submitted()) {
+    $timenow = time();
+    $transaction = $DB->start_delegated_transaction();
+    $quba = \question_engine::load_questions_usage_by_activity($qubaid);
+    // $quba->finish_question($slot);
+    $quba->process_all_actions($timenow);
+    question_engine::save_questions_usage_by_activity($quba);
+    // Record results here  
+    $transaction->allow_commit(); 
+    redirect($actionurl);
+             
+} else if ($slot !=0) {
+    // Probably just re-visiting or refreshing page
+    $question = $quba->get_question($slot);
+}
+
 echo $OUTPUT->header();
 
 // Now show this page
@@ -93,48 +134,22 @@ if ($mode != 'attempt') {
 
 echo $renderer->show_page($data, $show_index, $page_links);
 
-$questionid = \mod_simplelesson\local\questions::
-        page_has_question($simplelessonid, $pageid);
-
 // If there is a question and this is an attempt, show
 // the question, or just show a placeholder
-if ($questionid != 0) {
-    if ($mode == 'preview') {
+if ($slot != 0) {
+    if ($mode == 'attempt') {
+        echo $renderer->render_question_form(
+                $actionurl, $options, $slot, $quba, $deferred);
+    } else {
         echo $renderer->dummy_question(
                 $questionid, $mode);
-    } else {
-        // Sort the usage and slots
-        $qubaid = \mod_simplelesson\local\attempts::
-                get_usageid($simplelessonid);
-        $quba = \question_engine::load_questions_usage_by_activity($qubaid);
-        // get the slot for the lesson and page
-        $slot = mod_simplelesson\local\questions::get_slot($simplelessonid, $pageid);
-
-        $options = \mod_simplelesson\local\displayoptions::
-                get_options($feedback); 
-
-        $actionurl = $PAGE->url;
-
-        echo $renderer->render_question_form(
-                $actionurl, $options, $slot, $quba);
-        
-        // Check if data submitted
-        if (data_submitted()) {
-            $transaction = $DB->start_delegated_transaction();
-            $quba->finish_question($slot);
-            question_engine::save_questions_usage_by_activity($quba);
-            // Record results here  
-            $transaction->allow_commit(); 
-            
-            // Get a warning because the page
-            // was already started
-            redirect($actionurl);
-             
-        } else {
-            // Probably just re-visiting or refreshing page
-            $question = $quba->get_question($slot);
-        }
     }
+}
+
+// If this is the last page, add link to the summary page
+if (\mod_simplelesson\local\pages::is_last_page($data)) {
+    echo $renderer->show_last_page_link(
+            $courseid, $simplelessonid, $mode);
 }
 
 echo $renderer->show_page_nav_links(
