@@ -60,9 +60,6 @@ $event->trigger();
 $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
 
-//  are we a teacher or a student?
-$mode= "view";
-
 /// Set up the page header
 $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
@@ -76,19 +73,18 @@ $activityname = $moduleinstance->name;
 // Declare renderer for page output.
 $renderer = $PAGE->get_renderer('mod_simplelesson');
 
-//if we are teacher we see tabs. If student we just see the page.
-if(has_capability('mod/simplelesson:preview',$modulecontext)) {
-    echo $renderer->header($lessontitle, $activityname);
-} else {
-    echo $renderer->notabsheader();
-}
+echo $OUTPUT->header();
 
 //if we have too many attempts, lets report that.
-if($moduleinstance->maxattempts > 0){
-    $attempts =  $DB->get_records(MOD_SIMPLELESSON_USERTABLE,array('userid'=>$USER->id, 
-            MOD_SIMPLELESSON_MODNAME.'id'=>$moduleinstance->id));
-    if($attempts && count($attempts)<$moduleinstance->maxattempts) {
-        echo get_string("exceededattempts",MOD_SIMPLELESSON_LANG,$moduleinstance->maxattempts);
+if ($moduleinstance->maxattempts > 0) {
+    $attempts = $DB->get_records(MOD_SIMPLELESSON_USERTABLE,
+            array('userid'=>$USER->id, 
+            MOD_SIMPLELESSON_MODNAME.'id' => 
+            $moduleinstance->id));
+    if($attempts && count($attempts) < 
+            $moduleinstance->maxattempts) {
+            echo get_string("exceededattempts",
+            MOD_SIMPLELESSON_LANG,$moduleinstance->maxattempts);
     }
 }
 

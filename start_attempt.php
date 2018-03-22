@@ -35,13 +35,6 @@ $moduleinstance  = $DB->get_record('simplelesson', array('id' => $simplelessonid
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 $cm = get_coursemodule_from_instance('simplelesson', $simplelessonid, $courseid, false, MUST_EXIST);
 
-$return_showpage = new moodle_url(
-        '/mod/simplelesson/showpage.php', 
-        array('courseid' => $courseid, 
-        'simplelessonid' => $simplelessonid, 
-        'pageid' => $pageid,
-        'mode' => 'attempt'));
-
 //set up the page
 $PAGE->set_url('/mod/simplelesson/start_attempt.php', 
         array('courseid' => $courseid, 
@@ -69,8 +62,30 @@ if (!empty($question_entries)) {
 // save slots here
 \mod_simplelesson\local\questions::set_slots($simplelessonid);
 
+// Count this as starting an attempt, record it
+$attempt_data = new stdClass();
+$attempt_data->courseid = $courseid;
+$attempt_data->simplelessonid = $simplelessonid;
+$attempt_data->userid = $USER->id;
+$attempt_data->status = MOD_SIMPLELESSON_ATTEMPT_STARTED;
+$attempt_data->sessionscore = 0;
+$attempt_data->timecreated = time();
+$attempt_data->timemodified = 0;
+
+$attemptid = \mod_simplelesson\local\attempts::
+        set_attempt_start($attempt_data);
+
+$return_showpage = new moodle_url(
+        '/mod/simplelesson/showpage.php', 
+        array('courseid' => $courseid, 
+        'simplelessonid' => $simplelessonid, 
+        'pageid' => $pageid,
+        'mode' => 'attempt',
+        'attemptid' => $attemptid));
+
 redirect($return_showpage, 
-            get_string('starting_attempt', MOD_SIMPLELESSON_LANG), 2);
+            get_string('starting_attempt', 
+            MOD_SIMPLELESSON_LANG), 2);
 
 echo $OUTPUT->header();
 echo 'put the cancel form in here';

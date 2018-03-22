@@ -239,7 +239,8 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      * @param int $courseid
      * @return string html representation of navigation links
      */
-    public function show_page_nav_links($data, $courseid, $mode) {
+    public function show_page_nav_links($data, $courseid, 
+            $mode, $attemptid) {
         
         $links = array();
 
@@ -256,7 +257,8 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
                         array('courseid' => $courseid, 
                         'simplelessonid' => $data->simplelessonid, 
                         'pageid' => $data->prevpageid,
-                        'mode' =>$mode));
+                        'mode' => $mode,
+                        'attemptid' => $attemptid));
             $links[] = html_writer::link($prev_url, 
                         get_string('gotoprevpage', MOD_SIMPLELESSON_LANG));
         
@@ -270,7 +272,8 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
                         array('courseid' => $courseid, 
                         'simplelessonid' => $data->simplelessonid, 
                         'pageid' => $data->nextpageid,
-                        'mode' =>$mode));
+                        'mode' =>$mode,
+                        'attemptid' => $attemptid));
             $links[] = html_writer::link($next_url, 
                         get_string('gotonextpage', MOD_SIMPLELESSON_LANG));
         
@@ -321,7 +324,8 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      * @return string
      */
     public function show_last_page_link(
-            $courseid, $simplelessonid, $answerid, $mode) {
+            $courseid, $simplelessonid, $answerid, 
+            $mode, $attemptid) {
 
         $html = '';
         $html .= html_writer::start_div(
@@ -332,7 +336,8 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
                 array('courseid' => $courseid,
                 'simplelessonid' => $simplelessonid,
                 'answerid' =>$answerid,
-                'mode' => $mode));
+                'mode' => $mode,
+                'attemptid' => $attemptid));
         $html .= html_writer::link($url,
                 get_string('end_lesson', MOD_SIMPLELESSON_LANG));
         $html .= '</p>';
@@ -750,7 +755,9 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      * @return string html link
      */
     public function lesson_summary($sum_data) {
-
+        
+        // group these by attemptid
+        // var_dump($sum_data);exit();
         $table = new html_table();
         $table->head = array(
         get_string('question_name', MOD_SIMPLELESSON_LANG),
@@ -765,16 +772,14 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $table->cellpadding = '2px';
         $table->width = '80%';
         $table->data = array();
-
-        foreach ($sum_data as $sumd) {
+        foreach($sum_data as $sd) {
             $data = array();
-            $data[] = $sumd->qname;
-            $data[] = $sumd->pagename;
-            $data[] = $sumd->youranswer;
-            $data[] = $sumd->rightanswer; 
+            $data[] = $sd->qname;
+            $data[] = $sd->pagename;
+            $data[] = $sd->youranswer;
+            $data[] = $sd->rightanswer; 
             $table->data[] = $data;             
         }
-        
         return html_writer::table($table);
     }
 }

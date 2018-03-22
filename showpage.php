@@ -35,6 +35,7 @@ $simplelessonid = required_param('simplelessonid', PARAM_INT);
 $pageid = required_param('pageid', PARAM_INT);
 $mode = optional_param('mode', 'preview', PARAM_TEXT);
 $starttime = optional_param('starttime', 0, PARAM_INT);
+$attemptid = optional_param('attemptid', 0, PARAM_INT);
 global $USER;
 // Get the question feedback type
 //$config = get_config('mod_simplelesson');
@@ -49,7 +50,8 @@ $PAGE->set_url('/mod/simplelesson/showpage.php',
         array('courseid' => $courseid, 
               'simplelessonid' => $simplelessonid, 
               'pageid' => $pageid,
-              'mode' => $mode));
+              'mode' => $mode,
+              'attemptid' => $attemptid));
 
 require_login($course, true, $cm);
 $coursecontext = context_course::instance($courseid);
@@ -109,6 +111,7 @@ if (data_submitted() && confirm_sesskey()) {
     $answer_data->qatid = $qdata->id;           
     $answer_data->courseid = $courseid;
     $answer_data->simplelessonid = $simplelessonid;
+    $answer_data->attemptid = $attemptid;
     $answer_data->userid = $USER->id;
     $answer_data->slqid = $question_entry->id;
     $answer_data->starttime = $starttime;
@@ -119,6 +122,7 @@ if (data_submitted() && confirm_sesskey()) {
              
 } else if ($slot !=0) {
     // Probably just re-visiting or refreshing page
+    // Disable next until question answered...
     $question = $quba->get_question($slot);
 }
 
@@ -163,12 +167,14 @@ if ($slot != 0) {
 
 // If this is the last page, add link to the summary page
 if (\mod_simplelesson\local\pages::is_last_page($data)) {
+    // Check here all questions answered or not
     echo $renderer->show_last_page_link(
-            $courseid, $simplelessonid, $USER->id, $mode);
+            $courseid, $simplelessonid, $USER->id, 
+            $mode, $attemptid);
 }
 
 echo $renderer->show_page_nav_links(
-        $data, $courseid, $mode);
+        $data, $courseid, $mode, $attemptid);
 
 // If we have the capability, show the action links
 if(has_capability('mod/simplelesson:manage',$modulecontext)) {

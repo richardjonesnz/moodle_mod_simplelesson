@@ -31,6 +31,7 @@ require_once($CFG->libdir.'/resourcelib.php');
 $courseid = required_param('courseid', PARAM_INT);
 $simplelessonid = required_param('simplelessonid', PARAM_INT);  
 $mode = optional_param('mode', 'preview', PARAM_TEXT);
+$attemptid = optional_param('attemptid', 0, PARAM_INT);
 
 $moduleinstance  = $DB->get_record('simplelesson', array('id' => $simplelessonid), '*', MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
@@ -40,7 +41,8 @@ $cm = get_coursemodule_from_instance('simplelesson', $simplelessonid, $courseid,
 $PAGE->set_url('/mod/simplelesson/summary.php', 
         array('courseid' => $courseid, 
               'simplelessonid' => $simplelessonid, 
-              'mode' => $mode));
+              'mode' => $mode,
+              'attemptid' => $attemptid));
 
 require_login($course, true, $cm);
 $coursecontext = context_course::instance($courseid);
@@ -54,9 +56,17 @@ $renderer = $PAGE->get_renderer('mod_simplelesson');
 
 echo $OUTPUT->header();
 
-// Summary data for attempts on this lesson by this user
+// If we got here, the user has attempted 
+// and completed the lesson 
+\mod_simplelesson\local\attempts::
+        set_attempt_completed($attemptid);
+
+// Summary data for this attempt by this user
 $answer_data = \mod_simplelesson\local\attempts::
-        get_lesson_answer_data($courseid, $simplelessonid, $USER->id);
+        get_lesson_answer_data($courseid, $simplelessonid, 
+        $USER->id, $attemptid);
+
+echo $OUTPUT->heading(get_string('summary_header', MOD_SIMPLELESSON_LANG), 2);
 echo $renderer->lesson_summary($answer_data);
 
 echo $renderer->show_home_page_link($simplelessonid);

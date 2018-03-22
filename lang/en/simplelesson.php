@@ -98,6 +98,7 @@ $string['nolink'] = 'None';
 $string['end_lesson'] = 'Exit lesson';
 $string['gotosummary'] = 'Go to the summary page: ';
 $string['gotohome'] = 'Go to the home page: ';
+$string['summary_header'] = 'Your results for this attempt';
 
 // Lesson editing (page management)
 $string['edit_lesson'] = 'Simple Lesson editing';

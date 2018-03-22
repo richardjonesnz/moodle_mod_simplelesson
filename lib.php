@@ -45,6 +45,10 @@ define('MOD_SIMPLELESSON_GRADELATEST', 2);
 define('MOD_SIMPLELESSON_GRADEAVERAGE', 3);
 define('MOD_SIMPLELESSON_GRADENONE', 4);
 
+define('MOD_SIMPLELESSON_ATTEMPT_NONE', 0);
+define('MOD_SIMPLELESSON_ATTEMPT_STARTED', 1);
+define('MOD_SIMPLELESSON_ATTEMPT_COMPLETED', 2);
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Moodle core API                                                            //

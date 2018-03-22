@@ -114,11 +114,12 @@ class attempts  {
      * @return object corresponding row in question attempts
      */
     public static function get_lesson_answer_data($courseid, 
-            $simplelessonid, $userid) {
+            $simplelessonid, $userid, $attemptid) {
         global $DB;
         // Get the records for this user on this course
         $sql = "SELECT  a.id, a.courseid, a.simplelessonid, 
-                        a.slqid, a.userid, a.qatid, a.starttime, 
+                        a.attemptid, a.slqid, a.userid, 
+                        a.qatid, a.starttime, 
                         a.endtime, c.fullname, u.firstname, 
                         u.lastname 
                   FROM  {simplelesson_answers} a
@@ -126,12 +127,14 @@ class attempts  {
                   JOIN  {user} u ON u.id = a.userid
                  WHERE  a.courseid = :cid 
                    AND  a.simplelessonid = :slid 
-                   AND  a.userid = :uid";
+                   AND  a.userid = :uid
+                   AND  a.attemptid = :aid";
         
         $answer_data = $DB->get_records_sql($sql,
                 array('cid' => $courseid,
                       'slid' => $simplelessonid,
-                      'uid' => $userid));
+                      'uid' => $userid,
+                      'aid' => $attemptid));
 
         // Add the data for the summary table
         foreach ($answer_data as $data) {
@@ -160,7 +163,33 @@ class attempts  {
             $data->youranswer = $qdata->responsesummary;
             $data->rightanswer = $qdata->rightanswer;
         }
-        return $answer_data;
-        
+        return $answer_data;        
+    }
+    /**
+     * Make an entry in the attempts table
+     *
+     * @param $data data to insert (from start_attempt.php)
+     * @return int record->id
+     */
+    public static function set_attempt_start($data) {
+        global $DB;
+
+        return $DB->insert_record(
+                'simplelesson_attempts',
+                $data);
+    }
+    /**
+     * Complete an entry in the attempts table
+     *
+     * @param $attemptid - record id to update
+     * @return int number of attempts by user
+     *         on this lesson and course
+     */
+    public static function set_attempt_completed($attemptid) {
+        global $DB;
+        $DB->set_field('simplelesson_attempts',
+                'status',
+                MOD_SIMPLELESSON_ATTEMPT_COMPLETED,
+                array('id' => $attemptid));
     }
 }
