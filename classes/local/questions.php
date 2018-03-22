@@ -147,7 +147,6 @@ class questions  {
             $DB->update_record('simplelesson_questions', $question);
             $slot++;
         }
-        //var_dump($questions);exit();
     }  
     /** 
      * Given a simplelessonid and pageid 

@@ -97,6 +97,7 @@ $string['afterpage'] = 'Add after page';
 $string['nolink'] = 'None';
 $string['end_lesson'] = 'Exit lesson';
 $string['gotosummary'] = 'Go to the summary page: ';
+$string['gotohome'] = 'Go to the home page: ';
 
 // Lesson editing (page management)
 $string['edit_lesson'] = 'Simple Lesson editing';
@@ -113,8 +114,11 @@ $string['move_down'] = 'Move page down';
 $string['question'] = 'Question';
 $string['question_name'] = 'Name';
 
-// Attempts
+// Attempts and lesson summary
 $string['starting_attempt'] = 'Starting attempt';
+$string['your_answer'] = 'Your answer';
+$string['correct_answer'] = 'Correct answer';
+$string['score'] = 'Score';
 
 // Question selection and placement (question management)
 $string['manage_questions'] = 'Manage lesson questions';

@@ -108,6 +108,7 @@ if (data_submitted() && confirm_sesskey()) {
     $answer_data = new stdClass();
     $answer_data->qatid = $qdata->id;           
     $answer_data->courseid = $courseid;
+    $answer_data->simplelessonid = $simplelessonid;
     $answer_data->userid = $USER->id;
     $answer_data->slqid = $question_entry->id;
     $answer_data->starttime = $starttime;
@@ -163,7 +164,7 @@ if ($slot != 0) {
 // If this is the last page, add link to the summary page
 if (\mod_simplelesson\local\pages::is_last_page($data)) {
     echo $renderer->show_last_page_link(
-            $courseid, $simplelessonid, $mode);
+            $courseid, $simplelessonid, $USER->id, $mode);
 }
 
 echo $renderer->show_page_nav_links(

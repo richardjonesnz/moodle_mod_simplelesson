@@ -173,6 +173,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $html .= html_writer::start_div(
                 MOD_SIMPLELESSON_CLASS . '_lesson_edit');
         $html .= '<p>' . get_string('edit_lesson', MOD_SIMPLELESSON_LANG) . '</p>';
+       
         // instance settings
         $url = new moodle_url('/course/modedit.php', 
                 array('update' => $moduleid));
@@ -294,13 +295,33 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         return $html;    
     }
     /**
+     * Returns the html for the link to the home page
+     * @param int $simplelessonid 
+     * @return string
+     */
+    public function show_home_page_link($simplelessonid) {
+        $html = '';
+        $html .= html_writer::start_div(
+                MOD_SIMPLELESSON_CLASS . '_page');
+        $html .= '<p>' . get_string('gotohome',
+                MOD_SIMPLELESSON_LANG);
+        $url = new moodle_url('/mod/simplelesson/view.php', 
+                array('n' => $simplelessonid));
+        $html .= html_writer::link($url,
+                get_string('homelink', MOD_SIMPLELESSON_LANG));
+        $html .= '</p>';
+        $html .= html_writer::end_div();
+
+        return $html;
+    }
+    /**
      * Returns the html for the link from last page
      * to summary page
      * @param int $mode preview or attempt
      * @return string
      */
     public function show_last_page_link(
-            $courseid, $simplelessonid, $mode) {
+            $courseid, $simplelessonid, $answerid, $mode) {
 
         $html = '';
         $html .= html_writer::start_div(
@@ -308,7 +329,9 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $html .= '<p>' . get_string('gotosummary',
                 MOD_SIMPLELESSON_LANG);
         $url = new moodle_url('/mod/simplelesson/summary.php', 
-                array('n' => $simplelessonid,
+                array('courseid' => $courseid,
+                'simplelessonid' => $simplelessonid,
+                'answerid' =>$answerid,
                 'mode' => $mode));
         $html .= html_writer::link($url,
                 get_string('end_lesson', MOD_SIMPLELESSON_LANG));
@@ -719,5 +742,39 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $html .= html_writer::end_tag('form');
 
         return $html;  
+    }
+    /**
+     * Returns a table of results to summary page
+     *
+     * @param object summary data of answers 
+     * @return string html link
+     */
+    public function lesson_summary($sum_data) {
+
+        $table = new html_table();
+        $table->head = array(
+        get_string('question_name', MOD_SIMPLELESSON_LANG),
+        get_string('pagetitle', MOD_SIMPLELESSON_LANG),
+        get_string('your_answer', MOD_SIMPLELESSON_LANG),
+        get_string('correct_answer', MOD_SIMPLELESSON_LANG));
+        $table->align = 
+                array('left', 'left', 'left', 'left');
+        $table->wrap = array('', '', '', '');
+        $table->tablealign = 'center';
+        $table->cellspacing = 0;
+        $table->cellpadding = '2px';
+        $table->width = '80%';
+        $table->data = array();
+
+        foreach ($sum_data as $sumd) {
+            $data = array();
+            $data[] = $sumd->qname;
+            $data[] = $sumd->pagename;
+            $data[] = $sumd->youranswer;
+            $data[] = $sumd->rightanswer; 
+            $table->data[] = $data;             
+        }
+        
+        return html_writer::table($table);
     }
 }

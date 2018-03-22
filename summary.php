@@ -23,54 +23,45 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
+require_once('../../config.php');
 require_once(dirname(__FILE__).'/lib.php');
+require_once($CFG->libdir.'/resourcelib.php');
 
-// Course module or module instance 
-$id = optional_param('id', 0, PARAM_INT); // course_module ID
-$n  = optional_param('n', 0, PARAM_INT);  // instance ID 
-// could be preview or attempt
-$mode  = optional_param('mode', 'none', PARAM_TEXT);  
+//fetch URL parameters
+$courseid = required_param('courseid', PARAM_INT);
+$simplelessonid = required_param('simplelessonid', PARAM_INT);  
+$mode = optional_param('mode', 'preview', PARAM_TEXT);
 
-if ($id) {
-    $cm         = get_coursemodule_from_id('simplelesson', $id, 0, false, MUST_EXIST);
-    $course     = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-    $moduleinstance  = $DB->get_record('simplelesson', array('id' => $cm->instance), '*', MUST_EXIST);
-} elseif ($n) {
-    $moduleinstance  = $DB->get_record('simplelesson', array('id' => $n), '*', MUST_EXIST);
-    $course     = $DB->get_record('course', array('id' => $moduleinstance->course), '*', MUST_EXIST);
-    $cm         = get_coursemodule_from_instance('simplelesson', $moduleinstance->id, $course->id, false, MUST_EXIST);
-} else {
-    error('You must specify a course_module ID or an instance ID');
-}
+$moduleinstance  = $DB->get_record('simplelesson', array('id' => $simplelessonid), '*', MUST_EXIST);
+$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+$cm = get_coursemodule_from_instance('simplelesson', $simplelessonid, $courseid, false, MUST_EXIST);
 
-$PAGE->set_url('/mod/simplelesson/summary.php', array('id' => $cm->id));
+//set up the page
+$PAGE->set_url('/mod/simplelesson/summary.php', 
+        array('courseid' => $courseid, 
+              'simplelessonid' => $simplelessonid, 
+              'mode' => $mode));
+
 require_login($course, true, $cm);
+$coursecontext = context_course::instance($courseid);
 $modulecontext = context_module::instance($cm->id);
-
-//  are we a teacher or a student?
-$view_mode= "view";
-
-// Set up the page header
-$PAGE->set_title(format_string($moduleinstance->name));
-$PAGE->set_heading(format_string($course->fullname));
+$lessontitle = $moduleinstance->name;
 $PAGE->set_context($modulecontext);
 $PAGE->set_pagelayout('course');
+$PAGE->set_heading(format_string($course->fullname));
 
-//Get an instance setting.
-$lessontitle = $moduleinstance->lessontitle;
-$activityname = $moduleinstance->name;
-
-// Declare renderer for page output.
 $renderer = $PAGE->get_renderer('mod_simplelesson');
 
-$attempts =  $DB->get_records(MOD_SIMPLELESSON_USERTABLE,
-        array('userid'=>$USER->id, 
-        MOD_SIMPLELESSON_MODNAME.'id'=>$moduleinstance->id));
+echo $OUTPUT->header();
+
+// Summary data for attempts on this lesson by this user
+$answer_data = \mod_simplelesson\local\attempts::
+        get_lesson_answer_data($courseid, $simplelessonid, $USER->id);
+echo $renderer->lesson_summary($answer_data);
+
+echo $renderer->show_home_page_link($simplelessonid);
 
 // Get the page links. 
-$page_links = \mod_simplelesson\local\pages::fetch_page_links(
-            $moduleinstance->id, $course->id, true);
 
 //if we are teacher we see buttons.
 if(has_capability('mod/simplelesson:manage', $modulecontext)) {
