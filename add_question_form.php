@@ -20,6 +20,7 @@
  * @copyright 2018 Richard Jones https://richardnz.net
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+use \mod_simplelesson\local\questions;
 defined('MOODLE_INTERNAL') || die();
 require_once('../../lib/formslib.php');
 require_once('lib.php');
@@ -28,14 +29,17 @@ require_once('lib.php');
  */
 class simplelesson_add_question_form extends moodleform {
     /**
-     * Defines forms elements
+     * Defines a from for selecting questions
      */
     public function definition() {
+        global $DB;
         $mform = $this->_form;  
         $mform->addElement('static', 'label1', 'select_questions', 
-                get_string('select_questions', MOD_SIMPLELESSON_LANG));
-        
-        $questions = $this->_customdata['questions'];
+                get_string('select_questions', 'mod_simplelesson'));
+              
+        $questions = questions::get_questions_from_category(
+                $this->_customdata['categoryid']);
+
         $n = 0;
         foreach($questions as $question) {
             $n++;
@@ -45,6 +49,7 @@ class simplelesson_add_question_form extends moodleform {
                 null, array('group' => 1), array(0, (int) $question->id));
         $mform->setType($check_name, PARAM_TEXT);   
         }
+        
         // Hidden fields
         $mform->addElement('hidden', 'courseid', $this->_customdata['courseid']);
         $mform->addElement('hidden', 'simplelessonid', $this->_customdata['simplelessonid']);

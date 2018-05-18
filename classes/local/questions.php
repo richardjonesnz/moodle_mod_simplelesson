@@ -20,6 +20,7 @@
  * @copyright  Richard Jones https://richardnz.net
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+use \mod_simplelesson\local\pages;
 namespace mod_simplelesson\local;
 require_once('../../config.php'); 
 defined('MOODLE_INTERNAL') || die();
@@ -89,17 +90,12 @@ class questions  {
             $simplelessonid) { 
         $page_titles = array();
         $pagecount = 
-                \mod_simplelesson\local\pages::
-                count_pages($simplelessonid);
+                pages::count_pages($simplelessonid);
         if ($pagecount != 0) {
             for ($p = 1; $p <= $pagecount; $p++ ) {
-                $pid = 
-                        \mod_simplelesson\local\pages::
-                        get_page_id_from_sequence(
+                $pid = pages::get_page_id_from_sequence(
                         $simplelessonid, $p);
-                $page_titles[$pid] = 
-                        \mod_simplelesson\local\pages::
-                        get_page_title($pid);
+                $page_titles[$pid] =pages::get_page_title($pid);
            }
         }
         $page_titles[0] = 'none';

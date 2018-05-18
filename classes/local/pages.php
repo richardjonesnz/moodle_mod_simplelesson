@@ -167,9 +167,8 @@ class pages  {
     /**
      * Given a simplelesson id return its sequence number
      *
-     * @param int $simplelessonid the instance id
-     * @param int $sequence, where the page is in the lesson sequence
-     * @return int pageid, the id of the page in the pages table
+     * @param int $pageid the
+     * @return int $sequence, where the page is in the lesson sequence
      */
 
     public static function get_page_sequence_from_id($pageid) {
@@ -177,6 +176,19 @@ class pages  {
 
         return $DB->get_field('simplelesson_pages',
                 'sequence',  array('id' => $pageid));
+    }
+    /**
+     * Given a simplelesson page id return its title
+     *
+     * @param int $pageid, where the page is in the lesson sequence
+     * @return string page title
+     */
+
+    public static function get_page_title($pageid) {
+        global $DB;
+
+        return $DB->get_field('simplelesson_pages',
+                'pagetitle',  array('id' => $pageid));
     }
 
     /**

@@ -44,7 +44,7 @@ class mod_simplelesson_mod_form extends moodleform_mod {
      * Defines forms elements
      */
     public function definition() {
-        global $CFG;
+        global $CFG, $DB;
 
         $mform = $this->_form;
 
@@ -82,6 +82,24 @@ class mod_simplelesson_mod_form extends moodleform_mod {
         $mform->addElement('advcheckbox', 'showindex', 
                 get_string('showindex', 'mod_simplelesson'));
         $mform->setDefault('showindex', 1);
+
+        // Select the category for the questions that can be added.
+        $categories = array();
+        $cats = $DB->get_records('question_categories', 
+                null, null, 'id, name');
+        foreach ($cats as $cat) {
+            $questions = $DB->count_records(
+                    'question', array('category' => $cat->id));
+            if ($questions > 0) {
+                $categories[$cat->id] = $cat->name . ' (' . $questions . ')';
+            }
+            $categories[0] = get_string('nocategory', 'mod_simplelesson');
+        }
+
+        $mform->addElement('select', 'categoryid', get_string('category_select', 'mod_simplelesson'), $categories);
+        $mform->addHelpButton('categoryid', 'categoryid', 'mod_simplelesson');
+        $mform->setType('categoryid', PARAM_INT);
+        $mform->setDefault('categoryid', 0);
 
         // Add standard grading elements.
         $this->standard_grading_coursemodule_elements();

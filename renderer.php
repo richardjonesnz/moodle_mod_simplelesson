@@ -63,20 +63,32 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         return $output;
     }
     /**
-     * Returns the editing links.
+     * Returns the editing links for the intro (home) page
      *
      * @return string editing links
      */
     public function fetch_editing_links($courseid, $simplelessonid) {
 
         $html = html_writer::start_div(
-                'mod_simplelesson' . '_page_edit');
+                'mod_simplelesson_edit_links');
+        $links = array();
 
+        // Page management.
         $url = new moodle_url('/mod/simplelesson/edit.php',
                 array('courseid' => $courseid,
                 'simplelessonid' => $simplelessonid));
-        $html .= html_writer::link($url,
+        $links[] = html_writer::link($url,
                 get_string('manage_pages', 'mod_simplelesson'));
+        
+        // Question management.
+        $url = new moodle_url('/mod/simplelesson/edit_questions.php',
+                array('courseid' => $courseid,
+                      'simplelessonid' => $simplelessonid));
+        $links[] = html_writer::link($url,
+                get_string('manage_questions', 'mod_simplelesson'));
+        
+        $html = $html .= html_writer::alist($links, null, 'ul');
+        
         $html .= html_writer::end_div();
 
         return $html;
@@ -533,7 +545,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $html = '';
         $links = array();
         
-        $html .= html_writer::start_div('mod_simplelesson_action_links');
+        $html .= html_writer::start_div('mod_simplelesson_edit_links');
         
         // Home link
         $url = new moodle_url('/mod/simplelesson/view.php', 

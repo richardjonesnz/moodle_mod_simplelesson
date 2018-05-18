@@ -67,6 +67,20 @@ $string['showpage'] = 'Preview page';
 // Question management
 $string['manage_questions'] = 'Manage questions';
 $string['question_editing'] = 'Editing questions';
+$string['qnumber'] = 'Question number';
+$string['question_name'] = 'Question name';
+$string['question_text'] = 'Question text';
+$string['setpage'] = 'Page for question';
+$string['add_question'] = 'Add question';
+$string['question_adding'] = 'Adding questions to Simple lesson';
+$string['questions_added'] = 'Added questions';
+$string['select_questions'] = 'Select questions';
+$string['category_select'] = 'Select category';
+$string['categoryid'] = 'Category';
+$string['categoryid_help'] = 'Choose one category for the questions that can be added to this simplelesson.';
+$string['nocategory'] = 'none';
+$string['selecting_page'] = 'Select the page for this question.';
+$string['editing_question_page'] = 'Select the page';
 
 // Page editing
 $string['edit_page'] = 'Edit page';

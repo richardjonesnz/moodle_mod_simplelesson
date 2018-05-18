@@ -35,7 +35,7 @@ class simplelesson_pagechanger_form extends moodleform {
         $mform = $this->_form;
         // Just the one field - select a page title.
         $mform->addElement('select', 'pagetitle', 
-                get_string('pagetitle', MOD_SIMPLELESSON_LANG),
+                get_string('pagetitle', 'mod_simplelesson'),
                 $this->_customdata['page_titles']);
         
         $mform->addElement('hidden', 'courseid', 
@@ -125,7 +125,7 @@ if($action =="edit") {
     echo $OUTPUT->header();
     echo $OUTPUT->heading(
         get_string('selecting_page', 'mod_simplelesson'), 4);
-        echo get_string('editing_question', 
+        echo get_string('editing_question_page', 
                 'mod_simplelesson', $data->name);
         $mform->display();
         echo $OUTPUT->footer();
