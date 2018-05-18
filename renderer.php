@@ -479,6 +479,32 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
 
         return $html;
     }
+     /**
+     * Returns the html for the link from last page
+     * to summary page
+     * @param int $mode preview or attempt
+     * @return string
+     */
+    public function show_last_page_link(
+            $courseid, $simplelessonid, $answerid, 
+            $mode, $attemptid) {
+        $html = '';
+        $html .= html_writer::start_div(
+                MOD_SIMPLELESSON_CLASS . '_page');
+        $html .= '<p>' . get_string('gotosummary',
+                MOD_SIMPLELESSON_LANG);
+        $url = new moodle_url('/mod/simplelesson/summary.php', 
+                array('courseid' => $courseid,
+                'simplelessonid' => $simplelessonid,
+                'answerid' =>$answerid,
+                'mode' => $mode,
+                'attemptid' => $attemptid));
+        $html .= html_writer::link($url,
+                get_string('end_lesson', MOD_SIMPLELESSON_LANG));
+        $html .= '</p>';
+        $html .= html_writer::end_div();
+        return $html;
+    }
     /**
      * Returns a list of questions and editing actions
      *

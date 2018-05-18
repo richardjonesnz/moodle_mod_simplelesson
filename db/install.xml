@@ -12,15 +12,19 @@
         <FIELD NAME="intro" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="General introduction of the simplelesson activity"/>
         <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Format of the intro field (MOODLE, HTML, MARKDOWN...)"/>
         <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Title field for Multichoice"/>
-        <FIELD NAME="grade" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="100" SEQUENCE="false" COMMENT="The maximum grade. Can be negative to indicate the use of a scale."/>
         <FIELD NAME="showindex" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Whether to show page index"/>
         <FIELD NAME="categoryid" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Question category id"/>
-        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false"/>
+        <FIELD NAME="behaviour" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" DEFAULT="immediatefeedback" COMMENT="Question behaviour"/>
+         <FIELD NAME="qubaid" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="Question usage id"/>
+         <FIELD NAME="maxattempts" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="maxattempts"/>
+         <FIELD NAME="grade" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="100" SEQUENCE="false" COMMENT="The maximum grade. Can be negative to indicate the use of a scale."/>        
+         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="categoryid" TYPE="foreign" FIELDS="catgeoryid" REFTABLE="question_categories" REFFIELDS="id"/>
+        <KEY NAME="categoryid" TYPE="foreign" FIELDS="categoryid" REFTABLE="question_categories" REFFIELDS="id"/>
+        <KEY NAME="qubaid" TYPE="foreign" FIELDS="qubaid" REFTABLE="question_usages" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
@@ -28,15 +32,15 @@
     </TABLE>
     <TABLE NAME="simplelesson_pages" COMMENT="Keeps track of content in a page">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>    
-        <FIELD NAME="simplelessonid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="sequence" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="prevpageid" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="nextpageid" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="true"/>  
+        <FIELD NAME="simplelessonid" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="sequence" TYPE="int" LENGTH="4" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="prevpageid" TYPE="int" LENGTH="4" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="nextpageid" TYPE="int" LENGTH="4" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="pagetitle" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Title of the page"/>
         <FIELD NAME="pagecontents" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Content from page editor"/>
-        <FIELD NAME="pagecontentsformat" TYPE="int" LENGTH="2" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="showindex" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Should the page index be shown"/>        
+        <FIELD NAME="pagecontentsformat" TYPE="int" LENGTH="4" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="showindex" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Should the page index be shown"/>        
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
       </FIELDS>
@@ -58,6 +62,24 @@
         <KEY NAME="pageid" TYPE="foreign" FIELDS="pageid" REFTABLE="simplelesson_pages" REFFIELDS="id"/>
         <KEY NAME="simplelessonid" TYPE="foreign" FIELDS="simplelessonid" REFTABLE="simplelessons" REFFIELDS="id"/>
         <KEY NAME="qid" TYPE="foreign" FIELDS="qid" REFTABLE="question" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="simplelesson_attempts" COMMENT="user attempt data for simplelesson">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" COMMENT="Course simplelesson activity belongs to"/>
+        <FIELD NAME="simplelessonid" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" COMMENT="simplelesson activity this data belongs to"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" COMMENT="Course simplelesson activity belongs to"/>
+        <FIELD NAME="status" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="status"/>
+        <FIELD NAME="sessionscore" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the score for this session"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
+        <KEY NAME="simplelessonid" TYPE="foreign" FIELDS="simplelessonid" REFTABLE="simplelessons" REFFIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="users" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
   </TABLES>

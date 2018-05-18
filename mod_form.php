@@ -101,6 +101,34 @@ class mod_simplelesson_mod_form extends moodleform_mod {
         $mform->setType('categoryid', PARAM_INT);
         $mform->setDefault('categoryid', 0);
 
+        // Attempts.
+        $attemptoptions = array(0 => get_string('unlimited', 'mod_simplelesson'),
+            1 => '1',2 => '2',3 => '3',4 => '4',5 => '5',);
+        $mform->addElement('select', 'maxattempts', get_string('maxattempts', 'mod_simplelesson'), $attemptoptions);
+        $mform->setType('maxattempts', PARAM_INT);
+        
+        // Might use this later.
+        $boptions = question_engine::get_behaviour_options('immediatefeedback');
+        
+        // Not using deferred options (yet).
+        unset($boptions['deferredfeedback']);
+        unset($boptions['deferredcbm']);
+        
+        // Returns a list of available question behaviour options.
+        $behaviouroptions = array(
+                'immediatefeedback' => get_string('immediatefeedback',
+                'mod_simplelesson'),
+                'deferredfeedback' => get_string('deferredfeedback',
+                'mod_simplelesson'));
+        $mform->addElement('select', 'behaviour', 
+                get_string('behaviour', 'mod_simplelesson'),
+                $boptions);
+        $mform->setType('behaviour', PARAM_TEXT);            
+        
+        // Question usage field.
+        $mform->addElement('hidden', 'qubaid', 0);
+        $mform->setType('qubaid', PARAM_INT);       
+
         // Add standard grading elements.
         $this->standard_grading_coursemodule_elements();
 
