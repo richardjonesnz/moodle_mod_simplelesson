@@ -509,8 +509,9 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
             $data[] = $question->qid;
             $data[] = $question->name;
             if (strlen($question->questiontext) > 100) {
-                $data[] = substr($question->questiontext, 
+                $rawtext = substr($question->questiontext, 
                         0, 95) . '...';
+                $data[] = strip_tags(format_string($rawtext));
             } else {
                 $data[] = $question->questiontext;        
             }

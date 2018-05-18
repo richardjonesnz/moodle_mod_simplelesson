@@ -101,11 +101,21 @@ if ($mform->is_cancelled()) {
     exit;
 }
 
-// If we have data, save it.
+/* If we have data, save it (if it isn't there already)
+ * We only allow one question per page.
+ * However, we still want to update the table if the question is de-selected
+ * using the "none" option.
+*/
 if ($data = $mform->get_data()) {
-    questions::update_question_table($data); 
-    redirect($PAGE->url,
+    if (!questions::page_has_question($simplelessonid, $data->pagetitle)
+            || ($data->pagetitle == 0) ) {
+        questions::update_question_table($data); 
+        redirect($PAGE->url,
                 get_string('updated','core', $data->name), 2);
+    } else {
+        redirect($PAGE->url,
+                get_string('question_exists','mod_simplelesson'), 2);
+    }
 }
 
 if($action =="edit") {

@@ -81,6 +81,7 @@ $string['categoryid_help'] = 'Choose one category for the questions that can be 
 $string['nocategory'] = 'none';
 $string['selecting_page'] = 'Select the page for this question.';
 $string['editing_question_page'] = 'Select the page';
+$string['question_exists'] = 'That page has a question already';
 
 // Page editing
 $string['edit_page'] = 'Edit page';

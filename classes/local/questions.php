@@ -47,7 +47,7 @@ class questions  {
 
     /** 
      * Given a question id
-     * save if data is unique
+     * save if data is unique to simplelesson and pageid
      *
      * @param object $qdata
      * @return id of inserted record or false
@@ -56,8 +56,9 @@ class questions  {
         global $DB;
         $table = 'simplelesson_questions';
         $condition = array('qid' => $qdata->qid, 
-                'simplelessonid' =>$qdata->simplelessonid);
-        // Check if this question was already added to this lesson
+                'simplelessonid' => $qdata->simplelessonid);
+        // Only add the question to this if it doesn't exist.
+        // Ie prevent duplicate questions for same lesson id.
         if (!$DB->get_record($table, $condition, IGNORE_MISSING)) {
             return $DB->insert_record($table, $qdata);
         }
@@ -115,6 +116,18 @@ class questions  {
                     array('id' => $data->id));
     }  
     /** 
+     * Given a simplelesson id and a page id
+     *
+     * @param int $data the question data
+     * @return bboolean true if record exists in questions table
+     */  
+    public static function page_has_question($simplelessonid, $pageid) {
+        global $DB;
+        return $DB->record_exists('simplelesson_questions',
+                    array('simplelessonid' => $simplelessonid,
+                    'pageid' => $pageid));
+    }  
+    /** 
      * Given a simplelessonid update the slots field
      * for the lesson pages.
      *
@@ -157,23 +170,6 @@ class questions  {
                 'simplelessonid' => $simplelessonid,
                 'pageid' => $pageid));
     }  
-    /** 
-     * Given a simplelesson and page find out if
-     * it has a question entry in the questions table
-     *
-     * @param int $simplelessonid
-     * @param int $pageid
-     * @return object id of the questions table object
-     */  
-    public static function page_has_question($simplelessonid,
-            $pageid) {
-        global $DB;
-        $q = $DB->get_record('simplelesson_questions',
-                  array('pageid' => $pageid, 
-                  'simplelessonid' => $simplelessonid),
-                  '*', IGNORE_MISSING);
-        return $q;
-    } 
     /** 
      * Given a question id find the name
      *
