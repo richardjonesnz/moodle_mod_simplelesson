@@ -24,10 +24,12 @@
  * @see https://github.com/justinhunt/moodle-mod_pairwork
  */
 use mod_simplelesson\local\pages;
+use mod_simplelesson\local\attempts;
 use mod_simplelesson\event\course_module_viewed;
 
 require_once('../../config.php');
 require_once(dirname(__FILE__).'/lib.php');
+global $DB, $USER;
 // Get a course module or instance id.
 $id = optional_param('id', 0, PARAM_INT);
 $simplelessonid  = optional_param('simplelessonid', 0, PARAM_INT);
@@ -110,7 +112,9 @@ if (has_capability('mod/simplelesson:manage', $modulecontext)) {
     if ($numpages == 0) {
         echo $renderer->add_first_page_link($course->id, $simplelesson->id, 0);
     } else {
-        echo $renderer->fetch_num_pages($numpages);
+        $userattempts = attempts::get_number_of_attempts($USER->id, $simplelesson->id);
+        echo $renderer->fetch_num_pages($numpages, $userattempts, 
+                $simplelesson->maxattempts);
     }
 
     // The teacher sees the edit links.

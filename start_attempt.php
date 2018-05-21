@@ -24,9 +24,7 @@ use \mod_simplelesson\local\questions;
 use \mod_simplelesson\local\attempts;
 use \mod_simplelesson\local\pages;
 require_once('../../config.php');
-//require_once($CFG->libdir.'/resourcelib.php');
-
-
+global $DB, $USER;
 // Fetch URL parameters.
 $courseid = required_param('courseid', PARAM_INT);
 $simplelessonid = required_param('simplelessonid', PARAM_INT); 
@@ -44,6 +42,20 @@ $PAGE->set_context($modulecontext);
 $PAGE->set_pagelayout('course');
 $PAGE->set_heading(format_string($course->fullname));
 
+// Check attempts (for students)
+
+if (!has_capability('mod/simplelesson:manage', $modulecontext)) {
+    $maxattempts = $moduleinstance->maxattempts;
+    $userattempts = attempts::get_number_of_attempts($USER->id, $simplelessonid);
+
+    if ( ($userattempts >= $maxattempts) && ($maxattempts != 0) ) {
+        // Max attempts is exceeded.
+        $returnview = new moodle_url('/mod/simplelesson/view.php',
+                array('simplelessonid' => $simplelessonid));
+        redirect($returnview,
+                get_string('max_attemps_exceeded', 'mod_simplelesson', 2));
+    }
+}
 // Check for questions.
 $question_entries = questions::fetch_questions($moduleinstance->id);
 if (!empty($question_entries)) {

@@ -46,4 +46,63 @@ class reporting  {
         }
         return $records;
     }
+    /**
+     * Return an array of lesson answers and associated data
+     * for multiple attempts at a single lesson.
+     *
+     * @param $simplelessonid int id of simplelesson instance
+     * @return object array with one or more rows of answer data
+     */
+    public static function get_lesson_answer_data($simplelessonid) {
+        global $DB;
+        // Get the records for this user on this attempt
+        $sql = "SELECT  a.id, a.simplelessonid, a.qatid,
+                        a.attemptid, a.pageid, a.timestarted, 
+                        a.timecompleted, t.userid
+                  FROM  {simplelesson_answers} a
+                  JOIN  {simplelesson_attempts} t ON a.attemptid = t.id
+                   AND  a.simplelessonid = :slid";
+        
+        $answerdata = $DB->get_records_sql($sql, 
+                array('slid' => $simplelessonid));
+    
+        // Add the data for the summary table
+        foreach ($answerdata as $data) {
+        
+            // Get the records from our tables
+            $pagedata = $DB->get_record('simplelesson_pages',
+                    array('id' => $data->pageid), '*',
+                    MUST_EXIST);
+            $questiondata = $DB->get_record('simplelesson_questions',
+                    array('simplelessonid' => $data->simplelessonid,
+                    'pageid' => $data->pageid), '*',
+                    MUST_EXIST);
+
+            // Add the page and question name.
+            $data->pagename = pages::get_page_title($pagedata->id);
+            $data->qname = questions::fetch_question_name($questiondata->qid);
+            
+            // We'll need the slot to get the response data.
+            $data->slot = $questiondata->slot;
+            
+            // Get the record from the question attempt data.
+            $qdata = $DB->get_record('question_attempts',
+                    array('id' => $data->qatid), '*',
+                    MUST_EXIST);
+            $data->youranswer = $qdata->responsesummary;
+            $data->rightanswer = $qdata->rightanswer;
+
+            // Get the userdata
+            $userdata = $DB->get_record('user',
+                    array('id' => $data->userid), '*',
+                    MUST_EXIST);
+            $data->userid = $userdata->id;
+            $data->firstname = $userdata->firstname;
+            $data->lastname = $userdata->lastname;
+            $data->timetaken = date("s", ($data->timecompleted
+                    - $data->timestarted));
+        }
+        
+        return $answerdata;        
+    }
 }

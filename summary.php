@@ -20,23 +20,21 @@
  * @copyright 2018 Richard Jones https://richardnz.net
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-use \mod_simplelesson\local\attempts; 
+use \mod_simplelesson\local\attempts;
+use \mod_simplelesson\local\questions;
 require_once('../../config.php');
-//require_once(dirname(__FILE__).'/lib.php');
-//require_once($CFG->libdir.'/resourcelib.php');
-//fetch URL parameters
+
 $courseid = required_param('courseid', PARAM_INT);
-$simplelessonid = required_param('simplelessonid', PARAM_INT);  
+$simplelessonid = required_param('simplelessonid', PARAM_INT);
 $mode = optional_param('mode', 'preview', PARAM_TEXT);
 $attemptid = optional_param('attemptid', 0, PARAM_INT);
 
-$moduleinstance  = $DB->get_record('simplelesson', array('id' => $simplelessonid), '*', MUST_EXIST);
+$moduleinstance  = $DB->get_record('simplelesson', array('id' => $simplelessonid), '*',MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
-$cm = get_coursemodule_from_instance('simplelesson', $simplelessonid, $courseid, false, MUST_EXIST);
-//set up the page
-$PAGE->set_url('/mod/simplelesson/summary.php', 
-        array('courseid' => $courseid, 
-              'simplelessonid' => $simplelessonid, 
+$cm = get_coursemodule_from_instance('simplelesson', $simplelessonid, $courseid, false,MUST_EXIST);
+$PAGE->set_url('/mod/simplelesson/summary.php',
+        array('courseid' => $courseid,
+              'simplelessonid' => $simplelessonid,
               'mode' => $mode,
               'attemptid' => $attemptid));
 require_login($course, true, $cm);
@@ -48,7 +46,7 @@ $PAGE->set_pagelayout('course');
 $PAGE->set_heading(format_string($course->fullname));
 $renderer = $PAGE->get_renderer('mod_simplelesson');
 
-// If we got here, the user got to the last page and hit the exit link. 
+// If we got here, the user got to the last page and hit the exit link.
 // Mode is either preview or attempt.
 
 if ($mode == 'attempt') {
@@ -57,7 +55,6 @@ if ($mode == 'attempt') {
 
     // Summary data for this attempt by this user
     $answerdata = attempts::get_lesson_answer_data($attemptid);
-    //var_dump($answerdata);exit;
     echo $OUTPUT->heading(get_string('summary_header', 'mod_simplelesson'), 2);
     echo $renderer->lesson_summary($answerdata);
     echo $renderer->show_home_page_link($simplelessonid);
@@ -65,13 +62,11 @@ if ($mode == 'attempt') {
     // It's a preview, go back to the home page.
     $returnview = new moodle_url('/mod/simplelesson/view.php',
         array('simplelessonid' => $simplelessonid));
-    redirect($returnview, 
+    redirect($returnview,
             get_string('preview_completed', 'mod_simplelesson', 1));
 }
-//if we are teacher we see buttons.
+// Show editing links, if permitted.
 if(has_capability('mod/simplelesson:manage', $modulecontext)) {
-    echo $renderer->lesson_editing_links($course->id, $cm->id,
-            $moduleinstance->id);
+    echo $renderer->fetch_editing_links($courseid, $simplelessonid);
 }
-// Finish the page.
 echo $renderer->footer();

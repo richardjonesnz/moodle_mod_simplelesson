@@ -121,9 +121,22 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      * @param int $numpages the number of pages
      * @return string html
      */
-    public function fetch_num_pages($numpages) {
+    public function fetch_num_pages($numpages, $attempts, $maxattempts) {
 
-        return get_string('numpages', 'mod_simplelesson', $numpages);
+        $html = '';
+        $html .= html_writer::start_div('mod_simplelesson_data');
+        $pages = get_string('numpages', 'mod_simplelesson', $numpages);
+        $pages .= ' | ';
+        if ($maxattempts != 0) {
+            $attempts = get_string('numattempts', 'mod_simplelesson', $attempts);
+            $attempts .= ' ' . $maxattempts . ' ';
+        } else {
+            $attempts = get_string('unlimited_attempts', 'mod_simplelesson');
+        }
+        $html .= $pages . $attempts;
+        $html .= html_writer::end_div();
+        
+        return $html;        
     }
 
     /**

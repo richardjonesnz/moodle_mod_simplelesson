@@ -21,7 +21,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 use \mod_simplelesson\local\pages;
-use \mod_simplelesson\local\questions;
+use \mod_simplelesson\local\reporting;
 namespace mod_simplelesson\local;
 require_once('../../config.php'); 
 require_once($CFG->libdir . '/questionlib.php');
@@ -119,9 +119,7 @@ class attempts  {
                   JOIN  {simplelesson_attempts} t ON a.attemptid = t.id
                    AND  a.attemptid = :aid";
         
-        $answerdata = $DB->get_records_sql($sql,
-                array('aid' => $attemptid));
-        echo 'attempt ' . $attemptid;
+        $answerdata = $DB->get_records_sql($sql, array('aid' => $attemptid));
     
         // Add the data for the summary table
         foreach ($answerdata as $data) {
@@ -173,11 +171,10 @@ class attempts  {
                 $data);
     }
     /**
-     * Complete an entry in the attempts table
+     * Set status the attempts table
      *
+     * Need some constants here: 0, 1 (started), 2 (complete).
      * @param $attemptid - record id to update
-     * @return int number of attempts by user
-     *         on this lesson and course
      */
     public static function set_attempt_completed($attemptid) {
         global $DB;
@@ -186,4 +183,19 @@ class attempts  {
                 2,
                 array('id' => $attemptid));
     }
+    /**
+     * Get the user attempts at this lesson instance
+     *
+     * @param $userid - relevant user
+     * @param $simplelessonid - relevant lesson
+     * @return int number of attempts by user
+     *         on this lesson and course
+     */
+    public static function get_number_of_attempts($userid, $simplelessonid) {
+        global $DB;
+        return $DB->count_records('simplelesson_attempts',
+                array('userid' => $userid,
+                'simplelessonid' => $simplelessonid));
+    }
+
 }

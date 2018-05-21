@@ -142,3 +142,6 @@ $string['lastname'] = "Last name";
 $string['question'] = "Question";
 $string['rightanswer'] = "Right answer";
 $string['youranswer'] = "Your answer";
+$string['max_attempts_exceeded'] = "No more attempts allowed";
+$string['numattempts'] = 'Attempt: {$a} of';
+$string['unlimited_attempts'] = 'Unlimited attempts';
