@@ -682,4 +682,57 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $html .= html_writer::end_tag('form');
         return $html;  
     }
+    /**
+     *
+     * Output the details of the attempt
+     *
+     * @param $answerdata an array of objects
+     * @return $html table with summary data on user's attempt
+     */
+    public function lesson_summary($answerdata) {
+
+        $table = new html_table();
+        
+        $table->head = array(
+        get_string('firstname', 'mod_simplelesson'),
+        get_string('lastname', 'mod_simplelesson'),
+        get_string('question', 'mod_simplelesson'),
+        get_string('pagetitle', 'mod_simplelesson'),
+        get_string('rightanswer', 'mod_simplelesson'),
+        get_string('youranswer', 'mod_simplelesson'));
+        
+        $table->align = 
+                array('left', 'left', 'left', 'left', 'left', 'left', 'left');
+        $table->wrap = array('nowrap', 'nowrap', '', '', '', '', '');
+        $table->tablealign = 'center';
+        $table->cellspacing = 0;
+        $table->cellpadding = '2px';
+        $table->width = '80%';
+        $table->data = array();
+        foreach ($answerdata as $answer) {
+            $data = array();
+            $data[] = $answer->firstname;
+            $data[] = $answer->lastname;
+            $data[] = $answer->qname;        
+            $data[] = $answer->pagename;
+            $data[] = $answer->rightanswer;
+            $data[] = $answer->youranswer;
+            $table->data[] = $data;            
+        } 
+        
+        return html_writer::table($table);        
+    }
+    /**
+     * Returns the html for home page link
+     * @param int $simplelessonid 
+     * @return string, html link
+     */ 
+    public function show_home_page_link($simplelessonid) {
+
+        $url = new moodle_url('/mod/simplelesson/view.php', 
+                array('simplelessonid' => $simplelessonid));
+        return html_writer::link($url,
+                get_string('homelink', 'mod_simplelesson'));
+        
+    }    
 }

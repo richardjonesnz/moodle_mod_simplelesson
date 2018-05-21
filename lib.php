@@ -465,7 +465,6 @@ function simplelesson_pluginfile($course, $cm, $context, $filearea, array $args,
     if ($context->contextlevel != CONTEXT_MODULE) {
         send_file_not_found();
     }
-
     require_login($course, true, $cm);
 
     $fs = get_file_storage();
@@ -475,6 +474,49 @@ function simplelesson_pluginfile($course, $cm, $context, $filearea, array $args,
         return false;
     }
     // Finally send the file.
+    send_stored_file($file, 0, 0, $forcedownload, $options);
+}
+/**
+ *
+ * @package    mod_qpractice
+ * @copyright  2013 Jayesh Anandani
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * Modified for use in mod_simplelesson by Richard Jones http://richardnz/net
+ * This is used for images within pages that are in questions.
+ * Apparently it will be magically called by simplelesson_pluginfile above.
+ *
+ * @package  filter_simplequestion
+ * @category files
+ * @param stdClass $course course settings object
+ * @param stdClass $context context object
+ * @param string $component the name of the component we are serving files for.
+ * @param string $filearea the name of the file area.
+ * @param int $qubaid the attempt usage id.
+ * @param int $slot the id of a question in this quiz attempt.
+ * @param array $args the remaining bits of the file path.
+ * @param bool $forcedownload whether the user must be forced to download the file.
+ * @param array $options additional options affecting the file serving
+ * @return bool false if file not found, does not return if found - justsend the file
+ */
+
+function mod_simplelesson_question_pluginfile($course, $context, $component,
+         $filearea, $qubaid, $slot, $args,
+         $forcedownload, array $options = array()) {
+    
+    // require_login($course) - I probably should fix this up.
+    // But it's hard to know how qubaid, slot and so on are
+    // actually used within this callback.  All I know
+    // is that it seems to work.  Quiz does something similar
+    // but with much more complexity.
+   
+    $fs = get_file_storage();
+    $relativepath = implode('/', $args);
+    $fullpath = "/$context->id/$component/$filearea/$relativepath";
+    if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+        send_file_not_found();
+    }
+
     send_stored_file($file, 0, 0, $forcedownload, $options);
 }
 

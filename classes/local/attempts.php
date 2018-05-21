@@ -109,7 +109,7 @@ class attempts  {
      * @param $userid int id of simplelesson user
      * @return object array with one or more rows of answer data
      */
-    public static function get_lesson_answerdata($attemptid) {
+    public static function get_lesson_answer_data($attemptid) {
         global $DB;
         // Get the records for this user on this attempt
         $sql = "SELECT  a.id, a.simplelessonid, a.qatid,

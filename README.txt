@@ -13,7 +13,6 @@ For summative activities use the quiz or lesson.
 
 The current BETA version works in most respects with the remaining challenges:
 
-	Images in the questions don't display.
 	Backup and restore don't backup the page contents - an export model like that of mod_glossary will be developed.
 	There is reporting but  no grading just yet.
 

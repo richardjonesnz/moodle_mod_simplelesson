@@ -57,7 +57,7 @@ if ($mode == 'attempt') {
 
     // Summary data for this attempt by this user
     $answerdata = attempts::get_lesson_answer_data($attemptid);
-    // var_dump($answer_data);exit;
+    //var_dump($answerdata);exit;
     echo $OUTPUT->heading(get_string('summary_header', 'mod_simplelesson'), 2);
     echo $renderer->lesson_summary($answerdata);
     echo $renderer->show_home_page_link($simplelessonid);

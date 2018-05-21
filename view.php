@@ -27,7 +27,7 @@ use mod_simplelesson\local\pages;
 use mod_simplelesson\event\course_module_viewed;
 
 require_once('../../config.php');
-
+require_once(dirname(__FILE__).'/lib.php');
 // Get a course module or instance id.
 $id = optional_param('id', 0, PARAM_INT);
 $simplelessonid  = optional_param('simplelessonid', 0, PARAM_INT);
