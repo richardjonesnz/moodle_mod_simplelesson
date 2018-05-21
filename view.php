@@ -99,7 +99,7 @@ $numpages = pages::count_pages($simplelesson->id);
 if ($numpages > 0) {
     // Get the record # for the first page.
     $pageid = pages::get_page_id_from_sequence($simplelesson->id, 1);
-    echo $renderer->fetch_firstpage_link($course->id,
+    echo $renderer->fetch_firstpage_links($course->id,
             $simplelesson->id, $pageid);
 }
 

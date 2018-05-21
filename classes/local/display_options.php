@@ -31,7 +31,7 @@ defined('MOODLE_INTERNAL') || die();
 /** 
  * Control question display options
  */
-class displayoptions  {
+class display_options  {
     /** 
      * Set the display options for a question
      * @param int $maxvariant The maximum number of variants previewable.

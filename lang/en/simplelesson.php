@@ -45,6 +45,10 @@ $string['pluginname'] = 'simplelesson';
 $string['simplelesson_settings'] = 'Simplelesson settings';
 $string['simplelesson_title'] = 'Title of this resource';
 $string['showindex'] = 'Show the page index';
+$string['immediatefeedback'] = 'Immediate feedback';
+$string['deferredfeedback'] = 'Deferred feedback';
+$string['behaviour'] = 'Question behaviour';
+$string['unlimited'] = 'Unlimited';
 
 // Capabilities
 $string['simplelesson:manage'] = 'Manage Simple lesson';
@@ -102,6 +106,7 @@ $string['firstpagelink'] = 'First page';
 $string['homelink'] = 'Home';
 $string['gotonextpage'] = 'Next';
 $string['gotoprevpage'] = 'Previous';
+$string['page_index_header'] = 'Index';
 
 // Page editing
 $string['gotoaddpage'] = 'Add page';
@@ -123,5 +128,12 @@ $string['enablereports_desc'] = 'Check to allow teachers to see reports';
 $string['enableindex'] = 'Show page index';
 $string['enableindex_desc'] = 'Check to show page index';
 
-// Page index
-$string['page_index_header'] = 'Index';
+// Attempts
+$string['maxattempts'] = "Max attempts";
+$string['gotosummary'] = "Summary page";
+$string['end_lesson'] = "Exit lesson";
+$string['preview'] = "Preview";
+$string['attempt'] = "Attempt lesson";
+$string['starting_attempt'] = "Starting Attempt";
+$string['preview_completed'] = "Preview completed";
+$string['summary_header'] = "Attempt summary";

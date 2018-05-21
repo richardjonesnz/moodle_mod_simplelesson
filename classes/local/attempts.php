@@ -102,59 +102,63 @@ class attempts  {
         return $data;
     }
     /**
-     * Return the wanted row from simplelesson answers
+     * Return an array of lesson answers and associated data
      *
      * @param $courseid int course id
      * @param $simplelessonid int id of simplelesson instance
      * @param $userid int id of simplelesson user
-     * @return object corresponding row in question attempts
+     * @return object array with one or more rows of answer data
      */
-    public static function get_lesson_answer_data($courseid, 
-            $simplelessonid, $userid, $attemptid) {
+    public static function get_lesson_answerdata($attemptid) {
         global $DB;
-        // Get the records for this user on this course
-        $sql = "SELECT  a.id, a.courseid, a.simplelessonid, 
-                        a.attemptid, a.slqid, a.userid, 
-                        a.qatid, a.starttime, 
-                        a.endtime, c.fullname, u.firstname, 
-                        u.lastname 
+        // Get the records for this user on this attempt
+        $sql = "SELECT  a.id, a.simplelessonid, a.qatid,
+                        a.attemptid, a.pageid, a.timestarted, 
+                        a.timecompleted, t.userid
                   FROM  {simplelesson_answers} a
-                  JOIN  {course} c ON c.id = a.courseid
-                  JOIN  {user} u ON u.id = a.userid
-                 WHERE  a.courseid = :cid 
-                   AND  a.simplelessonid = :slid 
-                   AND  a.userid = :uid
+                  JOIN  {simplelesson_attempts} t ON a.attemptid = t.id
                    AND  a.attemptid = :aid";
         
-        $answer_data = $DB->get_records_sql($sql,
-                array('cid' => $courseid,
-                      'slid' => $simplelessonid,
-                      'uid' => $userid,
-                      'aid' => $attemptid));
+        $answerdata = $DB->get_records_sql($sql,
+                array('aid' => $attemptid));
+        echo 'attempt ' . $attemptid;
+    
         // Add the data for the summary table
-        foreach ($answer_data as $data) {
+        foreach ($answerdata as $data) {
         
-            // Get the record from the questions table
-            $qdata = $DB->get_record('simplelesson_questions',
-                    array('id' => $data->slqid), '*',
+            // Get the records from our tables
+            $pagedata = $DB->get_record('simplelesson_pages',
+                    array('id' => $data->pageid), '*',
                     MUST_EXIST);
-        
-            // Add the page name
-            $data->pagename = pages::get_page_title($qdata->pageid);
-        
-            // Add the question name
-            $data->qname = questions::fetch_question_name($qdata->qid);
-        
-            // We'll need the slot to get the response data
-            // $data->slot = $qdata->slot;
-            // Get the record from the question attempt data
+            $questiondata = $DB->get_record('simplelesson_questions',
+                    array('simplelessonid' => $data->simplelessonid,
+                    'pageid' => $data->pageid), '*',
+                    MUST_EXIST);
+
+            // Add the page and question name.
+            $data->pagename = pages::get_page_title($pagedata->id);
+            $data->qname = questions::fetch_question_name($questiondata->qid);
+            
+            // We'll need the slot to get the response data.
+            $data->slot = $questiondata->slot;
+            
+            // Get the record from the question attempt data.
             $qdata = $DB->get_record('question_attempts',
                     array('id' => $data->qatid), '*',
                     MUST_EXIST);
             $data->youranswer = $qdata->responsesummary;
             $data->rightanswer = $qdata->rightanswer;
+
+            // Get the userdata
+            $userdata = $DB->get_record('user',
+                    array('id' => $data->userid), '*',
+                    MUST_EXIST);
+            $data->userid = $userdata->id;
+            $data->firstname = $userdata->firstname;
+            $data->lastname = $userdata->lastname;
         }
-        return $answer_data;        
+        
+        return $answerdata;        
     }
     /**
      * Make an entry in the attempts table
@@ -179,7 +183,7 @@ class attempts  {
         global $DB;
         $DB->set_field('simplelesson_attempts',
                 'status',
-                MOD_SIMPLELESSON_ATTEMPT_COMPLETED,
+                2,
                 array('id' => $attemptid));
     }
 }

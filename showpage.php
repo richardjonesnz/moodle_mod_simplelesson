@@ -28,7 +28,8 @@ use \mod_simplelesson\local\questions;
 use \mod_simplelesson\local\attempts;
 use \mod_simplelesson\local\display_options;
 require_once('../../config.php');
-
+require_once(dirname(__FILE__).'/lib.php');
+require_once($CFG->libdir . '/questionlib.php');
 $courseid = required_param('courseid', PARAM_INT);
 $simplelessonid  = required_param('simplelessonid', PARAM_INT);
 $pageid = required_param('pageid', PARAM_INT);
@@ -36,11 +37,6 @@ $mode = optional_param('mode', 'preview', PARAM_TEXT);
 $starttime = optional_param('starttime', 0, PARAM_INT);
 $attemptid = optional_param('attemptid', 0, PARAM_INT);
 global $USER;
-
-// Get the question feedback type.
-$config = get_config('mod_simplelesson');
-$feedback = $config->feedback;
-$maxattempts = $config->maxattempts;
 
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 $cm = get_coursemodule_from_instance('simplelesson', $simplelessonid,
@@ -54,17 +50,20 @@ require_login($course, true, $cm);
 $coursecontext = context_course::instance($courseid);
 $modulecontext = context_module::instance($cm->id);
 
+// Get the question feedback type.
+//var_dump($moduleinstance);exit;
+$feedback = $moduleinstance->behaviour;
+$maxattempts = $moduleinstance->maxattempts;
+
 $PAGE->set_context($modulecontext);
 $PAGE->set_pagelayout('course');
 $PAGE->set_heading(format_string($course->fullname));
-
-$config = get_config('mod_simplelesson');
 
 $renderer = $PAGE->get_renderer('mod_simplelesson');
 
 // Sort the question usage and slots
 $question_entry = questions::page_has_question($simplelessonid, $pageid);
-if ($question_entry) {
+if ( ($question_entry) && ($mode == 'attempt') ) {
     
     $qubaid = attempts::get_usageid($simplelessonid);
     $quba = \question_engine::load_questions_usage_by_activity($qubaid);
@@ -73,38 +72,46 @@ if ($question_entry) {
     $slot = questions::get_slot($simplelessonid, $pageid);
     
     // Display and feedback options
-    $options = displayoptions::get_options($feedback);
+    $options = display_options::get_options($feedback);
     
-    // Actually not allowing deferred feedback (yet)
+    // Actually not allowing deferred feedback (yet).
     $deferred = $options->feedback == 'deferredfeedback';
 } else {
     $slot = 0;
 }
 
-$actionurl = $PAGE->url;
+$actionurl = new moodle_url ('/mod/simplelesson/showpage.php',
+        array('courseid' => $courseid, 'simplelessonid' => $simplelessonid,
+        'pageid' => $pageid, 'mode' => $mode, 'attemptid' => $attemptid));
 
 // Check if data submitted.
 if (data_submitted() && confirm_sesskey()) {
     $timenow = time();
     $transaction = $DB->start_delegated_transaction();
+    $qubaid = attempts::get_usageid($simplelessonid);
     $quba = \question_engine::load_questions_usage_by_activity($qubaid);
     // $quba->finish_question($slot);
     $quba->process_all_actions($timenow);
     question_engine::save_questions_usage_by_activity($quba);
     $transaction->allow_commit(); 
     
-    // Todo: Record results here for each answer.
+    /* Record results here for each answer.
+       qatid id is entry in question_attempts table
+       attemptid is from start_attempt (includes user id),
+       that's our own question_attempts table.
+       pageid gives us also the question info, such as slot 
+       and question number.
+    */
+    $slot = questions::get_slot($simplelessonid, $pageid);
     $qdata = attempts::get_question_attempt_id($qubaid, $slot); 
     $answer_data = new stdClass();
-    $answer_data->qatid = $qdata->id;           
-    $answer_data->courseid = $courseid;
-    $answer_data->simplelessonid = $simplelessonid;
-    $answer_data->attemptid = $attemptid;
-    $answer_data->userid = $USER->id;
-    $answer_data->slqid = $question_entry->id;
-    $answer_data->starttime = $starttime;
-    $answer_data->endtime = $timenow;
-    $DB->insert_record('simplelesson_answers', $answer_data);    
+    $answer_data->simplelessonid = $simplelessonid;         
+    $answer_data->qatid = $qdata->id; 
+    $answer_data->attemptid = $attemptid; 
+    $answer_data->pageid = $pageid;
+    $answer_data->timestarted = $starttime;
+    $answer_data->timecompleted = $timenow;
+    $DB->insert_record('simplelesson_answers', $answer_data);     
     redirect($actionurl);
              
 } else if ($slot !=0) {
@@ -140,29 +147,22 @@ if ( ($moduleinstance->showindex) && ($mode != 'attempt') ) {
 echo $renderer->show_page($data);
 
 // If there is a question and this is an attempt, show
-// the question, or just show a placeholder.
+// the question.
 
-if ($slot != 0) {
-    if ($mode == 'attempt') {
-        echo $renderer->render_question_form(
-                $actionurl, $options, $slot, $quba, 
-                $deferred, time());
-    } else {
-        echo $renderer->dummy_question(
-                $questionid, $mode);
-    }
+if ( ($slot != 0) && ($mode == 'attempt') ) {
+    echo $renderer->render_question_form($actionurl, $options, 
+            $slot, $quba, $deferred, time());
 }
 
 // If this is the last page, add link to the summary page.
 if (pages::is_last_page($data)) {
     // Todo: Check here all questions answered or not.
-    echo $renderer->show_last_page_link(
-            $courseid, $simplelessonid, $USER->id, 
+    echo $renderer->show_summary_page_link($courseid, $simplelessonid, 
             $mode, $attemptid);
 }
 
 //  Show the navigation links.
-echo $renderer->show_page_nav_links($courseid, $data);
+echo $renderer->show_page_nav_links($data, $courseid, $mode, $attemptid);
 
 if (has_capability('mod/simplelesson:manage', $modulecontext)) {
     echo $renderer->show_page_edit_links($courseid, $data);

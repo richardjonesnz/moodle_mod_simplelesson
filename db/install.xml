@@ -46,7 +46,7 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="simplelessonid" TYPE="foreign" FIELDS="simplelessonid" REFTABLE="simplelessons" REFFIELDS="id"/>
+        <KEY NAME="simplelessonid" TYPE="foreign" FIELDS="simplelessonid" REFTABLE="simplelesson" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
     <TABLE NAME="simplelesson_questions" COMMENT="Associates question id with page id">
@@ -60,15 +60,14 @@
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
         <KEY NAME="pageid" TYPE="foreign" FIELDS="pageid" REFTABLE="simplelesson_pages" REFFIELDS="id"/>
-        <KEY NAME="simplelessonid" TYPE="foreign" FIELDS="simplelessonid" REFTABLE="simplelessons" REFFIELDS="id"/>
+        <KEY NAME="simplelessonid" TYPE="foreign" FIELDS="simplelessonid" REFTABLE="simplelesson" REFFIELDS="id"/>
         <KEY NAME="qid" TYPE="foreign" FIELDS="qid" REFTABLE="question" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
     <TABLE NAME="simplelesson_attempts" COMMENT="user attempt data for simplelesson">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="courseid" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" COMMENT="Course simplelesson activity belongs to"/>
-        <FIELD NAME="simplelessonid" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" COMMENT="simplelesson activity this data belongs to"/>
+        <FIELD NAME="simplelessonid" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" COMMENT="Course simplelesson activity belongs to"/>
         <FIELD NAME="userid" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" COMMENT="Course simplelesson activity belongs to"/>
         <FIELD NAME="status" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="status"/>
         <FIELD NAME="sessionscore" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the score for this session"/>
@@ -77,10 +76,27 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
-        <KEY NAME="simplelessonid" TYPE="foreign" FIELDS="simplelessonid" REFTABLE="simplelessons" REFFIELDS="id"/>
-        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="users" REFFIELDS="id"/>
+        <KEY NAME="simplelessonid" TYPE="foreign" FIELDS="simplelessonid" REFTABLE="simplelesson" REFFIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
+    <TABLE NAME="simplelesson_answers" COMMENT="user answer data for simplelesson">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="simplelessonid" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" COMMENT="Course simplelesson activity belongs to"/>
+        <FIELD NAME="qatid" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" COMMENT="question_attempt entry id"/>
+        <FIELD NAME="attemptid" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Our local attempt id"/>
+        <FIELD NAME="pageid" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="page being attempted"/>
+        <FIELD NAME="timestarted" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timecompleted" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="simplelessonid" TYPE="foreign" FIELDS="simplelessonid" REFTABLE="simplelesson" REFFIELDS="id"/>
+        <KEY NAME="qatid" TYPE="foreign" FIELDS="qatid" REFTABLE="question_attempts" REFFIELDS="id"/>
+        <KEY NAME="attemptid" TYPE="foreign" FIELDS="attemptid" REFTABLE="simplelesson_attempts" REFFIELDS="id"/>
+        <KEY NAME="pageid" TYPE="foreign" FIELDS="pageid" REFTABLE="question_pages" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>  
   </TABLES>
 </XMLDB>

@@ -30,7 +30,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/course/moodleform_mod.php');
-
+require_once($CFG->libdir . '/questionlib.php');
 /**
  * Module instance settings form (from moodle-mod_newmodule)
  *

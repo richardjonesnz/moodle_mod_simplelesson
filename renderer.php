@@ -144,79 +144,100 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
     }
 
     /**
-     * Returns the link to the a content page.
+     * Returns links to first page and start attempt page
      *
      * @param string $courseid
      * @param string $moduleid
      * @param string $pagesequence
-     * @return string
+     * @return string html links on first page
      */
-    public function fetch_firstpage_link($courseid,
+    public function fetch_firstpage_links($courseid,
             $simplelessonid, $pageid) {
 
         $html = '';
-        $html .= html_writer::start_div('mod_simplelesson_nav_links');
-
+        $links = array();
+        
+        $html .= html_writer::start_div(
+                'mod_simplelesson_page_links');
+        
+        // Link to first page.
         $url = new moodle_url('/mod/simplelesson/showpage.php',
-                    array('courseid' => $courseid,
-                    'simplelessonid' => $simplelessonid,
-                    'pageid' => $pageid));
-        $html .= html_writer::link($url,
-                    get_string('firstpagelink', 'mod_simplelesson'));
-
-        $html .= html_writer::end_div();
-
+                    array('courseid' => $courseid, 
+                          'simplelessonid' => $simplelessonid, 
+                          'pageid' => $pageid,
+                          'mode' => 'preview'));
+        $links[] = html_writer::link($url, 
+                    get_string('preview', 'mod_simplelesson'));
+        
+        // Link to start attempt page.
+        $url = new moodle_url('/mod/simplelesson/start_attempt.php',
+                    array('courseid' => $courseid, 
+                          'simplelessonid' => $simplelessonid,
+                          'pageid' => $pageid));
+        $links[] = html_writer::link($url, 
+                    get_string('attempt', 'mod_simplelesson'));
+        
+        $html .= html_writer::alist($links, null, 'ul'); 
+       
+        $html .=  html_writer::end_div();
+       
         return $html;
     }
 
     /**
-     * Show the home, previous and next links.
+     * Show the home, previous and next links
      *
+     * @param object $data object instance of current page
      * @param int $courseid
-     * @param object $data - the current page object
      * @return string html representation of navigation links
      */
-    public function show_page_nav_links($courseid, $data) {
-
+    public function show_page_nav_links($data, $courseid, 
+            $mode, $attemptid) {
+        
         $links = array();
-
-        $html = html_writer::start_div('mod_simplelesson_page_links');
-        // Home link.
-        $returnview = new moodle_url('/mod/simplelesson/view.php',
+        $html =  $this->output->box_start();
+        $html .= html_writer::start_div('mod_simplelesson_page_links');      
+        // Home link
+        $url = new moodle_url('/mod/simplelesson/view.php', 
                 array('simplelessonid' => $data->simplelessonid));
-        $links[] = html_writer::link($returnview,
-                    get_string('homelink',  'mod_simplelesson'));
-
-        // Previous page (if any).
+        $links[] = html_writer::link($url, 
+                    get_string('homelink', 'mod_simplelesson'));
+        
         if ($data->prevpageid != 0) {
-            $prevurl = new moodle_url('/mod/simplelesson/showpage.php',
-                    array('courseid' => $courseid,
-                    'simplelessonid' => $data->simplelessonid,
-                    'pageid' => $data->prevpageid));
-            $links[] = html_writer::link($prevurl,
-                    get_string('gotoprevpage', 'mod_simplelesson'));
+            $url = new moodle_url('/mod/simplelesson/showpage.php',
+                        array('courseid' => $courseid, 
+                        'simplelessonid' => $data->simplelessonid, 
+                        'pageid' => $data->prevpageid,
+                        'mode' => $mode,
+                        'attemptid' => $attemptid));
+            $links[] = html_writer::link($url, 
+                        get_string('gotoprevpage', 'mod_simplelesson'));
+        
         } else {
-            // Just put out the link text.
+            // Just put out the link text
             $links[] = get_string('gotoprevpage', 'mod_simplelesson');
         }
-
-        // Next page (if any).
+        // Check link is valid
         if ($data->nextpageid != 0) {
-            $nexturl = new moodle_url('/mod/simplelesson/showpage.php',
-                    array('courseid' => $courseid,
-                    'simplelessonid' => $data->simplelessonid,
-                    'pageid' => $data->nextpageid));
-            $links[] = html_writer::link($nexturl,
-                 get_string('gotonextpage', 'mod_simplelesson'));
+            $url = new moodle_url('/mod/simplelesson/showpage.php',
+                        array('courseid' => $courseid, 
+                        'simplelessonid' => $data->simplelessonid, 
+                        'pageid' => $data->nextpageid,
+                        'mode' =>$mode,
+                        'attemptid' => $attemptid));
+            $links[] = html_writer::link($url, 
+                        get_string('gotonextpage', 'mod_simplelesson'));
+        
         } else {
-            // Just put out the link text.
+            // Just put out the link text
             $links[] = get_string('gotonextpage', 'mod_simplelesson');
         }
-
+        
         $html .= html_writer::alist($links, null, 'ul');
-        $html .= html_writer::end_div();
-
-        return $html;
+        $html .= html_writer::end_div();  // pagelinks 
+        $html .=  $this->output->box_end();  
+        
+        return $html;    
     }
 
     /**
@@ -485,22 +506,18 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      * @param int $mode preview or attempt
      * @return string
      */
-    public function show_last_page_link(
-            $courseid, $simplelessonid, $answerid, 
+    public function show_summary_page_link($courseid, $simplelessonid, 
             $mode, $attemptid) {
         $html = '';
         $html .= html_writer::start_div(
-                MOD_SIMPLELESSON_CLASS . '_page');
-        $html .= '<p>' . get_string('gotosummary',
-                MOD_SIMPLELESSON_LANG);
+                'mod_simplelesson_page');
         $url = new moodle_url('/mod/simplelesson/summary.php', 
                 array('courseid' => $courseid,
                 'simplelessonid' => $simplelessonid,
-                'answerid' =>$answerid,
                 'mode' => $mode,
                 'attemptid' => $attemptid));
         $html .= html_writer::link($url,
-                get_string('end_lesson', MOD_SIMPLELESSON_LANG));
+                get_string('end_lesson', 'mod_simplelesson'));
         $html .= '</p>';
         $html .= html_writer::end_div();
         return $html;
@@ -604,7 +621,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
     public function dummy_question($questionid) {
         $html = '';
         $html .= html_writer::start_div(
-                MOD_SIMPLELESSON_CLASS . '_page_question');
+                'mod_simplelesson_page_question');
         $html .= get_string('dummy_question', 'mod_simplelesson');
         $html .= html_writer::end_div();
         return $html;

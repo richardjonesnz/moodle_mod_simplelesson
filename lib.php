@@ -154,7 +154,8 @@ function simplelesson_refresh_events($courseid = 0) {
 function simplelesson_delete_instance($id) {
     global $DB;
 
-    if (!$simplelesson = $DB->get_record('simplelesson', array('id' => $id))) {
+    if (!$simplelesson = $DB->get_record('simplelesson', 
+            array('id' => $id))) {
         return false;
     }
 
@@ -163,7 +164,13 @@ function simplelesson_delete_instance($id) {
     }
     // Delete any dependent records.
     $DB->delete_records('simplelesson_pages',
-            array('simplelessonid' => $simplelesson->id));
+            array('simplelessonid' => $simplelessonid));
+    $DB->delete_records('simplelesson_questions',
+            array('simplelessonid' => $simplelessonid));
+    $DB->delete_records('simplelesson_attempts',
+            array('simplelessonid' => $simplelessonid));
+    $DB->delete_records('simplelesson_aanswers',
+            array('simplelessonid' => $simplelessonid));
     
     // Delete files.
     $context = context_module::instance($cm->id);
@@ -171,7 +178,7 @@ function simplelesson_delete_instance($id) {
     $fs->delete_area_files($context->id);
 
     // Delete the module table.
-    $DB->delete_records('simplelesson', array('id' => $simplelesson->id));
+    $DB->delete_records('simplelesson', array('id' => $simplelessonid));
 
     return true;
 }
