@@ -204,6 +204,7 @@ class pages  {
     /**
      * Given a simplelesson and sequence number
      * Move the page by exchanging sequence numbers
+     * 
      *
      * @param int $simplelessonid the simplelesson instance
      * @param int $sequence the page sequence number
@@ -225,6 +226,8 @@ class pages  {
      * Given a simplelesson and sequence number
      * Move the page by exchanging sequence numbers
      *
+     * If there is a question slot, move that too.
+     *
      * @param int $simplelessonid the simplelesson instance
      * @param int $sequence the page sequence number
      * @return none
@@ -239,6 +242,8 @@ class pages  {
 
         self::increment_page_sequence($pageiddown);
         self::decrement_page_sequence($pageidup);
+        self::exchange_question_slots($simplelessonid, 
+                $pageiddown, $pageidup);
     }
 
     /**
@@ -271,6 +276,36 @@ class pages  {
         $DB->set_field('simplelesson_pages',
                 'sequence', ($sequence + 1),
                 array('id' => $pageid));
+    }
+    /**
+     * Given two page record id's
+     * Exchange their question slot numbers (if any)
+     *
+     * @param simplelessonid - make sure it is just this lesson
+     * @param $p1 int $pageid
+     * @param $p2 int $pageid
+     * @return none
+     */
+    public static function exchange_question_slots($simplelessonid,
+            $p1, $p2) {
+        global $DB;
+        $p1_slot = $DB->get_field('simplelesson_questions',
+                'slot',
+                array('pageid' => $p1,
+                'simplelessonid' => $simplelessonid));
+        $p2_slot = $DB->get_field('simplelesson_questions',
+                'slot',
+                array('pageid' => $p2,
+                'simplelessonid' => $simplelessonid));
+
+        $DB->set_field('simplelesson_questions',
+                'slot', ($p2_slot),
+                array('pageid' => $p1,
+                'simplelessonid' => $simplelessonid));
+        $DB->set_field('simplelesson_questions',
+                'slot', ($p1_slot),
+                array('pageid' => $p2,
+                'simplelessonid' => $simplelessonid));
     }
 
     /**

@@ -104,9 +104,7 @@ class attempts  {
     /**
      * Return an array of lesson answers and associated data
      *
-     * @param $courseid int course id
-     * @param $simplelessonid int id of simplelesson instance
-     * @param $userid int id of simplelesson user
+     * @param $attemptid int id of attempt (simplelesson_attempts)
      * @return object array with one or more rows of answer data
      */
     public static function get_lesson_answer_data($attemptid) {
@@ -121,10 +119,10 @@ class attempts  {
         
         $answerdata = $DB->get_records_sql($sql, array('aid' => $attemptid));
     
-        // Add the data for the summary table
+        // Add the data for the summary table.
         foreach ($answerdata as $data) {
         
-            // Get the records from our tables
+            // Get the records from our tables.
             $pagedata = $DB->get_record('simplelesson_pages',
                     array('id' => $data->pageid), '*',
                     MUST_EXIST);
@@ -138,7 +136,7 @@ class attempts  {
             $data->qname = questions::fetch_question_name($questiondata->qid);
             
             // We'll need the slot to get the response data.
-            $data->slot = $questiondata->slot;
+            // $data->slot = $questiondata->slot;
             
             // Get the record from the question attempt data.
             $qdata = $DB->get_record('question_attempts',
@@ -147,7 +145,7 @@ class attempts  {
             $data->youranswer = $qdata->responsesummary;
             $data->rightanswer = $qdata->rightanswer;
 
-            // Get the userdata
+            // Get the userdata.
             $userdata = $DB->get_record('user',
                     array('id' => $data->userid), '*',
                     MUST_EXIST);

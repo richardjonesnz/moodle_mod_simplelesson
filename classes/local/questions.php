@@ -111,9 +111,13 @@ class questions  {
      */  
     public static function update_question_table($data) {
         global $DB;
-        return $DB->set_field('simplelesson_questions', 
-                    'pageid', $data->pagetitle,  
-                    array('id' => $data->id));
+        $DB->set_field('simplelesson_questions', 
+                'pageid', $data->pagetitle,  
+                array('id' => $data->id));
+        // Remove the slot number too.
+        $DB->set_field('simplelesson_questions', 
+                'slot', 0,  
+                array('id' => $data->id));
     }  
     /** 
      * Given a simplelesson id and a page id
