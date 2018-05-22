@@ -21,6 +21,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 use \mod_simplelesson\local\pages;
+use \mod_simplelesson\local\questions;
 use \mod_simplelesson\local\reporting;
 namespace mod_simplelesson\local;
 require_once('../../config.php');
@@ -51,10 +52,11 @@ class attempts  {
                 'mod_simplelesson',
                 $context);
         $quba->set_preferred_behaviour($behaviour);
-
         foreach ($entries as $entry) {
             $questiondef = \question_bank::load_question($entry->qid);
-            $id = $quba->add_question($questiondef, $entry->defaultmark);
+            $slot = $quba->add_question($questiondef,
+                    $entry->defaultmark);
+            self::set_slot($simplelessonid, $entry->pageid, $slot);
         }
         $quba->start_all_questions();
         \question_engine::save_questions_usage_by_activity($quba);
@@ -63,6 +65,20 @@ class attempts  {
                     'qubaid', $qubaid,
                     array('id' => $simplelessonid));
         return $qubaid;
+    }
+    /**
+     * Set the slot number in the questions table
+     *
+     * @param $simplelessonid - module instance id
+     * @param $pageid - module instance id
+     * @param $slot - module instance id
+     */
+    public static function set_slot($simplelessonid, $pageid, $slot) {
+        global $DB;
+        $DB->set_field('simplelesson_questions',
+                'slot', $slot,
+                array('simplelessonid' => $simplelessonid,
+                'pageid' => $pageid));
     }
     /**
      * Get the usage id for a simplelesson instance

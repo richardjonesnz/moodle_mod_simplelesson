@@ -645,14 +645,17 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
     public function render_question_form(
             $actionurl, $options, $slot, $quba,
             $deferred, $starttime) {
+
+        $html = html_writer::start_div('mod_simplelesson_question');
         $headtags = '';
         $headtags .= $quba->render_question_head_html($slot);
         $headtags .= question_engine::initialise_js();
 
         // Start the question form.
-        $html = html_writer::start_tag('form',
+        $html .= html_writer::start_tag('form',
                 array('method' => 'post', 'action' => $actionurl,
                 'enctype' => 'multipart/form-data',
+                'accept-charset' => 'utf-8',
                 'id' => 'responseform'));
         $html .= html_writer::start_tag('div');
         $html .= html_writer::empty_tag('input',
@@ -666,11 +669,12 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
                 'name' => 'starttime', 'value' => $starttime));
         $html .= html_writer::end_tag('div');
 
-        // Output the question.
-        $html .= $quba->render_question($slot, $options, $slot);
+        // Output the question. slot = display number
+        $html .= $quba->render_question($slot, $options);
 
         // Finish the question form.
-        $html .= html_writer::start_tag('div');
+        $html .= html_writer::start_tag(
+                'mod_simplelesson_action_buttons');
 
         // Action button on the form.
         // We only need this for deferred feedback I think
@@ -691,6 +695,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         */
         $html .= html_writer::end_tag('div');
         $html .= html_writer::end_tag('form');
+        $html .= html_writer::end_div('div');
         return $html;
     }
     /**

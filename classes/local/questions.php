@@ -89,7 +89,8 @@ class questions  {
      */
     public static function fetch_attempt_questions($simplelessonid) {
         global $DB;
-        $sql = "SELECT s.id, s.qid, s.pageid, q.name, q.questiontext, q.defaultmark
+        $sql = "SELECT s.id, s.qid, s.pageid, q.name,
+                       q.questiontext, q.defaultmark
                   FROM {simplelesson_questions} s
                   JOIN {question} q ON s.qid = q.id
                  WHERE s.simplelessonid = :slid
@@ -148,33 +149,6 @@ class questions  {
         return $DB->record_exists('simplelesson_questions',
                     array('simplelessonid' => $simplelessonid,
                     'pageid' => $pageid));
-    }
-    /**
-     * Given a simplelessonid update the slots field
-     * for the lesson pages.
-     *
-     * @param $questionentries object array
-     * @return none
-     * @see self::fetch_attempt_questions
-     */
-    public static function set_slots($simplelessonid) {
-        global $DB;
-        global $DB;
-        $sql = "SELECT s.id, s.pageid, p.sequence
-                  FROM {simplelesson_questions} s
-                  JOIN {simplelesson_pages} p ON s.pageid = p.id
-                 WHERE s.simplelessonid = :slid
-              ORDER BY p.sequence";
-        $entries = $DB->get_records_sql($sql,
-              array('slid' => $simplelessonid));
-        // Allocate slots to those pages which have questions.
-        $slot = 1;
-        foreach ($entries as $entry) {
-            $DB->set_field('simplelesson_questions',
-                'slot', $slot,
-                array('id' => $entry->id));
-            $slot++;
-        }
     }
     /**
      * Given a simplelessonid and pageid

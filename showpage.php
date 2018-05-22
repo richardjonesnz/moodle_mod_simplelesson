@@ -43,7 +43,8 @@ $cm = get_coursemodule_from_instance('simplelesson', $simplelessonid,
         $courseid, false, MUST_EXIST);
 $moduleinstance  = $DB->get_record('simplelesson', array('id' => $simplelessonid), '*', MUST_EXIST);
 $PAGE->set_url('/mod/simplelesson/showpage.php',
-        array('courseid' => $courseid, 'simplelessonid' => $simplelessonid,
+        array('courseid' => $courseid,
+        'simplelessonid' => $simplelessonid,
         'pageid' => $pageid));
 
 require_login($course, true, $cm);
@@ -67,21 +68,18 @@ if ( ($questionentry) && ($mode == 'attempt') ) {
     $qubaid = attempts::get_usageid($simplelessonid);
     $quba = \question_engine::load_questions_usage_by_activity($qubaid);
 
-    // Get the slot for the lesson and page.
-    $slot = questions::get_slot($simplelessonid, $pageid);
-
     // Display and feedback options.
     $options = display_options::get_options($feedback);
 
     // Actually not allowing deferred feedback (yet).
     $deferred = $options->feedback == 'deferredfeedback';
-} else {
-    $slot = 0;
 }
 
 $actionurl = new moodle_url ('/mod/simplelesson/showpage.php',
-        array('courseid' => $courseid, 'simplelessonid' => $simplelessonid,
-        'pageid' => $pageid, 'mode' => $mode, 'attemptid' => $attemptid));
+        array('courseid' => $courseid,
+        'simplelessonid' => $simplelessonid,
+        'pageid' => $pageid, 'mode' => $mode,
+        'attemptid' => $attemptid));
 
 // Check if data submitted.
 if (data_submitted() && confirm_sesskey()) {
@@ -89,7 +87,6 @@ if (data_submitted() && confirm_sesskey()) {
     $transaction = $DB->start_delegated_transaction();
     $qubaid = attempts::get_usageid($simplelessonid);
     $quba = \question_engine::load_questions_usage_by_activity($qubaid);
-    /* $quba->finish_question($slot); */
     $quba->process_all_actions($timenow);
     question_engine::save_questions_usage_by_activity($quba);
     $transaction->allow_commit();
@@ -112,11 +109,6 @@ if (data_submitted() && confirm_sesskey()) {
     $answerdata->timecompleted = $timenow;
     $DB->insert_record('simplelesson_answers', $answerdata);
     redirect($actionurl);
-
-} else if ($slot != 0) {
-    // Probably just re-visiting or refreshing page
-    // Disable next until question answered...
-    $question = $quba->get_question($slot);
 }
 
 echo $OUTPUT->header();
@@ -148,7 +140,8 @@ echo $renderer->show_page($data);
 // If there is a question and this is an attempt, show
 // the question.
 
-if ( ($slot != 0) && ($mode == 'attempt') ) {
+if ( ($questionentry) && ($mode == 'attempt') ) {
+    $slot = questions::get_slot($simplelessonid, $pageid);
     echo $renderer->render_question_form($actionurl, $options,
             $slot, $quba, $deferred, time());
 }

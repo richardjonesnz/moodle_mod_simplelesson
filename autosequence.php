@@ -24,28 +24,9 @@
 
 use \mod_simplelesson\local\pages;
 require_once('../../config.php');
-
-// Fetch URL parameters.
 $courseid = required_param('courseid', PARAM_INT);
 $simplelessonid = required_param('simplelessonid', PARAM_INT);
-
-// Set course related variables.
-$moduleinstance  = $DB->get_record('simplelesson', array('id' => $simplelessonid), '*', MUST_EXIST);
-$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
-$cm = get_coursemodule_from_instance('simplelesson', $simplelessonid,
-        $courseid, false, MUST_EXIST);
-
-// Set up the page.
-$PAGE->set_url('/mod/simplelesson/autosequence.php',
-        array('simplelessonid' => $simplelessonid));
-require_login($course, true, $cm);
-
-$coursecontext = context_course::instance($courseid);
-$modulecontext = context_module::instance($cm->id);
-
-$PAGE->set_context($modulecontext);
-$PAGE->set_pagelayout('course');
-
+require_course_login($courseid);
 $returnedit = new moodle_url('/mod/simplelesson/edit.php',
         array('courseid' => $courseid,
         'simplelessonid' => $simplelessonid));
