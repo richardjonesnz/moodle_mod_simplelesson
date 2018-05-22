@@ -52,13 +52,16 @@ $renderer = $PAGE->get_renderer('mod_simplelesson');
 
 if ($mode == 'attempt') {
     echo $OUTPUT->header();
-    attempts::set_attempt_completed($attemptid);
 
     // Summary data for this attempt by this user.
     $answerdata = attempts::get_lesson_answer_data($attemptid);
     echo $OUTPUT->heading(get_string('summary_header', 'mod_simplelesson'), 2);
     echo $renderer->lesson_summary($answerdata);
     echo $renderer->show_home_page_link($simplelessonid);
+
+    // Record attempt completion data.
+    $sessionscore = attempts::get_sessionscore($answerdata);
+    attempts::set_attempt_completed($attemptid, $sessionscore);
 
     // Remove the usage data (may have to do manually).
     // May need attempts management page.

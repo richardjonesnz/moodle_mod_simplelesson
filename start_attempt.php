@@ -64,6 +64,8 @@ if (!empty($questionentries)) {
             $moduleinstance->behaviour,
             $questionentries,
             $moduleinstance->id);
+    // Save slots here.
+    questions::set_slots($simplelessonid);
 } else {
     // No questions.
     $returnview = new moodle_url('/mod/simplelesson/view.php',
@@ -71,8 +73,6 @@ if (!empty($questionentries)) {
     redirect($returnview,
             get_string('no_questions', 'mod_simplelesson', 2));
 }
-// Save slots here.
-questions::set_slots($simplelessonid);
 
 // Count this as starting an attempt, record it.
 $attemptdata = new stdClass();

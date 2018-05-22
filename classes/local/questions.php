@@ -153,26 +153,26 @@ class questions  {
      * Given a simplelessonid update the slots field
      * for the lesson pages.
      *
-     * @param int $simplelessonid the module instance id
+     * @param $questionentries object array
      * @return none
+     * @see self::fetch_attempt_questions
      */
     public static function set_slots($simplelessonid) {
         global $DB;
-        // Get the records to change in order of sequence.
-        // Using the pageid to avoid setting null pageid's.
-        $sql = "SELECT q.id, q.qid, q.pageid, q.slot
-                  FROM {simplelesson_questions} q
-                  JOIN {simplelesson_pages} p ON q.pageid = p.id
-                 WHERE q.simplelessonid = :slid
-              ORDER BY p.sequence ASC";
-
-        $questions = $DB->get_records_sql($sql,
-                array('slid' => $simplelessonid));
-        // Allocate slots to those page which have questions.
+        global $DB;
+        $sql = "SELECT s.id, s.pageid, p.sequence
+                  FROM {simplelesson_questions} s
+                  JOIN {simplelesson_pages} p ON s.pageid = p.id
+                 WHERE s.simplelessonid = :slid
+              ORDER BY p.sequence";
+        $entries = $DB->get_records_sql($sql,
+              array('slid' => $simplelessonid));
+        // Allocate slots to those pages which have questions.
         $slot = 1;
-        foreach ($questions as $question) {
-            $question->slot = $slot;
-            $DB->update_record('simplelesson_questions', $question);
+        foreach ($entries as $entry) {
+            $DB->set_field('simplelesson_questions',
+                'slot', $slot,
+                array('id' => $entry->id));
             $slot++;
         }
     }

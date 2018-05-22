@@ -185,11 +185,29 @@ class attempts  {
      *
      * Need some constants here: 0, 1 (started), 2 (complete).
      * @param $attemptid - record id to update
+     * @param $sessionscore - Score for this attempt
      */
-    public static function set_attempt_completed($attemptid) {
+    public static function set_attempt_completed($attemptid,
+            $sessionscore) {
         global $DB;
         $DB->set_field('simplelesson_attempts',
                 'status', 2, array('id' => $attemptid));
+        $DB->set_field('simplelesson_attempts',
+                'sessionscore', $sessionscore,
+                array('id' => $attemptid));
+    }
+    /**
+     * Add up the marks in the answer data
+     *
+     * @param $answerdata - array of objects
+     * @return int overall mark for the attempt
+     */
+    public static function get_sessionscore($answerdata) {
+        $sessionscore = 0;
+        foreach ($answerdata as $data) {
+            $sessionscore .= $data->mark;
+        }
+        return $sessionscore;
     }
     /**
      * Get the user attempts at this lesson instance
