@@ -33,29 +33,29 @@ class simplelesson_add_question_form extends moodleform {
      */
     public function definition() {
         global $DB;
-        $mform = $this->_form;  
-        $mform->addElement('static', 'label1', 'select_questions', 
+        $mform = $this->_form;
+        $mform->addElement('static', 'label1', 'select_questions',
                 get_string('select_questions', 'mod_simplelesson'));
-              
+
         $questions = questions::get_questions_from_category(
                 $this->_customdata['categoryid']);
 
         $n = 0;
-        foreach($questions as $question) {
+        foreach ($questions as $question) {
             $n++;
-            $check_name = 'q' . $question->id;  
-            $mform->addElement('advcheckbox', $check_name,  
+            $checkname = 'q' . $question->id;
+            $mform->addElement('advcheckbox', $checkname,
                 $question->name,
                 null, array('group' => 1), array(0, (int) $question->id));
-        $mform->setType($check_name, PARAM_TEXT);   
+            $mform->setType($checkname, PARAM_TEXT);
         }
-        
-        // Hidden fields
+
+        // Hidden fields.
         $mform->addElement('hidden', 'courseid', $this->_customdata['courseid']);
         $mform->addElement('hidden', 'simplelessonid', $this->_customdata['simplelessonid']);
-        
+
         $mform->setType('courseid', PARAM_INT);
         $mform->setType('simplelessonid', PARAM_INT);
-        $this->add_action_buttons($cancel=true);
+        $this->add_action_buttons($cancel = true);
     }
 }

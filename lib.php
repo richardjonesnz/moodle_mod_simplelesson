@@ -132,12 +132,12 @@ function simplelesson_refresh_events($courseid = 0) {
             return true;
         }
     }
-
+    /*
     foreach ($simplelessons as $simplelesson) {
         // Create a function such as the one below to deal with updating calendar events.
-        // simplelesson_update_events($simplelesson);
+        // simplelesson_update_events($simplelesson);.
     }
-
+    */
     return true;
 }
 
@@ -154,13 +154,14 @@ function simplelesson_refresh_events($courseid = 0) {
 function simplelesson_delete_instance($id) {
     global $DB;
 
-    if (!$simplelesson = $DB->get_record('simplelesson', 
+    if (!$simplelesson = $DB->get_record('simplelesson',
             array('id' => $id))) {
         return false;
     }
 
-    if (!$cm = get_coursemodule_from_instance('simplelesson', $simplelesson->id)) {
-     return false;
+    if (!$cm = get_coursemodule_from_instance('simplelesson',
+            $simplelesson->id)) {
+        return false;
     }
     // Delete any dependent records.
     $DB->delete_records('simplelesson_pages',
@@ -169,9 +170,9 @@ function simplelesson_delete_instance($id) {
             array('simplelessonid' => $simplelessonid));
     $DB->delete_records('simplelesson_attempts',
             array('simplelessonid' => $simplelessonid));
-    $DB->delete_records('simplelesson_aanswers',
+    $DB->delete_records('simplelesson_answers',
             array('simplelessonid' => $simplelessonid));
-    
+
     // Delete files.
     $context = context_module::instance($cm->id);
     $fs = get_file_storage();
@@ -400,12 +401,13 @@ function simplelesson_update_grades(stdClass $simplelesson, $userid = 0) {
 
 /* File API */
 
-// Return editor options
+// Return editor options.
 function simplelesson_get_editor_options($context) {
     global $CFG;
-    return array('subdirs'=>true, 'maxbytes'=>$CFG->maxbytes, 'maxfiles'=>-1,
-            'changeformat'=>1, 'context'=>$context, 
-            'noclean'=>true, 'trusttext'=>false);
+    return array('subdirs' => true, 'maxbytes' => $CFG->maxbytes,
+            'maxfiles' => -1,
+            'changeformat' => 1, 'context' => $context,
+            'noclean' => true, 'trusttext' => false);
 }
 
 /**
@@ -458,7 +460,7 @@ function simplelesson_get_file_info($browser, $areas, $course, $cm, $context, $f
  * @param bool $forcedownload whether or not force download
  * @param array $options additional options affecting the file serving
  */
-function simplelesson_pluginfile($course, $cm, $context, $filearea, array $args, 
+function simplelesson_pluginfile($course, $cm, $context, $filearea, array $args,
         $forcedownload, array $options=array()) {
     global $DB, $CFG;
 
@@ -503,13 +505,13 @@ function simplelesson_pluginfile($course, $cm, $context, $filearea, array $args,
 function mod_simplelesson_question_pluginfile($course, $context, $component,
          $filearea, $qubaid, $slot, $args,
          $forcedownload, array $options = array()) {
-    
-    // require_login($course) - I probably should fix this up.
-    // But it's hard to know how qubaid, slot and so on are
-    // actually used within this callback.  All I know
-    // is that it seems to work.  Quiz does something similar
-    // but with much more complexity.
-   
+
+    /* require_login($course) - I probably should fix this up.
+     * But it's hard to know how qubaid, slot and so on are
+     * actually used within this callback.  All I know
+     * is that it seems to work.  Quiz does something similar
+     * but with much more complexity.
+     */
     $fs = get_file_storage();
     $relativepath = implode('/', $args);
     $fullpath = "/$context->id/$component/$filearea/$relativepath";

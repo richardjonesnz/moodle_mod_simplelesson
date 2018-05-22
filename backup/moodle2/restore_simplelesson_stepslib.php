@@ -23,6 +23,7 @@
  * @see https://github.com/moodlehq/moodle-mod_newmodule
  *
  */
+defined('MOODLE_INTERNAL') || die();
 
 /**
  * Structure step to restore one simplelesson activity
@@ -89,7 +90,7 @@ class restore_simplelesson_activity_structure_step extends restore_activity_stru
         // when we know how :)
 
         $newitemid = $DB->insert_record('simplelesson_pages', $data);
-        $this->set_mapping('simplelesson_page', $oldid, $newitemid, true); 
+        $this->set_mapping('simplelesson_page', $oldid, $newitemid, true);
 
     }
     /**

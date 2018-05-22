@@ -79,16 +79,16 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
                 'simplelessonid' => $simplelessonid));
         $links[] = html_writer::link($url,
                 get_string('manage_pages', 'mod_simplelesson'));
-        
+
         // Question management.
         $url = new moodle_url('/mod/simplelesson/edit_questions.php',
                 array('courseid' => $courseid,
                       'simplelessonid' => $simplelessonid));
         $links[] = html_writer::link($url,
                 get_string('manage_questions', 'mod_simplelesson'));
-        
+
         $html = $html .= html_writer::alist($links, null, 'ul');
-        
+
         $html .= html_writer::end_div();
 
         return $html;
@@ -135,8 +135,8 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         }
         $html .= $pages . $attempts;
         $html .= html_writer::end_div();
-        
-        return $html;        
+
+        return $html;
     }
 
     /**
@@ -169,31 +169,31 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
 
         $html = '';
         $links = array();
-        
+
         $html .= html_writer::start_div(
                 'mod_simplelesson_page_links');
-        
+
         // Link to first page.
         $url = new moodle_url('/mod/simplelesson/showpage.php',
-                    array('courseid' => $courseid, 
-                          'simplelessonid' => $simplelessonid, 
+                    array('courseid' => $courseid,
+                          'simplelessonid' => $simplelessonid,
                           'pageid' => $pageid,
                           'mode' => 'preview'));
-        $links[] = html_writer::link($url, 
+        $links[] = html_writer::link($url,
                     get_string('preview', 'mod_simplelesson'));
-        
+
         // Link to start attempt page.
         $url = new moodle_url('/mod/simplelesson/start_attempt.php',
-                    array('courseid' => $courseid, 
+                    array('courseid' => $courseid,
                           'simplelessonid' => $simplelessonid,
                           'pageid' => $pageid));
-        $links[] = html_writer::link($url, 
+        $links[] = html_writer::link($url,
                     get_string('attempt', 'mod_simplelesson'));
-        
-        $html .= html_writer::alist($links, null, 'ul'); 
-       
-        $html .=  html_writer::end_div();
-       
+
+        $html .= html_writer::alist($links, null, 'ul');
+
+        $html .= html_writer::end_div();
+
         return $html;
     }
 
@@ -204,53 +204,53 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      * @param int $courseid
      * @return string html representation of navigation links
      */
-    public function show_page_nav_links($data, $courseid, 
+    public function show_page_nav_links($data, $courseid,
             $mode, $attemptid) {
-        
+
         $links = array();
-        $html =  $this->output->box_start();
-        $html .= html_writer::start_div('mod_simplelesson_page_links');      
-        // Home link
-        $url = new moodle_url('/mod/simplelesson/view.php', 
+        $html = $this->output->box_start();
+        $html .= html_writer::start_div('mod_simplelesson_page_links');
+        // Home link.
+        $url = new moodle_url('/mod/simplelesson/view.php',
                 array('simplelessonid' => $data->simplelessonid));
-        $links[] = html_writer::link($url, 
+        $links[] = html_writer::link($url,
                     get_string('homelink', 'mod_simplelesson'));
-        
+
         if ($data->prevpageid != 0) {
             $url = new moodle_url('/mod/simplelesson/showpage.php',
-                        array('courseid' => $courseid, 
-                        'simplelessonid' => $data->simplelessonid, 
+                        array('courseid' => $courseid,
+                        'simplelessonid' => $data->simplelessonid,
                         'pageid' => $data->prevpageid,
                         'mode' => $mode,
                         'attemptid' => $attemptid));
-            $links[] = html_writer::link($url, 
+            $links[] = html_writer::link($url,
                         get_string('gotoprevpage', 'mod_simplelesson'));
-        
+
         } else {
-            // Just put out the link text
+            // Just put out the link text.
             $links[] = get_string('gotoprevpage', 'mod_simplelesson');
         }
-        // Check link is valid
+        // Check link is valid.
         if ($data->nextpageid != 0) {
             $url = new moodle_url('/mod/simplelesson/showpage.php',
-                        array('courseid' => $courseid, 
-                        'simplelessonid' => $data->simplelessonid, 
+                        array('courseid' => $courseid,
+                        'simplelessonid' => $data->simplelessonid,
                         'pageid' => $data->nextpageid,
-                        'mode' =>$mode,
+                        'mode' => $mode,
                         'attemptid' => $attemptid));
-            $links[] = html_writer::link($url, 
+            $links[] = html_writer::link($url,
                         get_string('gotonextpage', 'mod_simplelesson'));
-        
+
         } else {
-            // Just put out the link text
+            // Just put out the link text.
             $links[] = get_string('gotonextpage', 'mod_simplelesson');
         }
-        
+
         $html .= html_writer::alist($links, null, 'ul');
-        $html .= html_writer::end_div();  // pagelinks 
-        $html .=  $this->output->box_end();  
-        
-        return $html;    
+        $html .= html_writer::end_div();
+        $html .= $this->output->box_end();
+
+        return $html;
     }
 
     /**
@@ -265,7 +265,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $links = array();
 
         $html = html_writer::start_div('mod_simplelesson_edit_links');
-        
+
         // Add edit and delete links.
         $url = new moodle_url('/mod/simplelesson/add_page.php',
                 array('courseid' => $courseid,
@@ -514,17 +514,20 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         return $html;
     }
      /**
-     * Returns the html for the link from last page
-     * to summary page
-     * @param int $mode preview or attempt
-     * @return string
-     */
-    public function show_summary_page_link($courseid, $simplelessonid, 
+      * Returns the html for the link from last page
+      * to summary page
+      * @param int $courseid current course
+      * @param int $simplelessonid current lesson
+      * @param string $mode "preview" or "attempt"
+      * @param int $attemptid id from question_attempts
+      * @return string html for the link
+      */
+    public function show_summary_page_link($courseid, $simplelessonid,
             $mode, $attemptid) {
         $html = '';
         $html .= html_writer::start_div(
                 'mod_simplelesson_page');
-        $url = new moodle_url('/mod/simplelesson/summary.php', 
+        $url = new moodle_url('/mod/simplelesson/summary.php',
                 array('courseid' => $courseid,
                 'simplelessonid' => $simplelessonid,
                 'mode' => $mode,
@@ -540,10 +543,10 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      *
      * @param string $courseid
      * @param int $simplelessonid
-     * @param object array questions 
+     * @param object array questions
      * @return string html link
      */
-    public function question_management($courseid, 
+    public function question_management($courseid,
             $simplelessonid, $questions) {
         $table = new html_table();
         $table->head = array(
@@ -552,7 +555,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         get_string('question_text', 'mod_simplelesson'),
         get_string('pagetitle', 'mod_simplelesson'),
         get_string('setpage', 'mod_simplelesson'));
-        $table->align = 
+        $table->align =
                 array('left', 'left', 'left', 'left', 'left');
         $table->wrap = array('nowrap', '', '', 'nowrap', 'nowrap');
         $table->tablealign = 'center';
@@ -565,16 +568,16 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
             $data[] = $question->qid;
             $data[] = $question->name;
             if (strlen($question->questiontext) > 100) {
-                $rawtext = substr($question->questiontext, 
+                $rawtext = substr($question->questiontext,
                         0, 95) . '...';
                 $data[] = strip_tags(format_string($rawtext));
             } else {
-                $data[] = $question->questiontext;        
+                $data[] = $question->questiontext;
             }
             if ($question->pageid == 0) {
                 $data[] = '-';
             } else {
-                $data[] = pages::get_page_title($question->pageid);       
+                $data[] = pages::get_page_title($question->pageid);
             }
             $url = new moodle_url(
                     '/mod/simplelesson/edit_questions.php',
@@ -582,98 +585,84 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
                     'simplelessonid' => $simplelessonid,
                     'action' => 'edit',
                     'actionitem' => $question->qid));
-            $data[] = html_writer::link($url, 
+            $data[] = html_writer::link($url,
                     get_string('setpage',
                     'mod_simplelesson'));
-            $table->data[] = $data;            
-        } 
-        
+            $table->data[] = $data;
+        }
+
         return html_writer::table($table);
     }
     /**
      * Returns the html for question management page
-     * @param int $simplelessonid 
-     * @param int $courseid 
+     * @param int $simplelessonid
+     * @param int $courseid
      * @return string, html list of links
      */
-    public function fetch_question_page_links($courseid, 
+    public function fetch_question_page_links($courseid,
         $simplelessonid) {
-        
+
         $html = '';
         $links = array();
-        
+
         $html .= html_writer::start_div('mod_simplelesson_edit_links');
-        
-        // Home link
-        $url = new moodle_url('/mod/simplelesson/view.php', 
+
+        // Home link.
+        $url = new moodle_url('/mod/simplelesson/view.php',
                 array('simplelessonid' => $simplelessonid));
-        $links[] = html_writer::link($url,get_string('homelink', 'mod_simplelesson'));
-        
-        // add link
-        $url = new moodle_url('/mod/simplelesson/add_question.php', 
-                array('courseid' => $courseid, 
+        $links[] = html_writer::link($url, get_string('homelink', 'mod_simplelesson'));
+
+        // Add link.
+        $url = new moodle_url('/mod/simplelesson/add_question.php',
+                array('courseid' => $courseid,
                 'simplelessonid' => $simplelessonid));
-        $links[] = html_writer::link($url,get_string('add_question', 'mod_simplelesson'));
-        
-        // Page management
-        $url = new moodle_url('/mod/simplelesson/edit.php', 
-                array('courseid' => $courseid, 
+        $links[] = html_writer::link($url, get_string('add_question', 'mod_simplelesson'));
+
+        // Page management.
+        $url = new moodle_url('/mod/simplelesson/edit.php',
+                array('courseid' => $courseid,
                 'simplelessonid' => $simplelessonid));
-        $links[] = html_writer::link($url, 
+        $links[] = html_writer::link($url,
                 get_string('manage_pages', 'mod_simplelesson'));
         $html .= html_writer::alist($links, null, 'ul');
         $html .= html_writer::end_div();
         return $html;
-    } 
-    /**
-     * Display a dummy question on the page
-     * This is a placeholder for the review stage
-     * @param int $qustionid - the id of the question 
-     * @return string, html representing the dummy text
-     */
-    public function dummy_question($questionid) {
-        $html = '';
-        $html .= html_writer::start_div(
-                'mod_simplelesson_page_question');
-        $html .= get_string('dummy_question', 'mod_simplelesson');
-        $html .= html_writer::end_div();
-        return $html;
-    } 
+    }
     /**
      *
      * render the question form on a page
      *
      */
     public function render_question_form(
-            $actionurl, $options, $slot, $quba, 
+            $actionurl, $options, $slot, $quba,
             $deferred, $starttime) {
         $headtags = '';
         $headtags .= $quba->render_question_head_html($slot);
-        $headtags .= question_engine::initialise_js();  
-        
+        $headtags .= question_engine::initialise_js();
+
         // Start the question form.
-        $html = html_writer::start_tag('form', 
+        $html = html_writer::start_tag('form',
                 array('method' => 'post', 'action' => $actionurl,
-                'enctype' => 'multipart/form-data', 
+                'enctype' => 'multipart/form-data',
                 'id' => 'responseform'));
         $html .= html_writer::start_tag('div');
-        $html .= html_writer::empty_tag('input', 
-                array('type' => 'hidden', 
+        $html .= html_writer::empty_tag('input',
+                array('type' => 'hidden',
                 'name' => 'sesskey', 'value' => sesskey()));
-        $html .= html_writer::empty_tag('input', 
-                array('type' => 'hidden', 
+        $html .= html_writer::empty_tag('input',
+                array('type' => 'hidden',
                 'name' => 'slots', 'value' => $slot));
-        $html .= html_writer::empty_tag('input', 
-                array('type' => 'hidden', 
+        $html .= html_writer::empty_tag('input',
+                array('type' => 'hidden',
                 'name' => 'starttime', 'value' => $starttime));
         $html .= html_writer::end_tag('div');
-        
+
         // Output the question.
         $html .= $quba->render_question($slot, $options, $slot);
-        
+
         // Finish the question form.
         $html .= html_writer::start_tag('div');
-        
+
         // Action button on the form.
         // We only need this for deferred feedback I think
         // So we won't implement for now
@@ -681,19 +670,19 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         if ($deferred) {
             $html .= html_writer::empty_tag(
                     'input', array('type' => 'submit',
-                    'name' => 'submit', 
-                    'value' => 
+                    'name' => 'submit',
+                    'value' =>
                     get_string('submit', 'mod_simplelesson')));
         }
         // put this button option in mod form (allow terminate)
         $html .= html_writer::empty_tag(
                 'input', array('type' => 'submit',
-                'name' => 'finish', 'value' => 
+                'name' => 'finish', 'value' =>
                 get_string('stoplesson', 'mod_simplelesson')));
         */
         $html .= html_writer::end_tag('div');
         $html .= html_writer::end_tag('form');
-        return $html;  
+        return $html;
     }
     /**
      *
@@ -705,7 +694,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
     public function lesson_summary($answerdata) {
 
         $table = new html_table();
-        
+
         $table->head = array(
         get_string('firstname', 'mod_simplelesson'),
         get_string('lastname', 'mod_simplelesson'),
@@ -713,8 +702,8 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         get_string('pagetitle', 'mod_simplelesson'),
         get_string('rightanswer', 'mod_simplelesson'),
         get_string('youranswer', 'mod_simplelesson'));
-        
-        $table->align = 
+
+        $table->align =
                 array('left', 'left', 'left', 'left', 'left', 'left', 'left');
         $table->wrap = array('nowrap', 'nowrap', '', '', '', '', '');
         $table->tablealign = 'center';
@@ -726,26 +715,26 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
             $data = array();
             $data[] = $answer->firstname;
             $data[] = $answer->lastname;
-            $data[] = $answer->qname;        
+            $data[] = $answer->qname;
             $data[] = $answer->pagename;
             $data[] = $answer->rightanswer;
             $data[] = $answer->youranswer;
-            $table->data[] = $data;            
-        } 
-        
-        return html_writer::table($table);        
+            $table->data[] = $data;
+        }
+
+        return html_writer::table($table);
     }
     /**
      * Returns the html for home page link
-     * @param int $simplelessonid 
+     * @param int $simplelessonid current lesson
      * @return string, html link
-     */ 
+     */
     public function show_home_page_link($simplelessonid) {
 
-        $url = new moodle_url('/mod/simplelesson/view.php', 
+        $url = new moodle_url('/mod/simplelesson/view.php',
                 array('simplelessonid' => $simplelessonid));
         return html_writer::link($url,
                 get_string('homelink', 'mod_simplelesson'));
-        
-    }    
+
+    }
 }

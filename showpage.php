@@ -51,7 +51,6 @@ $coursecontext = context_course::instance($courseid);
 $modulecontext = context_module::instance($cm->id);
 
 // Get the question feedback type.
-//var_dump($moduleinstance);exit;
 $feedback = $moduleinstance->behaviour;
 $maxattempts = $moduleinstance->maxattempts;
 
@@ -61,19 +60,19 @@ $PAGE->set_heading(format_string($course->fullname));
 
 $renderer = $PAGE->get_renderer('mod_simplelesson');
 
-// Sort the question usage and slots
-$question_entry = questions::page_has_question($simplelessonid, $pageid);
-if ( ($question_entry) && ($mode == 'attempt') ) {
-    
+// Sort the question usage and slots.
+$questionentry = questions::page_has_question($simplelessonid, $pageid);
+if ( ($questionentry) && ($mode == 'attempt') ) {
+
     $qubaid = attempts::get_usageid($simplelessonid);
     $quba = \question_engine::load_questions_usage_by_activity($qubaid);
-    
-    // get the slot for the lesson and page
+
+    // Get the slot for the lesson and page.
     $slot = questions::get_slot($simplelessonid, $pageid);
-    
-    // Display and feedback options
+
+    // Display and feedback options.
     $options = display_options::get_options($feedback);
-    
+
     // Actually not allowing deferred feedback (yet).
     $deferred = $options->feedback == 'deferredfeedback';
 } else {
@@ -90,31 +89,31 @@ if (data_submitted() && confirm_sesskey()) {
     $transaction = $DB->start_delegated_transaction();
     $qubaid = attempts::get_usageid($simplelessonid);
     $quba = \question_engine::load_questions_usage_by_activity($qubaid);
-    // $quba->finish_question($slot);
+    /* $quba->finish_question($slot); */
     $quba->process_all_actions($timenow);
     question_engine::save_questions_usage_by_activity($quba);
-    $transaction->allow_commit(); 
-    
+    $transaction->allow_commit();
+
     /* Record results here for each answer.
        qatid id is entry in question_attempts table
        attemptid is from start_attempt (includes user id),
        that's our own question_attempts table.
-       pageid gives us also the question info, such as slot 
+       pageid gives us also the question info, such as slot
        and question number.
     */
     $slot = questions::get_slot($simplelessonid, $pageid);
-    $qdata = attempts::get_question_attempt_id($qubaid, $slot); 
-    $answer_data = new stdClass();
-    $answer_data->simplelessonid = $simplelessonid;         
-    $answer_data->qatid = $qdata->id; 
-    $answer_data->attemptid = $attemptid; 
-    $answer_data->pageid = $pageid;
-    $answer_data->timestarted = $starttime;
-    $answer_data->timecompleted = $timenow;
-    $DB->insert_record('simplelesson_answers', $answer_data);     
+    $qdata = attempts::get_question_attempt_id($qubaid, $slot);
+    $answerdata = new stdClass();
+    $answerdata->simplelessonid = $simplelessonid;
+    $answerdata->qatid = $qdata->id;
+    $answerdata->attemptid = $attemptid;
+    $answerdata->pageid = $pageid;
+    $answerdata->timestarted = $starttime;
+    $answerdata->timecompleted = $timenow;
+    $DB->insert_record('simplelesson_answers', $answerdata);
     redirect($actionurl);
-             
-} else if ($slot !=0) {
+
+} else if ($slot != 0) {
     // Probably just re-visiting or refreshing page
     // Disable next until question answered...
     $question = $quba->get_question($slot);
@@ -150,18 +149,18 @@ echo $renderer->show_page($data);
 // the question.
 
 if ( ($slot != 0) && ($mode == 'attempt') ) {
-    echo $renderer->render_question_form($actionurl, $options, 
+    echo $renderer->render_question_form($actionurl, $options,
             $slot, $quba, $deferred, time());
 }
 
 // If this is the last page, add link to the summary page.
 if (pages::is_last_page($data)) {
     // Todo: Check here all questions answered or not.
-    echo $renderer->show_summary_page_link($courseid, $simplelessonid, 
+    echo $renderer->show_summary_page_link($courseid, $simplelessonid,
             $mode, $attemptid);
 }
 
-//  Show the navigation links.
+// Show the navigation links.
 echo $renderer->show_page_nav_links($data, $courseid, $mode, $attemptid);
 
 if (has_capability('mod/simplelesson:manage', $modulecontext)) {

@@ -113,7 +113,7 @@ if (has_capability('mod/simplelesson:manage', $modulecontext)) {
         echo $renderer->add_first_page_link($course->id, $simplelesson->id, 0);
     } else {
         $userattempts = attempts::get_number_of_attempts($USER->id, $simplelesson->id);
-        echo $renderer->fetch_num_pages($numpages, $userattempts, 
+        echo $renderer->fetch_num_pages($numpages, $userattempts,
                 $simplelesson->maxattempts);
     }
 

@@ -22,7 +22,7 @@
  */
 use \mod_simplelesson\local\pages;
 namespace mod_simplelesson\local;
-require_once('../../config.php'); 
+require_once('../../config.php');
 defined('MOODLE_INTERNAL') || die();
 /**
  * Utility class for handling questions from question bank
@@ -32,30 +32,30 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class questions  {
-    /** 
+    /**
      * Given a category id
      * return an array of questions from that category
      *
      * @param int $categoryid
      * @return array of objects
-     */  
+     */
     public static function get_questions_from_category($categoryid) {
         global $DB;
         return $DB->get_records('question',
               array('category' => $categoryid));
     }
 
-    /** 
+    /**
      * Given a question id
      * save if data is unique to simplelesson and pageid
      *
      * @param object $qdata
      * @return id of inserted record or false
-     */    
+     */
     public static function save_question($qdata) {
         global $DB;
         $table = 'simplelesson_questions';
-        $condition = array('qid' => $qdata->qid, 
+        $condition = array('qid' => $qdata->qid,
                 'simplelessonid' => $qdata->simplelessonid);
         // Only add the question to this if it doesn't exist.
         // Ie prevent duplicate questions for same lesson id.
@@ -64,23 +64,23 @@ class questions  {
         }
         return false;
     }
-    /** 
+    /**
      * Given a simplelessonid, find all its questions
      *
      * @param object $simplelesonid
      * @return array question display data
-     */    
+     */
     public static function fetch_questions($simplelessonid) {
         global $DB;
         $sql = "SELECT s.id, s.qid, s.pageid, q.name, q.questiontext, q.defaultmark
-                  FROM {simplelesson_questions} s 
-                  JOIN {question} q ON s.qid = q.id 
+                  FROM {simplelesson_questions} s
+                  JOIN {question} q ON s.qid = q.id
                  WHERE s.simplelessonid = :slid";
         $entries = $DB->get_records_sql($sql,
               array('slid' => $simplelessonid));
         return $entries;
     }
-    /** 
+    /**
      * Get the page titles for the question manager
      * keys are the page values, text is the page title
      *
@@ -88,103 +88,103 @@ class questions  {
      * @return array of titles of pages in the simplelesson
      */
     public static function fetch_all_page_titles(
-            $simplelessonid) { 
-        $page_titles = array();
-        $pagecount = 
+            $simplelessonid) {
+        $pagetitles = array();
+        $pagecount =
                 pages::count_pages($simplelessonid);
         if ($pagecount != 0) {
-            for ($p = 1; $p <= $pagecount; $p++ ) {
+            for ($p = 1; $p <= $pagecount; $p++) {
                 $pid = pages::get_page_id_from_sequence(
                         $simplelessonid, $p);
-                $page_titles[$pid] =pages::get_page_title($pid);
-           }
+                $pagetitles[$pid] = pages::get_page_title($pid);
+            }
         }
-        $page_titles[0] = 'none';
-        return $page_titles;
+        $pagetitles[0] = 'none';
+        return $pagetitles;
     }
-    /** 
+    /**
      * Given a question table id
      * update the pageid field
      *
      * @param int $data the question data
      * @return none
-     */  
+     */
     public static function update_question_table($data) {
         global $DB;
-        $DB->set_field('simplelesson_questions', 
-                'pageid', $data->pagetitle,  
+        $DB->set_field('simplelesson_questions',
+                'pageid', $data->pagetitle,
                 array('id' => $data->id));
         // Remove the slot number too.
-        $DB->set_field('simplelesson_questions', 
-                'slot', 0,  
+        $DB->set_field('simplelesson_questions',
+                'slot', 0,
                 array('id' => $data->id));
-    }  
-    /** 
+    }
+    /**
      * Given a simplelesson id and a page id
      *
      * @param int $data the question data
-     * @return bboolean true if record exists in questions table
-     */  
+     * @return boolean true if record exists in questions table
+     */
     public static function page_has_question($simplelessonid, $pageid) {
         global $DB;
         return $DB->record_exists('simplelesson_questions',
                     array('simplelessonid' => $simplelessonid,
                     'pageid' => $pageid));
-    }  
-    /** 
+    }
+    /**
      * Given a simplelessonid update the slots field
      * for the lesson pages.
      *
      * @param int $simplelessonid the module instance id
      * @return none
-     */  
+     */
     public static function set_slots($simplelessonid) {
         global $DB;
-        // Get the records to change in order of sequence
-        // Using the pageid to avoid setting null pageid's
+        // Get the records to change in order of sequence.
+        // Using the pageid to avoid setting null pageid's.
         $sql = "SELECT q.id, q.qid, q.pageid, q.slot
-                  FROM {simplelesson_questions} q 
+                  FROM {simplelesson_questions} q
                   JOIN {simplelesson_pages} p ON q.pageid = p.id
                  WHERE q.simplelessonid = :slid
               ORDER BY p.sequence ASC";
-        
+
         $questions = $DB->get_records_sql($sql,
                 array('slid' => $simplelessonid));
-        // Allocate slots to those page which have questions        
+        // Allocate slots to those page which have questions.
         $slot = 1;
-        foreach($questions as $question) {
+        foreach ($questions as $question) {
             $question->slot = $slot;
             $DB->update_record('simplelesson_questions', $question);
             $slot++;
         }
-    }  
-    /** 
-     * Given a simplelessonid and pageid 
+    }
+    /**
+     * Given a simplelessonid and pageid
      * return the slot number
      *
      * @param int $simplelesson the module instance
      * @param int $pageid the page
      * @return int a slot number from the table
-     */  
-    public static function get_slot($simplelessonid, 
+     */
+    public static function get_slot($simplelessonid,
             $pageid) {
         global $DB;
-        return $DB->get_field('simplelesson_questions', 
+        return $DB->get_field('simplelesson_questions',
                 'slot', array(
                 'simplelessonid' => $simplelessonid,
                 'pageid' => $pageid));
-    }  
-    /** 
+    }
+    /**
      * Given a question id find the name
      *
      * @param int $qid - the question id
      * @return string $name the name of the question
-     */  
+     */
     public static function fetch_question_name($qid) {
         global $DB;
         $data = $DB->get_record('question',
                   array('id' => $qid),
                   'name', MUST_EXIST);
         return $data->name;
-    } 
+    }
 }

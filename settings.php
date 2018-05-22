@@ -28,9 +28,9 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->dirroot.'/mod/simplelesson/lib.php');
 
 if ($ADMIN->fulltree) {
-  
+
     $settings->add(new admin_setting_configcheckbox(
         'mod_simplelesson' . '/enablereports',
-        get_string('enablereports', 'mod_simplelesson'), 
-        get_string('enablereports_desc', 'mod_simplelesson'),'0'));
+        get_string('enablereports', 'mod_simplelesson'),
+        get_string('enablereports_desc', 'mod_simplelesson'), '0'));
 }

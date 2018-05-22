@@ -22,7 +22,7 @@
  * @see https://github.com/moodlehq/moodle-mod_newmodule
  *
  */
-require_once(__DIR__ . "../../../config.php");
+require_once("../../config.php");
 $id = required_param('id', PARAM_INT);// Course module ID.
 // Item number may be != 0 for activities that allow more than one grade per user.
 $itemnumber = optional_param('itemnumber', 0, PARAM_INT);

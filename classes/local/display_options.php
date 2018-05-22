@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * Set of display options for simplelesson question 
+ * Set of display options for simplelesson question
  * From previewlib.php and re-written for this filter
  *
  * @package    mod_simplelesson
@@ -23,30 +23,30 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace mod_simplelesson\local;
-require_once('../../config.php'); 
+require_once('../../config.php');
 require_once($CFG->libdir . '/questionlib.php');
 require_once('../../question/previewlib.php');
 require_once('../../question/engine/lib.php');
 defined('MOODLE_INTERNAL') || die();
-/** 
+/**
  * Control question display options
  */
 class display_options  {
-    /** 
+    /**
      * Set the display options for a question
      * @param int $maxvariant The maximum number of variants previewable.
      * @return array $options the display options
      */
     public static function get_options($feedback) {
         $options = array();
-        // Question options - note just 1 question in the attempt
+        // Question options - note just 1 question in the attempt.
         $options = new \question_display_options();
         $options->marks = \question_display_options::MAX_ONLY;
-        $options->markdp = 0; // Mark display
+        $options->markdp = 0; // Mark display.
         $options->feedback = $feedback;
         $options->generalfeedback = \question_display_options::HIDDEN;
         $options->variant = 100;
-        //var_dump($options);exit();
+
         return $options;
     }
 }

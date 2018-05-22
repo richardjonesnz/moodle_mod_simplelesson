@@ -29,9 +29,9 @@ $simplelessonid = required_param('simplelessonid', PARAM_INT);
 $mode = optional_param('mode', 'preview', PARAM_TEXT);
 $attemptid = optional_param('attemptid', 0, PARAM_INT);
 
-$moduleinstance  = $DB->get_record('simplelesson', array('id' => $simplelessonid), '*',MUST_EXIST);
+$moduleinstance  = $DB->get_record('simplelesson', array('id' => $simplelessonid), '*', MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
-$cm = get_coursemodule_from_instance('simplelesson', $simplelessonid, $courseid, false,MUST_EXIST);
+$cm = get_coursemodule_from_instance('simplelesson', $simplelessonid, $courseid, false, MUST_EXIST);
 $PAGE->set_url('/mod/simplelesson/summary.php',
         array('courseid' => $courseid,
               'simplelessonid' => $simplelessonid,
@@ -53,7 +53,7 @@ if ($mode == 'attempt') {
     echo $OUTPUT->header();
     attempts::set_attempt_completed($attemptid);
 
-    // Summary data for this attempt by this user
+    // Summary data for this attempt by this user.
     $answerdata = attempts::get_lesson_answer_data($attemptid);
     echo $OUTPUT->heading(get_string('summary_header', 'mod_simplelesson'), 2);
     echo $renderer->lesson_summary($answerdata);
@@ -66,7 +66,7 @@ if ($mode == 'attempt') {
             get_string('preview_completed', 'mod_simplelesson', 1));
 }
 // Show editing links, if permitted.
-if(has_capability('mod/simplelesson:manage', $modulecontext)) {
+if (has_capability('mod/simplelesson:manage', $modulecontext)) {
     echo $renderer->fetch_editing_links($courseid, $simplelessonid);
 }
 echo $renderer->footer();

@@ -23,11 +23,9 @@
 use \mod_simplelesson\local\pages;
 use \mod_simplelesson\local\reporting;
 namespace mod_simplelesson\local;
-require_once('../../config.php'); 
+require_once('../../config.php');
 require_once($CFG->libdir . '/questionlib.php');
-//require_once('../../question/previewlib.php');
-//require_once('../../question/engine/lib.php');
-//use question_preview_options;
+
 defined('MOODLE_INTERNAL') || die();
 /**
  * Utility class for question usage actions
@@ -37,39 +35,37 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class attempts  {
-    /** 
+    /**
      * Creates the question usage for this simple lesson
-     * 
-     * @param $context - module context 
+     *
+     * @param $context - module context
      * @param $behaviour - question behaviour
      * @param $entries - questions selected by user (edit.php)
      * @param $simplelessonid - module instance id
      * @return $qubaid - the id of the question engine usage.
      */
-    public static function create_usage($context, 
+    public static function create_usage($context,
             $behaviour, $entries, $simplelessonid) {
         global $DB;
-        $quba = \question_engine::
-                make_questions_usage_by_activity(
-                'mod_simplelesson', 
+        $quba = \question_engine::make_questions_usage_by_activity(
+                'mod_simplelesson',
                 $context);
         $quba->set_preferred_behaviour($behaviour);
         $questions = array();
-        foreach($entries as $entry) {
-            
-            $question_def = \question_bank::load_question($entry->qid);
-            // add questions that have page id's
+        foreach ($entries as $entry) {
+
+            $questiondef = \question_bank::load_question($entry->qid);
+            // Add questions that have page id's.
             if ($entry->pageid != 0) {
                 $id = $quba->add_question(
-                        $question_def, $entry->defaultmark);
+                        $questiondef, $entry->defaultmark);
             }
         }
         $quba->start_all_questions();
-        \question_engine::
-                save_questions_usage_by_activity($quba);
+        \question_engine::save_questions_usage_by_activity($quba);
         $qubaid = $quba->get_id();
-        $DB->set_field('simplelesson', 
-                    'qubaid', $qubaid,  
+        $DB->set_field('simplelesson',
+                    'qubaid', $qubaid,
                     array('id' => $simplelessonid));
         return $qubaid;
     }
@@ -81,7 +77,7 @@ class attempts  {
      */
     public static function get_usageid($simplelessonid) {
         global $DB;
-        return $DB->get_field('simplelesson', 
+        return $DB->get_field('simplelesson',
                 'qubaid',
                 array('id' => $simplelessonid));
     }
@@ -96,7 +92,7 @@ class attempts  {
             $qubaid, $slot) {
         global $DB;
         $data = $DB->get_record('question_attempts',
-                  array('questionusageid' => $qubaid, 
+                  array('questionusageid' => $qubaid,
                   'slot' => $slot),
                   '*', MUST_EXIST);
         return $data;
@@ -109,19 +105,20 @@ class attempts  {
      */
     public static function get_lesson_answer_data($attemptid) {
         global $DB;
-        // Get the records for this user on this attempt
+        // Get the records for this user on this attempt.
         $sql = "SELECT  a.id, a.simplelessonid, a.qatid,
-                        a.attemptid, a.pageid, a.timestarted, 
+                        a.attemptid, a.pageid, a.timestarted,
                         a.timecompleted, t.userid
                   FROM  {simplelesson_answers} a
                   JOIN  {simplelesson_attempts} t ON a.attemptid = t.id
                    AND  a.attemptid = :aid";
-        
-        $answerdata = $DB->get_records_sql($sql, array('aid' => $attemptid));
-    
+
+        $answerdata = $DB->get_records_sql($sql,
+                array('aid' => $attemptid));
+
         // Add the data for the summary table.
         foreach ($answerdata as $data) {
-        
+
             // Get the records from our tables.
             $pagedata = $DB->get_record('simplelesson_pages',
                     array('id' => $data->pageid), '*',
@@ -134,10 +131,10 @@ class attempts  {
             // Add the page and question name.
             $data->pagename = pages::get_page_title($pagedata->id);
             $data->qname = questions::fetch_question_name($questiondata->qid);
-            
+
             // We'll need the slot to get the response data.
-            // $data->slot = $questiondata->slot;
-            
+            $data->slot = $questiondata->slot;
+
             // Get the record from the question attempt data.
             $qdata = $DB->get_record('question_attempts',
                     array('id' => $data->qatid), '*',
@@ -153,8 +150,8 @@ class attempts  {
             $data->firstname = $userdata->firstname;
             $data->lastname = $userdata->lastname;
         }
-        
-        return $answerdata;        
+
+        return $answerdata;
     }
     /**
      * Make an entry in the attempts table
@@ -177,9 +174,7 @@ class attempts  {
     public static function set_attempt_completed($attemptid) {
         global $DB;
         $DB->set_field('simplelesson_attempts',
-                'status',
-                2,
-                array('id' => $attemptid));
+                'status', 2, array('id' => $attemptid));
     }
     /**
      * Get the user attempts at this lesson instance

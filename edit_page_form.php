@@ -22,9 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once('../../lib/formslib.php');
 defined('MOODLE_INTERNAL') || die();
-
+require_once('../../lib/formslib.php');
 /**
  * Define the edit page form elements.
  */

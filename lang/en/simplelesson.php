@@ -27,12 +27,12 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-// General module strings
+// General module strings.
 $string['modulename'] = 'Simple lesson';
 $string['modulenameplural'] = 'Simple lessons';
 $string['modulename_help'] = 'Use the Simple lesson module for a simple sequential display of pages with an optional index.
 
- The simplelesson module allows the creation and addition of multiple pages of content. 
+ The simplelesson module allows the creation and addition of multiple pages of content.
 
 It allows the use of questions from a selected question bank.  User attempt data is recorded.';
 $string['simplelessonfieldset'] = 'Custom example fieldset';
@@ -41,7 +41,7 @@ $string['simplelessonname_help'] = 'Choose a suitable name for your Simple lesso
 $string['pluginadministration'] = 'simplelesson administration';
 $string['pluginname'] = 'simplelesson';
 
-// mod_form settings
+// The mod_form settings.
 $string['simplelesson_settings'] = 'Simplelesson settings';
 $string['simplelesson_title'] = 'Title of this resource';
 $string['showindex'] = 'Show the page index';
@@ -50,13 +50,13 @@ $string['deferredfeedback'] = 'Deferred feedback';
 $string['behaviour'] = 'Question behaviour';
 $string['unlimited'] = 'Unlimited';
 
-// Capabilities
+// Capabilities.
 $string['simplelesson:manage'] = 'Manage Simple lesson';
 $string['simplelesson:addinstance'] = 'Add a new Simple lesson';
 $string['simplelesson:viewreports'] = 'View the reports tab';
 $string['simplelesson:view'] = 'View Simple lesson';
 
-// Page management
+// Page management.
 $string['simplelesson_editing'] = 'Editing Simple lesson';
 $string['manage_pages'] = 'Page management';
 $string['sequence'] = 'sequence';
@@ -68,7 +68,7 @@ $string['move_up'] = 'Move up';
 $string['move_down'] = 'Move down';
 $string['showpage'] = 'Preview page';
 
-// Question management
+// Question management.
 $string['manage_questions'] = 'Manage questions';
 $string['question_editing'] = 'Editing questions';
 $string['qnumber'] = 'Question number';
@@ -87,7 +87,7 @@ $string['selecting_page'] = 'Select the page for this question.';
 $string['editing_question_page'] = 'Select the page';
 $string['question_exists'] = 'That page has a question already';
 
-// Page editing
+// Page editing.
 $string['edit_page'] = 'Edit page';
 $string['add_page'] = 'Add page';
 $string['delete_page'] = 'Delete page';
@@ -100,15 +100,6 @@ $string['getnextpage'] = 'Next page';
 $string['nolink'] = 'none';
 $string['no_pages'] = 'There are no pages yet, add a page';
 $string['numpages'] = 'Number of pages: {$a}';
-
-// Page navigation
-$string['firstpagelink'] = 'First page';
-$string['homelink'] = 'Home';
-$string['gotonextpage'] = 'Next';
-$string['gotoprevpage'] = 'Previous';
-$string['page_index_header'] = 'Index';
-
-// Page editing
 $string['gotoaddpage'] = 'Add page';
 $string['gotoeditpage'] = 'Edit page';
 $string['gotodeletepage'] = 'Delete page';
@@ -116,19 +107,26 @@ $string['page_editing'] = 'Editing page';
 $string['page_updated'] = 'Page updated';
 $string['page_deleted'] = 'Page deleted';
 
-// reporting
+// Page navigation.
+$string['firstpagelink'] = 'First page';
+$string['homelink'] = 'Home';
+$string['gotonextpage'] = 'Next';
+$string['gotoprevpage'] = 'Previous';
+$string['page_index_header'] = 'Index';
+
+// Reporting.
 $string['moduleid'] = 'id';
 $string['viewtab'] = 'view';
 $string['reportstab'] = 'reports';
 $string['timecreated'] = 'Time created';
 
-// Admin settings
+// Admin settings.
 $string['enablereports'] = 'Show reports tab';
 $string['enablereports_desc'] = 'Check to allow teachers to see reports';
 $string['enableindex'] = 'Show page index';
 $string['enableindex_desc'] = 'Check to show page index';
 
-// Attempts
+// Attempts.
 $string['maxattempts'] = "Max attempts";
 $string['gotosummary'] = "Summary page";
 $string['end_lesson'] = "Exit lesson";

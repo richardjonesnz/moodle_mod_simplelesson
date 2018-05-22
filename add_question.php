@@ -29,18 +29,19 @@ require_once('add_question_form.php');
 
 // Fetch URL parameters.
 $courseid = required_param('courseid', PARAM_INT);
-$simplelessonid = required_param('simplelessonid', PARAM_INT); 
+$simplelessonid = required_param('simplelessonid', PARAM_INT);
 
 // Set course related variables.
-$moduleinstance  = $DB->get_record('simplelesson', 
+$moduleinstance  = $DB->get_record('simplelesson',
         array('id' => $simplelessonid), '*', MUST_EXIST);
-$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
-$cm = get_coursemodule_from_instance('simplelesson', 
+$course = $DB->get_record('course', array('id' => $courseid), '*',
+        MUST_EXIST);
+$cm = get_coursemodule_from_instance('simplelesson',
         $simplelessonid, $courseid, false, MUST_EXIST);
 
 // Set up the page.
-$thisurl = new moodle_url('/mod/simplelesson/add_question.php', 
-        array('courseid' => $courseid, 
+$thisurl = new moodle_url('/mod/simplelesson/add_question.php',
+        array('courseid' => $courseid,
         'simplelessonid' => $simplelessonid));
 $PAGE->set_url($thisurl);
 require_login($course, true, $cm);
@@ -50,14 +51,14 @@ $modulecontext = context_module::instance($cm->id);
 $PAGE->set_context($modulecontext);
 $PAGE->set_pagelayout('course');
 
-$returnview = new moodle_url('/mod/simplelesson/view.php', 
+$returnview = new moodle_url('/mod/simplelesson/view.php',
         array('simplelessonid' => $simplelessonid));
-$returnmanage = new moodle_url('/mod/simplelesson/edit_questions.php', 
+$returnmanage = new moodle_url('/mod/simplelesson/edit_questions.php',
         array('courseid' => $courseid,
         'simplelessonid' => $simplelessonid));
 
-$mform = new simplelesson_add_question_form(null, 
-        array('courseid' => $courseid, 
+$mform = new simplelesson_add_question_form(null,
+        array('courseid' => $courseid,
         'simplelessonid' => $simplelessonid,
         'categoryid' => $moduleinstance->categoryid));
 
@@ -66,12 +67,12 @@ if ($mform->is_cancelled()) {
     redirect($returnview, get_string('cancelled'), 2);
 }
 
-// Has data, save checked questions in the simplelesson_questions table. 
+// Has data, save checked questions in the simplelesson_questions table.
 if ($data = $mform->get_data()) {
 
     $qdata = new stdClass;
     foreach ($data as $key => $value) {
-    // Any key starts with q and is non-zero is a selected question.
+        // Any key starts with q and is non-zero is a selected question.
         if (substr($key, 0, 1) == 'q') {
             if ($value != 0) {
                 $qdata->qid = $value;
@@ -79,9 +80,9 @@ if ($data = $mform->get_data()) {
                 $qdata->simplelessonid = $simplelessonid;
                 $qdataid = questions::save_question($qdata);
             }
-        }                    
+        }
     }
-    redirect($returnmanage, 
+    redirect($returnmanage,
             get_string('questions_added', 'mod_simplelesson'), 2);
 }
 echo $OUTPUT->header();

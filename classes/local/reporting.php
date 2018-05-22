@@ -57,19 +57,19 @@ class reporting  {
         global $DB;
         // Get the records for this user on this attempt
         $sql = "SELECT  a.id, a.simplelessonid, a.qatid,
-                        a.attemptid, a.pageid, a.timestarted, 
+                        a.attemptid, a.pageid, a.timestarted,
                         a.timecompleted, t.userid
                   FROM  {simplelesson_answers} a
                   JOIN  {simplelesson_attempts} t ON a.attemptid = t.id
                    AND  a.simplelessonid = :slid";
-        
-        $answerdata = $DB->get_records_sql($sql, 
+
+        $answerdata = $DB->get_records_sql($sql,
                 array('slid' => $simplelessonid));
-    
-        // Add the data for the summary table
+
+        // Add the data for the summary table.
         foreach ($answerdata as $data) {
-        
-            // Get the records from our tables
+
+            // Get the records from our tables.
             $pagedata = $DB->get_record('simplelesson_pages',
                     array('id' => $data->pageid), '*',
                     MUST_EXIST);
@@ -81,10 +81,10 @@ class reporting  {
             // Add the page and question name.
             $data->pagename = pages::get_page_title($pagedata->id);
             $data->qname = questions::fetch_question_name($questiondata->qid);
-            
+
             // We'll need the slot to get the response data.
             $data->slot = $questiondata->slot;
-            
+
             // Get the record from the question attempt data.
             $qdata = $DB->get_record('question_attempts',
                     array('id' => $data->qatid), '*',
@@ -92,7 +92,7 @@ class reporting  {
             $data->youranswer = $qdata->responsesummary;
             $data->rightanswer = $qdata->rightanswer;
 
-            // Get the userdata
+            // Get the userdata.
             $userdata = $DB->get_record('user',
                     array('id' => $data->userid), '*',
                     MUST_EXIST);
@@ -102,7 +102,7 @@ class reporting  {
             $data->timetaken = date("s", ($data->timecompleted
                     - $data->timestarted));
         }
-        
-        return $answerdata;        
+
+        return $answerdata;
     }
 }
