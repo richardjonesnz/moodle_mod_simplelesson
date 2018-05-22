@@ -104,21 +104,18 @@ if ($numpages > 0) {
     echo $renderer->fetch_firstpage_links($course->id,
             $simplelesson->id, $pageid);
 }
+// First page summary
+$userattempts = attempts::get_number_of_attempts($USER->id,
+        $simplelesson->id);
+echo $renderer->fetch_num_pages($numpages, $userattempts,
+        $simplelesson->maxattempts);
 
-// If we are teacher we see stuff.
+
+// If we are teacher we see edit links.
 if (has_capability('mod/simplelesson:manage', $modulecontext)) {
 
-    // If there are no pages, we add a add_page link.
-    if ($numpages == 0) {
-        echo $renderer->add_first_page_link($course->id, $simplelesson->id, 0);
-    } else {
-        $userattempts = attempts::get_number_of_attempts($USER->id, $simplelesson->id);
-        echo $renderer->fetch_num_pages($numpages, $userattempts,
-                $simplelesson->maxattempts);
-    }
-
-    // The teacher sees the edit links.
-    echo $renderer->fetch_editing_links($course->id, $simplelesson->id);
+    echo $renderer->fetch_editing_links($course->id, $simplelesson->id,
+            $numpages);
 }
 
 // Finish the page.

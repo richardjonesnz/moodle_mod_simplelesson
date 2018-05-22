@@ -68,12 +68,34 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      *
      * @return string editing links
      */
-    public function fetch_editing_links($courseid, $simplelessonid) {
+    public function fetch_editing_links($courseid, $simplelessonid,
+          $lastpage) {
 
         $html = html_writer::start_div(
                 'mod_simplelesson_edit_links');
         $links = array();
 
+        // Add page, if required.
+        if ($lastpage == 0) {
+            // Add message and lastpage link.
+            $html .= '<p>' . get_string('no_pages',
+                'mod_simplelesson') . '</p>';
+            $url = new moodle_url('/mod/simplelesson/add_page.php',
+                    array('courseid' => $courseid,
+                    'simplelessonid' => $simplelessonid,
+                    'sequence' => 0));
+            $links[] = html_writer::link($url,
+                    get_string('gotoaddpage', 'mod_simplelesson'));
+        } else {
+            // Add page at end.
+            $url = new moodle_url('/mod/simplelesson/add_page.php',
+                    array('courseid' => $courseid,
+                    'simplelessonid' => $simplelessonid,
+                    'sequence' => $lastpage + 1));
+            $links[] = html_writer::link($url,
+                    get_string('gotoaddpage', 'mod_simplelesson'));
+
+        }
         // Page management.
         $url = new moodle_url('/mod/simplelesson/edit.php',
                 array('courseid' => $courseid,
@@ -91,28 +113,6 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $html = $html .= html_writer::alist($links, null, 'ul');
 
         $html .= html_writer::end_div();
-
-        return $html;
-    }
-    /**
-     * Returns a link to add a page
-     *
-     * @param int $courseid
-     * @param int $simplelessonid
-     * @param int $sequence the page sequence number
-     * @return string add link html
-     */
-    public function add_first_page_link($courseid, $simplelessonid, $sequence) {
-
-        $html = '<p>' . get_string('no_pages',
-                'mod_simplelesson') . '</p>';
-
-        $url = new moodle_url('/mod/simplelesson/add_page.php',
-                array('courseid' => $courseid,
-                'simplelessonid' => $simplelessonid,
-                'sequence' => $sequence));
-
-        $html .= html_writer::link($url, get_string('add_page', 'mod_simplelesson'));
 
         return $html;
     }

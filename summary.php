@@ -78,6 +78,6 @@ if ($mode == 'attempt') {
 }
 // Show editing links, if permitted.
 if (has_capability('mod/simplelesson:manage', $modulecontext)) {
-    echo $renderer->fetch_editing_links($courseid, $simplelessonid);
+    echo $renderer->fetch_editing_links($courseid, $simplelessonid, 0);
 }
 echo $renderer->footer();
