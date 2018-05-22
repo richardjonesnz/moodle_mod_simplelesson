@@ -367,4 +367,44 @@ class pages  {
             }
         }
     }
+    /**
+     * Given a simplelesson id
+     * Fix the pages so that next and previous match page order
+     *
+     * @param int $simplelessonid
+     * @return none
+     */
+    public static function fix_page_sequence($simplelessonid) {
+        global $DB;
+
+        $pagecount = self::count_pages($simplelessonid);
+
+        if ($pagecount != 0) {
+            for ($p = 1; $p <= $pagecount; $p++) {
+                $pid = self::get_page_id_from_sequence($simplelessonid,
+                        $p);
+                // ID of previous page in sequence (unless first).
+                if ($p != 1) {
+                    $previd = self::get_page_id_from_sequence(
+                            $simplelessonid, ($p - 1));
+                } else {
+                    $previd = 0;
+                }
+                // Next id (unless last).
+                if ($p == $pagecount) {
+                    $nextid = 0;
+                } else {
+                    $nextid = self::get_page_id_from_sequence(
+                            $simplelessonid, ($p + 1));
+                }
+
+                $DB->set_field('simplelesson_pages',
+                        'prevpageid', ($previd),
+                        array('id' => $pid));
+                $DB->set_field('simplelesson_pages',
+                        'nextpageid', ($nextid),
+                        array('id' => $pid));
+           }
+       }
+    }
 }

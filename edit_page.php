@@ -51,11 +51,11 @@ $modulecontext = context_module::instance($cm->id);
 $PAGE->set_context($modulecontext);
 $PAGE->set_pagelayout('course');
 $pageid = pages::get_page_id_from_sequence($simplelessonid, $sequence);
-$returnshowpage = new moodle_url(
-        '/mod/simplelesson/showpage.php',
-        array('courseid' => $courseid,
-        'simplelessonid' => $simplelessonid,
-        'pageid' => $pageid));
+
+$returnpage = new moodle_url('/mod/simplelesson/showpage.php',
+    array('courseid' => $courseid,
+    'simplelessonid' => $simplelessonid,
+    'pageid' => $pageid));
 
 // Page link data.
 $pagetitles = pages::fetch_page_titles($simplelessonid, $pageid, true);
@@ -70,7 +70,7 @@ $mform = new simplelesson_edit_page_form(null,
 
 // If the cancel button was pressed.
 if ($mform->is_cancelled()) {
-    redirect($returnshowpage, get_string('cancelled'), 2);
+    redirect($returnpage, get_string('cancelled'), 2);
 }
 
 // If we have data, then our job here is to save it and return.
@@ -81,7 +81,7 @@ if ($data = $mform->get_data()) {
     $data->prevpageid = (int) $data->prevpageid;
     $data->id = $pageid;
     pages::update_page_record($data, $modulecontext);
-    redirect($returnshowpage,
+    redirect($returnpage,
             get_string('page_updated', 'mod_simplelesson'), 2);
 }
 

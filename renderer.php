@@ -316,9 +316,11 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      * @param string $courseid - current course
      * @param object $simplelessonid - current instance id
      * @param object $context  - module context
+     * @param $returnurl - page originating an edit request
      * @return string html link
      */
-    public function page_management($courseid, $simplelesson, $context) {
+    public function page_management($courseid, $simplelesson,
+          $context) {
 
         $activityname = format_string($simplelesson->name, true);
         $this->page->set_title($activityname);
@@ -357,8 +359,8 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
             $data[] = $nextpage;
 
             if (has_capability('mod/simplelesson:manage', $context)) {
-                $data[] = $this->page_action_links(
-                        $courseid, $simplelesson->id, $alldata);
+                $data[] = $this->page_action_links($courseid,
+                      $simplelesson->id, $alldata);
             } else {
                 $data[] = '';
             }
@@ -737,4 +739,29 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
                 get_string('homelink', 'mod_simplelesson'));
 
     }
+    /**
+     * Returns the html for page management footer
+     * @param int $simplelessonid current lesson
+     * @return string, html link
+     */
+    public function show_page_management_links($courseid, $simplelessonid) {
+
+        $html = '';
+        $links = array();
+
+        $html .= html_writer::start_div('mod_simplelesson_page_links');
+        $links[] = self::show_home_page_link($simplelessonid);
+
+        // Link to auto-sequencing page.
+        $url = new moodle_url('/mod/simplelesson/autosequence.php',
+                array('courseid' => $courseid,
+                'simplelessonid' => $simplelessonid));
+        $links[] =  html_writer::link($url,
+                get_string('autosequencelink', 'mod_simplelesson'));
+
+        $html .= html_writer::alist($links, null, 'ul');
+        $html .= html_writer::end_div();
+
+        return $html;
+      }
 }

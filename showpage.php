@@ -164,7 +164,7 @@ if (pages::is_last_page($data)) {
 echo $renderer->show_page_nav_links($data, $courseid, $mode, $attemptid);
 
 if (has_capability('mod/simplelesson:manage', $modulecontext)) {
-    echo $renderer->show_page_edit_links($courseid, $data);
+    echo $renderer->show_page_edit_links($courseid, $data, 'showpage');
 }
 
 echo $OUTPUT->footer();

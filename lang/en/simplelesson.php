@@ -67,6 +67,8 @@ $string['actions'] = 'Actions';
 $string['move_up'] = 'Move up';
 $string['move_down'] = 'Move down';
 $string['showpage'] = 'Preview page';
+$string['autosequencelink'] = 'Auto-sequence pages';
+$string['sequence_updated'] = 'Page sequences updated';
 
 // Question management.
 $string['manage_questions'] = 'Manage questions';
