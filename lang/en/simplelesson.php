@@ -69,6 +69,7 @@ $string['move_down'] = 'Move down';
 $string['showpage'] = 'Preview page';
 $string['autosequencelink'] = 'Auto-sequence pages';
 $string['sequence_updated'] = 'Page sequences updated';
+$string['hasquestion'] = 'Has question';
 
 // Question management.
 $string['manage_questions'] = 'Manage questions';
@@ -142,6 +143,9 @@ $string['lastname'] = "Last name";
 $string['question'] = "Question";
 $string['rightanswer'] = "Right answer";
 $string['youranswer'] = "Your answer";
+$string['mark'] = "Mark";
+$string['timetaken'] = "Time (s)";
 $string['max_attempts_exceeded'] = "No more attempts allowed";
 $string['numattempts'] = 'Attempt: {$a} of';
 $string['unlimited_attempts'] = 'Unlimited attempts';
+$string['no_questions'] = 'There are no questions to attempt (use preview)';

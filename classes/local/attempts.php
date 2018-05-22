@@ -51,15 +51,10 @@ class attempts  {
                 'mod_simplelesson',
                 $context);
         $quba->set_preferred_behaviour($behaviour);
-        $questions = array();
-        foreach ($entries as $entry) {
 
+        foreach ($entries as $entry) {
             $questiondef = \question_bank::load_question($entry->qid);
-            // Add questions that have page id's.
-            if ($entry->pageid != 0) {
-                $id = $quba->add_question(
-                        $questiondef, $entry->defaultmark);
-            }
+            $id = $quba->add_question($questiondef, $entry->defaultmark);
         }
         $quba->start_all_questions();
         \question_engine::save_questions_usage_by_activity($quba);
@@ -80,6 +75,17 @@ class attempts  {
         return $DB->get_field('simplelesson',
                 'qubaid',
                 array('id' => $simplelessonid));
+    }
+    /**
+     * Remove the usage id for a simplelesson instance
+     *
+     * @param $simplelessonid - module instance id
+     */
+    public static function remove_usageid($simplelessonid) {
+        global $DB;
+        $DB->set_field('simplelesson',
+            'qubaid', (0),
+            array('id' => $simplelessonid));
     }
     /**
      * Return the wanted row from question attempts
@@ -132,7 +138,7 @@ class attempts  {
             $data->pagename = pages::get_page_title($pagedata->id);
             $data->qname = questions::fetch_question_name($questiondata->qid);
 
-            // We'll need the slot to get the response data.
+            // We'll need the slot to get the user response data.
             $data->slot = $questiondata->slot;
 
             // Get the record from the question attempt data.
@@ -141,6 +147,15 @@ class attempts  {
                     MUST_EXIST);
             $data->youranswer = $qdata->responsesummary;
             $data->rightanswer = $qdata->rightanswer;
+            // If correct, maxmarks (may need to do more later)
+            if ($data->youranswer == $data->rightanswer) {
+                $data->mark = (int) $qdata->maxmark;
+            } else {
+                $data->mark = 0;
+            }
+
+            $data->timetaken = (int) ($data->timecompleted
+                    - $data->timestarted);
 
             // Get the userdata.
             $userdata = $DB->get_record('user',

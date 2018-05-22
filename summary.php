@@ -22,6 +22,7 @@
  */
 use \mod_simplelesson\local\attempts;
 use \mod_simplelesson\local\questions;
+use \question_engine;
 require_once('../../config.php');
 
 $courseid = required_param('courseid', PARAM_INT);
@@ -58,6 +59,13 @@ if ($mode == 'attempt') {
     echo $OUTPUT->heading(get_string('summary_header', 'mod_simplelesson'), 2);
     echo $renderer->lesson_summary($answerdata);
     echo $renderer->show_home_page_link($simplelessonid);
+
+    // Remove the usage data (may have to do manually).
+    // May need attempts management page.
+    $qubaid = attempts::get_usageid($simplelessonid);
+    question_engine::delete_questions_usage_by_activity($qubaid);
+    $qubaid = attempts::remove_usageid($simplelessonid);
+
 } else {
     // It's a preview, go back to the home page.
     $returnview = new moodle_url('/mod/simplelesson/view.php',

@@ -57,13 +57,19 @@ if (!has_capability('mod/simplelesson:manage', $modulecontext)) {
     }
 }
 // Check for questions.
-$questionentries = questions::fetch_questions($moduleinstance->id);
+$questionentries = questions::fetch_attempt_questions($moduleinstance->id);
 if (!empty($questionentries)) {
     $qubaid = attempts::create_usage(
             $modulecontext,
             $moduleinstance->behaviour,
             $questionentries,
             $moduleinstance->id);
+} else {
+    // No questions.
+    $returnview = new moodle_url('/mod/simplelesson/view.php',
+            array('simplelessonid' => $simplelessonid));
+    redirect($returnview,
+            get_string('no_questions', 'mod_simplelesson', 2));
 }
 // Save slots here.
 questions::set_slots($simplelessonid);

@@ -81,6 +81,24 @@ class questions  {
         return $entries;
     }
     /**
+     * Given a simplelessonid, find all its questions
+     * that are on a page.
+     *
+     * @param object $simplelesonid
+     * @return array question display data
+     */
+    public static function fetch_attempt_questions($simplelessonid) {
+        global $DB;
+        $sql = "SELECT s.id, s.qid, s.pageid, q.name, q.questiontext, q.defaultmark
+                  FROM {simplelesson_questions} s
+                  JOIN {question} q ON s.qid = q.id
+                 WHERE s.simplelessonid = :slid
+                   AND s.pageid <> 0";
+        $entries = $DB->get_records_sql($sql,
+              array('slid' => $simplelessonid));
+        return $entries;
+    }
+    /**
      * Get the page titles for the question manager
      * keys are the page values, text is the page title
      *

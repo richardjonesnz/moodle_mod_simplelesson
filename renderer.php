@@ -25,6 +25,7 @@
  */
 
 use mod_simplelesson\local\pages;
+use mod_simplelesson\local\questions;
 defined('MOODLE_INTERNAL') || die();
 
 class mod_simplelesson_renderer extends plugin_renderer_base {
@@ -331,9 +332,11 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
                 get_string('pagetitle', 'mod_simplelesson'),
                 get_string('prevpage', 'mod_simplelesson'),
                 get_string('nextpage', 'mod_simplelesson'),
+                get_string('hasquestion', 'mod_simplelesson'),
                 get_string('actions', 'mod_simplelesson'));
-        $table->align = array('left', 'left', 'left', 'left', 'left');
-        $table->wrap = array('', 'nowrap', '', 'nowrap', '');
+        $table->align = array('left', 'left', 'left', 'left',
+                'center', 'left');
+        $table->wrap = array('', 'nowrap', '', '','nowrap', '');
         $table->tablealign = 'center';
         $table->cellspacing = 0;
         $table->cellpadding = '2px';
@@ -357,7 +360,11 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
             $data[] = $alldata->pagetitle;
             $data[] = $prevpage;
             $data[] = $nextpage;
-
+            if (questions::page_has_question($simplelesson->id, $pageid)) {
+              $data[] = $this->output->pix_icon('i/valid', '*');
+            } else {
+              $data[] = $this->output->pix_icon('i/invalid', 'x');
+            }
             if (has_capability('mod/simplelesson:manage', $context)) {
                 $data[] = $this->page_action_links($courseid,
                       $simplelesson->id, $alldata);
@@ -703,11 +710,15 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         get_string('question', 'mod_simplelesson'),
         get_string('pagetitle', 'mod_simplelesson'),
         get_string('rightanswer', 'mod_simplelesson'),
-        get_string('youranswer', 'mod_simplelesson'));
+        get_string('youranswer', 'mod_simplelesson'),
+        get_string('mark', 'mod_simplelesson'),
+        get_string('timetaken', 'mod_simplelesson'));
 
         $table->align =
-                array('left', 'left', 'left', 'left', 'left', 'left', 'left');
-        $table->wrap = array('nowrap', 'nowrap', '', '', '', '', '');
+                array('left', 'left', 'left', 'left',
+                'left', 'left', 'left', 'left', 'left');
+        $table->wrap = array('nowrap', 'nowrap',
+                '', '', '', '', '', '', '');
         $table->tablealign = 'center';
         $table->cellspacing = 0;
         $table->cellpadding = '2px';
@@ -721,6 +732,8 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
             $data[] = $answer->pagename;
             $data[] = $answer->rightanswer;
             $data[] = $answer->youranswer;
+            $data[] = $answer->mark;
+            $data[] = $answer->timetaken;
             $table->data[] = $data;
         }
 
