@@ -104,18 +104,19 @@ if ($numpages > 0) {
     echo $renderer->fetch_firstpage_links($course->id,
             $simplelesson->id, $pageid);
 }
+
+$canmanage = has_capability('mod/simplelesson:manage', $modulecontext);
+
 // First page summary
 $userattempts = attempts::get_number_of_attempts($USER->id,
         $simplelesson->id);
-echo $renderer->fetch_num_pages($numpages, $userattempts,
-        $simplelesson->maxattempts);
-
+echo $renderer->fetch_lesson_info($numpages, $userattempts,
+        $simplelesson->maxattempts, $canmanage);
 
 // If we are teacher we see edit links.
-if (has_capability('mod/simplelesson:manage', $modulecontext)) {
-
-    echo $renderer->fetch_editing_links($course->id, $simplelesson->id,
-            $numpages);
+if ($canmanage) {
+    echo $renderer->fetch_editing_links($course->id,
+            $simplelesson->id, $numpages);
 }
 
 // Finish the page.

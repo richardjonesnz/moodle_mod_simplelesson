@@ -117,22 +117,26 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         return $html;
     }
     /**
-     * Returns the html to show the number of pages.
+     * Returns the html to show info about the lesson,
+     * such as the number of pages and attempt status.
      *
      * @param int $numpages the number of pages
      * @return string html
      */
-    public function fetch_num_pages($numpages, $attempts, $maxattempts) {
+    public function fetch_lesson_info($numpages, $attempts,
+            $maxattempts, $canmanage) {
 
         $html = '';
         $html .= html_writer::start_div('mod_simplelesson_data');
         $pages = get_string('numpages', 'mod_simplelesson', $numpages);
         $pages .= ' | ';
-        if ($maxattempts != 0) {
-            $attempts = get_string('numattempts', 'mod_simplelesson', $attempts);
-            $attempts .= ' ' . $maxattempts . ' ';
+        if ( ($maxattempts == 0) || ($canmanage) ) {
+            $attempts = get_string('unlimited_attempts',
+                   'mod_simplelesson');
         } else {
-            $attempts = get_string('unlimited_attempts', 'mod_simplelesson');
+            $attempts = get_string('numattempts', 'mod_simplelesson',
+                    $attempts);
+            $attempts .= ' ' . $maxattempts . ' ';
         }
         $html .= $pages . $attempts;
         $html .= html_writer::end_div();
@@ -710,8 +714,6 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $table = new html_table();
 
         $table->head = array(
-        get_string('firstname', 'mod_simplelesson'),
-        get_string('lastname', 'mod_simplelesson'),
         get_string('question', 'mod_simplelesson'),
         get_string('pagetitle', 'mod_simplelesson'),
         get_string('rightanswer', 'mod_simplelesson'),
@@ -720,10 +722,9 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         get_string('timetaken', 'mod_simplelesson'));
 
         $table->align =
-                array('left', 'left', 'left', 'left',
+                array('left', 'left',
                 'left', 'left', 'left', 'left', 'left');
-        $table->wrap = array('nowrap', 'nowrap',
-                '', '', '', '', '', '', '');
+        $table->wrap = array('', '', '', '', '', '', '');
         $table->tablealign = 'center';
         $table->cellspacing = 0;
         $table->cellpadding = '2px';
@@ -731,9 +732,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $table->data = array();
         foreach ($answerdata as $answer) {
             $data = array();
-            $data[] = $answer->firstname;
-            $data[] = $answer->lastname;
-            $data[] = $answer->qname;
+            $data[] = $answer->questionsummary;
             $data[] = $answer->pagename;
             $data[] = $answer->rightanswer;
             $data[] = $answer->youranswer;
@@ -782,4 +781,35 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
 
         return $html;
       }
+    /**
+     * Returns the html for attempt summary page
+     * @param object $sessiondata - score and time
+     * @return string, html to show summary
+     */
+    public function get_summary_data($sessiondata) {
+
+        $html = '';
+        $html .= get_string('summary_score', 'mod_simplelesson',
+            $sessiondata->score) . ' | ';
+        $html .= get_string('summary_time', 'mod_simplelesson',
+            $sessiondata->stime);
+        return $html;
+    }
+    /**
+     * Returns the html for link to attempt cleanup page
+     * @param object $simplelessonid - the lesson
+     * @param object $attemptid - the attempt
+     * @return string, html page link
+     */
+    public function show_attempt_completion_link($courseid,
+            $simplelessonid, $attemptid) {
+
+        // Link to attempt cleanup page.
+        $url = new moodle_url('/mod/simplelesson/cleanattempt.php',
+                array('courseid' => $courseid,
+                'simplelessonid' => $simplelessonid,
+                'attemptid' => $attemptid));
+        return  html_writer::link($url,
+                get_string('cleanattemptlink', 'mod_simplelesson'));
+    }
 }

@@ -15,26 +15,35 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Puts page sequence numbers in logical order according to
- * placement on page management screen.
+ * Clean up usages and attempt data
  *
  * @package   mod_simplelesson
  * @copyright 2018 Richard Jones https://richardnz.net
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-use \mod_simplelesson\local\pages;
+use \mod_simplelesson\local\attempts;
+use \question_engine;
 require_once('../../config.php');
 $courseid = required_param('courseid', PARAM_INT);
 $simplelessonid = required_param('simplelessonid', PARAM_INT);
-$PAGE->set_url('/mod/simplelesson/autosequence.php',
+$attemptid = required_param('attemptid', PARAM_INT);
+$PAGE->set_url('/mod/simplelesson/cleanattempt.php',
         array('courseid' => $courseid,
-        'simplelessonid' => $simplelessonid));
+        'simplelessonid' => $simplelessonid,
+        'attemptid' => $attemptid));
 require_course_login($courseid);
-$returnedit = new moodle_url('/mod/simplelesson/edit.php',
-        array('courseid' => $courseid,
-        'simplelessonid' => $simplelessonid));
-pages::fix_page_sequence($simplelessonid);
-// Go back to page where request came from.
-redirect($returnedit,
-        get_string('sequence_updated', 'mod_simplelesson'), 2);
+
+// Remove the usage data (may have to do manually).
+// May need attempts management page.
+
+$qubaid = attempts::get_usageid($simplelessonid);
+// Doesn't seem to work.
+question_engine::delete_questions_usage_by_activity($qubaid);
+// If it doesn't work we'll do it in here.
+$qubaid = attempts::remove_usageid($simplelessonid);
+
+$returnview = new moodle_url('/mod/simplelesson/view.php',
+        array('simplelessonid' => $simplelessonid));
+// Go back to home page.
+redirect($returnview,
+        get_string('attempt_completed', 'mod_simplelesson', 1));

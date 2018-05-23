@@ -53,7 +53,7 @@ if (!has_capability('mod/simplelesson:manage', $modulecontext)) {
         $returnview = new moodle_url('/mod/simplelesson/view.php',
                 array('simplelessonid' => $simplelessonid));
         redirect($returnview,
-                get_string('max_attemps_exceeded', 'mod_simplelesson', 2));
+                get_string('max_attempts_exceeded', 'mod_simplelesson', 2));
     }
 }
 // Check for questions.

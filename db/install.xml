@@ -70,7 +70,7 @@
         <FIELD NAME="simplelessonid" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" COMMENT="Course simplelesson activity belongs to"/>
         <FIELD NAME="userid" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" COMMENT="Course simplelesson activity belongs to"/>
         <FIELD NAME="status" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="status"/>
-        <FIELD NAME="sessionscore" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="the score for this session"/>
+        <FIELD NAME="sessionscore" TYPE="number" LENGTH="12" NOTNULL="true" DEFAULT="0" SEQUENCE="false" DECIMALS="7"  COMMENT="the score for this session"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
       </FIELDS>
@@ -84,9 +84,14 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="simplelessonid" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" COMMENT="Course simplelesson activity belongs to"/>
-        <FIELD NAME="qatid" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" COMMENT="question_attempt entry id"/>
+        <FIELD NAME="qatid" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="question_attempt id"/>
         <FIELD NAME="attemptid" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Our local attempt id"/>
         <FIELD NAME="pageid" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="page being attempted"/>
+        <FIELD NAME="maxmark" TYPE="number" LENGTH="12" NOTNULL="true" DEFAULT="0" SEQUENCE="false" DECIMALS="7" COMMENT="The grade this question is marked out of in this attempt."/>
+        <FIELD NAME="mark" TYPE="number" LENGTH="12" NOTNULL="true" DEFAULT="0" SEQUENCE="false" DECIMALS="7" COMMENT="grade for this answer."/>
+        <FIELD NAME="questionsummary" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="This is a summary of the question"/>
+        <FIELD NAME="rightanswer" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="This is a summary of the right answer to this question."/>
+        <FIELD NAME="responsesummary" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="This is a summary of the student's response."/>
         <FIELD NAME="timestarted" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="timecompleted" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
       </FIELDS>

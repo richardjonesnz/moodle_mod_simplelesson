@@ -56,19 +56,21 @@ if ($mode == 'attempt') {
     // Summary data for this attempt by this user.
     $answerdata = attempts::get_lesson_answer_data($attemptid);
     echo $OUTPUT->heading(get_string('summary_header', 'mod_simplelesson'), 2);
+    $user = attempts::get_attempt_user($attemptid);
+    $name = $user->firstname . ' ' . $user->lastname;
+    echo get_string('summary_user', 'mod_simplelesson', $name);
     echo $renderer->lesson_summary($answerdata);
-    echo $renderer->show_home_page_link($simplelessonid);
 
     // Record attempt completion data.
-    $sessionscore = attempts::get_sessionscore($answerdata);
-    attempts::set_attempt_completed($attemptid, $sessionscore);
+    $sessiondata = attempts::get_sessiondata($answerdata);
+    echo $renderer->get_summary_data($sessiondata);
 
-    // Remove the usage data (may have to do manually).
-    // May need attempts management page.
-    $qubaid = attempts::get_usageid($simplelessonid);
-    question_engine::delete_questions_usage_by_activity($qubaid);
-    $qubaid = attempts::remove_usageid($simplelessonid);
+    // redirect to clean up page here, then back home...
+    attempts::set_attempt_completed($attemptid,
+            $sessiondata->score);
 
+    echo $renderer->show_attempt_completion_link($courseid,
+            $simplelessonid, $attemptid);
 } else {
     // It's a preview, go back to the home page.
     $returnview = new moodle_url('/mod/simplelesson/view.php',
@@ -76,8 +78,5 @@ if ($mode == 'attempt') {
     redirect($returnview,
             get_string('preview_completed', 'mod_simplelesson', 1));
 }
-// Show editing links, if permitted.
-if (has_capability('mod/simplelesson:manage', $modulecontext)) {
-    echo $renderer->fetch_editing_links($courseid, $simplelessonid, 0);
-}
+
 echo $renderer->footer();

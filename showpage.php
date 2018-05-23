@@ -97,6 +97,8 @@ if (data_submitted() && confirm_sesskey()) {
        that's our own question_attempts table.
        pageid gives us also the question info, such as slot
        and question number.
+
+       We will keep this data because we will remove the attempt data from the question_attempts table during cleanup.
     */
     $slot = questions::get_slot($simplelessonid, $pageid);
     $qdata = attempts::get_question_attempt_id($qubaid, $slot);
@@ -105,6 +107,11 @@ if (data_submitted() && confirm_sesskey()) {
     $answerdata->qatid = $qdata->id;
     $answerdata->attemptid = $attemptid;
     $answerdata->pageid = $pageid;
+    $answerdata->maxmark = 0;
+    $answerdata->mark = 0;
+    $answerdata->questionsummary = '';
+    $answerdata->rightanswer = '';
+    $answerdata->youranswer = '';
     $answerdata->timestarted = $starttime;
     $answerdata->timecompleted = $timenow;
     $DB->insert_record('simplelesson_answers', $answerdata);

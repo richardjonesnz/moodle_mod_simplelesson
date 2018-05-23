@@ -70,12 +70,13 @@ class pages  {
     /**
      * Get the page links for the simplelesson index
      *
-     * @param int $simplelessonid the id of a simplelesson
      * @param int $course id
-     * @param boolean $homepage true if this is the home page
+     * @param int $simplelessonid the id of a simplelesson
+     * @param int $pageid, page index is on
      * @return array of links to pages in the simplelesson
      */
-    public static function fetch_page_links($courseid, $simplelessonid, $pageid) {
+    public static function fetch_page_links($courseid, $simplelessonid,
+            $pageid) {
         global $CFG;
         require_once($CFG->libdir . '/weblib.php');
         require_once($CFG->libdir . '/outputcomponents.php');
@@ -85,16 +86,21 @@ class pages  {
         $pagecount = self::count_pages($simplelessonid);
         if ($pagecount != 0) {
             for ($p = 1; $p <= $pagecount; $p++) {
-                $pageid = self::get_page_id_from_sequence(
+                $pid = self::get_page_id_from_sequence(
                         $simplelessonid, $p);
-                $data = self::get_page_record($pageid);
+                $data = self::get_page_record($pid);
                 $pageurl = new
                         \moodle_url('/mod/simplelesson/showpage.php',
                         array('courseid' => $courseid,
                         'simplelessonid' => $data->simplelessonid,
-                        'pageid' => $pageid));
-                $link = \html_writer::link($pageurl,
-                        $data->pagetitle);
+                        'pageid' => $pid));
+                // No html link to self.
+                if ($pid == $pageid) {
+                    $link = $data->pagetitle;
+                } else {
+                    $link = \html_writer::link($pageurl,
+                            $data->pagetitle);
+                }
                 $pagelinks[] = $link;
             }
         }
@@ -165,7 +171,7 @@ class pages  {
         return $data->id;
     }
     /**
-     * Given a simplelesson id return its sequence number
+     * Given a pageid return its sequence number
      *
      * @param int $pageid the
      * @return int $sequence, where the page is in the lesson sequence
@@ -183,7 +189,6 @@ class pages  {
      * @param int $pageid, where the page is in the lesson sequence
      * @return string page title
      */
-
     public static function get_page_title($pageid) {
         global $DB;
 
@@ -200,11 +205,14 @@ class pages  {
     public static function is_last_page($data) {
         return ($data->sequence == self::count_pages($data->simplelessonid));
     }
-
     /**
      * Given a simplelesson and sequence number
      * Move the page by exchanging sequence numbers
      *
+     * If there is a question slot, move that too.
+     *
+     * Note: User is not presented with the choice to move
+     * pages at the top and bottom of the sequence.
      *
      * @param int $simplelessonid the simplelesson instance
      * @param int $sequence the page sequence number
@@ -220,6 +228,8 @@ class pages  {
 
         self::decrement_page_sequence($pageidup);
         self::increment_page_sequence($pageiddown);
+        self::exchange_question_slots($simplelessonid,
+                $pageiddown, $pageidup);
     }
 
     /**
@@ -260,7 +270,6 @@ class pages  {
         $DB->set_field('simplelesson_pages',
                 'sequence', ($sequence - 1), array('id' => $pageid));
     }
-
     /**
      * Given a page record id
      * increase the sequence number by 1
@@ -307,12 +316,12 @@ class pages  {
                 array('pageid' => $p2,
                 'simplelessonid' => $simplelessonid));
     }
-
     /**
      * Update a page record
      *
      * @param int $data from edit_page form
      * @param object $context, the module context
+     * @return none
      */
     public static function update_page_record($data, $context) {
         global $DB;
@@ -332,7 +341,7 @@ class pages  {
         $DB->update_record('simplelesson_pages', $data);
     }
     /**
-     * Fix the links to a deleted page
+     * Fix the links when a page is deleted
      *
      * @param int $simplelessonid instance the page is in
      * @param int $pageid of deleted page
@@ -370,6 +379,7 @@ class pages  {
     /**
      * Given a simplelesson id
      * Fix the pages so that next and previous match page order
+     * as it is on the page management screen
      *
      * @param int $simplelessonid
      * @return none

@@ -37,7 +37,7 @@ defined('MOODLE_INTERNAL') || die();
  */
 class attempts  {
     /**
-     * Creates the question usage for this simple lesson
+     * Handles data relating to attempts, including question usages
      *
      * @param $context - module context
      * @param $behaviour - question behaviour
@@ -70,8 +70,8 @@ class attempts  {
      * Set the slot number in the questions table
      *
      * @param $simplelessonid - module instance id
-     * @param $pageid - module instance id
-     * @param $slot - module instance id
+     * @param $pageid - id of page to set slot
+     * @param $slot - question slot number
      */
     public static function set_slot($simplelessonid, $pageid, $slot) {
         global $DB;
@@ -94,14 +94,23 @@ class attempts  {
     }
     /**
      * Remove the usage id for a simplelesson instance
+     * Also clean up Moodle's attempt data as this doesn't
+     $ seem to get done by question engine.
      *
      * @param $simplelessonid - module instance id
      */
     public static function remove_usageid($simplelessonid) {
         global $DB;
+        $qubaid = self::get_usageid($simplelessonid);
         $DB->set_field('simplelesson',
             'qubaid', (0),
             array('id' => $simplelessonid));
+        // Delete these records explicitly, we have the
+        // attempt data we need in our attempts table.
+        $DB->delete_records('question_attempts',
+                   array('questionusageid'=>$qubaid));
+        $DB->delete_records('question_usages',
+                   array('component'=>'mod_simplelesson'));
     }
     /**
      * Return the wanted row from question attempts
@@ -127,61 +136,40 @@ class attempts  {
      */
     public static function get_lesson_answer_data($attemptid) {
         global $DB;
-        // Get the records for this user on this attempt.
-        $sql = "SELECT  a.id, a.simplelessonid, a.qatid,
-                        a.attemptid, a.pageid, a.timestarted,
-                        a.timecompleted, t.userid
-                  FROM  {simplelesson_answers} a
-                  JOIN  {simplelesson_attempts} t ON a.attemptid = t.id
-                   AND  a.attemptid = :aid";
 
-        $answerdata = $DB->get_records_sql($sql,
-                array('aid' => $attemptid));
+        $answerdata = $DB->get_records('simplelesson_answers',
+                array('attemptid' => $attemptid));
 
         // Add the data for the summary table.
         foreach ($answerdata as $data) {
 
-            // Get the records from our tables.
-            $pagedata = $DB->get_record('simplelesson_pages',
-                    array('id' => $data->pageid), '*',
-                    MUST_EXIST);
-            $questiondata = $DB->get_record('simplelesson_questions',
-                    array('simplelessonid' => $data->simplelessonid,
-                    'pageid' => $data->pageid), '*',
-                    MUST_EXIST);
+            // Add the page title
+            $data->pagename = pages::get_page_title($data->pageid);
 
-            // Add the page and question name.
-            $data->pagename = pages::get_page_title($pagedata->id);
-            $data->qname = questions::fetch_question_name($questiondata->qid);
-
-            // We'll need the slot to get the user response data.
-            $data->slot = $questiondata->slot;
-
-            // Get the record from the question attempt data.
+            // get the response data from the question_attempts table
             $qdata = $DB->get_record('question_attempts',
                     array('id' => $data->qatid), '*',
                     MUST_EXIST);
+            $summary = $qdata->questionsummary;
+            if (strlen($summary) > 100) {
+                $summary = substr($summary,
+                        0, 95) . '...';
+            }
+            $data->questionsummary = $summary;
             $data->youranswer = $qdata->responsesummary;
             $data->rightanswer = $qdata->rightanswer;
+
             // If correct, maxmarks (may need to do more later)
             if ($data->youranswer == $data->rightanswer) {
-                $data->mark = (int) $qdata->maxmark;
+                $data->mark = $qdata->maxmark;
             } else {
-                $data->mark = 0;
+                $data->mark = 0.0;
             }
 
+            // Calculate the elapsed time (s)
             $data->timetaken = (int) ($data->timecompleted
                     - $data->timestarted);
-
-            // Get the userdata.
-            $userdata = $DB->get_record('user',
-                    array('id' => $data->userid), '*',
-                    MUST_EXIST);
-            $data->userid = $userdata->id;
-            $data->firstname = $userdata->firstname;
-            $data->lastname = $userdata->lastname;
         }
-
         return $answerdata;
     }
     /**
@@ -195,6 +183,19 @@ class attempts  {
         return $DB->insert_record(
                 'simplelesson_attempts',
                 $data);
+    }
+    /**
+     * Get the user record for an attempt
+     *
+     * @param $attemptid the attempt record id
+     * @return object - user data from the users table
+     */
+    public static function get_attempt_user($attemptid) {
+        global $DB;
+        $data = $DB->get_record('simplelesson_attempts',
+                array('id' => $attemptid), 'userid', MUST_EXIST);
+        return $DB->get_record('user',
+                array('id' => $data->userid), '*', MUST_EXIST);
     }
     /**
      * Set status the attempts table
@@ -213,17 +214,22 @@ class attempts  {
                 array('id' => $attemptid));
     }
     /**
-     * Add up the marks in the answer data
+     * Add up the marks and times in the answer data
      *
      * @param $answerdata - array of objects
-     * @return int overall mark for the attempt
+     * @return object overall mark and time for the attempt
      */
-    public static function get_sessionscore($answerdata) {
-        $sessionscore = 0;
+    public static function get_sessiondata($answerdata) {
+        $score = 0.0;
+        $stime = 0;
         foreach ($answerdata as $data) {
-            $sessionscore .= $data->mark;
+            $score += $data->mark;
+            $stime += $data->timetaken;
         }
-        return $sessionscore;
+        $returndata = new \stdClass();
+        $returndata->score = $score;
+        $returndata->stime = $stime;
+        return $returndata;
     }
     /**
      * Get the user attempts at this lesson instance
