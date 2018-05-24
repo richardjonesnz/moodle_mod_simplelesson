@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot . '/mod/simplelesson/backup/moodle2/backup_simplelesson_stepslib.php');
-
+require_once($CFG->dirroot . '/mod/simplelesson/backup/moodle2/backup_simplelesson_settingslib.php');
 /**
  * Provides the steps to perform one complete backup of the simplelesson instance.
  *
@@ -59,22 +59,15 @@ class backup_simplelesson_activity_task extends backup_activity_task {
     static public function encode_content_links($content) {
         global $CFG;
 
-        $base = preg_quote($CFG->wwwroot.'/mod/simplelesson', '#');
+        $base = preg_quote($CFG->wwwroot,"/");
 
-        // Link to the list of simplelessons.
-        $pattern = '#'.$base.'/index\.php\?id=([0-9]+)#';
-        $replacement = '$@MULTIPAGEINDEX*$2@$';
-        $content = preg_replace($pattern, $replacement, $content);
+        // Link to the list of simplelessons
+        $search="/(".$base."\/mod\/simplelesson\/index.php\?id\=)([0-9]+)/";
+        $content= preg_replace($search, '$@SIMPLELESSONINDEX*$2@$', $content);
 
-        // Link to one simplelesson by id.
-        $pattern = '#'.$base.'/view\.php\?id=([0-9]+)#';
-        $replacement = '$@MULTIPAGEVIEWBYID*$2@$';
-        $content = preg_replace($pattern, $replacement, $content);
-
-        // Action for displaying a page.
-        $pattern = '#'.$base.'/showpage\.php\?id=([0-9]+)(&|&amp;)pagedid=([0-9]+)#';
-        $replacement = '$@MULTIPAGESHOWPAGE*$2*$4@$';
-        $content = preg_replace($pattern, $replacement, $content);
+        // Link to simplelesson view by moduleid
+        $search="/(".$base."\/mod\/simplelesson\/view.php\?id\=)([0-9]+)/";
+        $content= preg_replace($search, '$@SIMPLELESSONVIEWBYID*$2@$', $content);
 
         return $content;
     }

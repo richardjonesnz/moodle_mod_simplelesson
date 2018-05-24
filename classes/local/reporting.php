@@ -136,7 +136,7 @@ class reporting  {
                     MUST_EXIST);
           $record->lessonname = $lessonname->name;
           $record->sessionscore = (int) $record->sessionscore;
-          $record->maxscore = (int) $record->maxcore;
+          $record->maxscore = (int) $record->maxscore;
         }
         return $records;
     }
