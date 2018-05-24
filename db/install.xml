@@ -70,7 +70,8 @@
         <FIELD NAME="simplelessonid" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" COMMENT="Course simplelesson activity belongs to"/>
         <FIELD NAME="userid" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" COMMENT="Course simplelesson activity belongs to"/>
         <FIELD NAME="status" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="status"/>
-        <FIELD NAME="sessionscore" TYPE="number" LENGTH="12" NOTNULL="true" DEFAULT="0" SEQUENCE="false" DECIMALS="7"  COMMENT="the score for this session"/>
+        <FIELD NAME="sessionscore" TYPE="number" LENGTH="12" NOTNULL="true" DEFAULT="0" SEQUENCE="false" DECIMALS="7"  COMMENT="the score for this attempt"/>
+        <FIELD NAME="maxscore" TYPE="number" LENGTH="12" NOTNULL="true" DEFAULT="0" SEQUENCE="false" DECIMALS="7"  COMMENT="the available score for the attempt"/>        
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
       </FIELDS>

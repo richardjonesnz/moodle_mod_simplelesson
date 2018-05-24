@@ -122,6 +122,12 @@ $string['moduleid'] = 'id';
 $string['viewtab'] = 'view';
 $string['reportstab'] = 'reports';
 $string['timecreated'] = 'Time created';
+$string['basic_report'] = 'Basic report';
+$string['user_report'] = 'User report';
+$string['date'] = 'Attempt date';
+$string['lessonname'] = 'Lesson';
+$string['sessionscore'] = 'Correct';
+$string['maxscore'] = 'Out of';
 
 // Admin settings.
 $string['enablereports'] = 'Show reports tab';
@@ -153,3 +159,4 @@ $string['max_attempts_exceeded'] = "No more attempts allowed";
 $string['numattempts'] = 'Attempts made: {$a} of';
 $string['unlimited_attempts'] = 'Unlimited attempts';
 $string['no_questions'] = 'There are no questions to attempt (use preview)';
+$string['cleanattemptlink'] = 'Finish review';

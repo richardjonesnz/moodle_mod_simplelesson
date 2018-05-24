@@ -102,6 +102,7 @@ if (data_submitted() && confirm_sesskey()) {
     */
     $slot = questions::get_slot($simplelessonid, $pageid);
     $qdata = attempts::get_question_attempt_id($qubaid, $slot);
+
     $answerdata = new stdClass();
     $answerdata->simplelessonid = $simplelessonid;
     $answerdata->qatid = $qdata->id;
@@ -114,7 +115,9 @@ if (data_submitted() && confirm_sesskey()) {
     $answerdata->youranswer = '';
     $answerdata->timestarted = $starttime;
     $answerdata->timecompleted = $timenow;
-    $DB->insert_record('simplelesson_answers', $answerdata);
+    $answerdata->id = $DB->insert_record('simplelesson_answers',
+            $answerdata);
+
     redirect($actionurl);
 }
 

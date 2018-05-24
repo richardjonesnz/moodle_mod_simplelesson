@@ -32,6 +32,8 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
+define('MOD_SIMPLELESSON_ATTEMPT_STARTED', 1);
+define('MOD_SIMPLELESSON_ATTEMPT_COMPLETE', 2);
 
 /* Moodle core API */
 

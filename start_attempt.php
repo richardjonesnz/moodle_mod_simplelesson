@@ -79,8 +79,9 @@ $attemptdata->courseid = $courseid;
 $attemptdata->simplelessonid = $simplelessonid;
 $attemptdata->pageid = 0;  // Set this later, per page.
 $attemptdata->userid = $USER->id;
-$attemptdata->status = 1;
+$attemptdata->status = MOD_SIMPLELESSON_ATTEMPT_STARTED;
 $attemptdata->sessionscore = 0;
+$attemptdata->maxscore = count($questionentries);
 $attemptdata->timecreated = time();
 $attemptdata->timemodified = 0;
 

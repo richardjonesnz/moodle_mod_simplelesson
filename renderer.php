@@ -215,12 +215,13 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $links = array();
         $html = $this->output->box_start();
         $html .= html_writer::start_div('mod_simplelesson_page_links');
-        // Home link.
-        $url = new moodle_url('/mod/simplelesson/view.php',
-                array('simplelessonid' => $data->simplelessonid));
-        $links[] = html_writer::link($url,
+        // Home link. Not shown during an attempt.
+        if ($mode != 'attempt') {
+            $url = new moodle_url('/mod/simplelesson/view.php',
+                    array('simplelessonid' => $data->simplelessonid));
+            $links[] = html_writer::link($url,
                     get_string('homelink', 'mod_simplelesson'));
-
+        }
         if ($data->prevpageid != 0) {
             $url = new moodle_url('/mod/simplelesson/showpage.php',
                         array('courseid' => $courseid,
@@ -788,11 +789,11 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      */
     public function get_summary_data($sessiondata) {
 
-        $html = '';
+        $html = '<p>';
         $html .= get_string('summary_score', 'mod_simplelesson',
             $sessiondata->score) . ' | ';
         $html .= get_string('summary_time', 'mod_simplelesson',
-            $sessiondata->stime);
+            $sessiondata->stime) . '</p>';
         return $html;
     }
     /**

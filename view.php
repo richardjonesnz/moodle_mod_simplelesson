@@ -26,7 +26,7 @@
 use mod_simplelesson\local\pages;
 use mod_simplelesson\local\attempts;
 use mod_simplelesson\event\course_module_viewed;
-
+use mod_simplelesson\local\reporting;
 require_once('../../config.php');
 require_once(dirname(__FILE__).'/lib.php');
 global $DB, $USER;
@@ -79,13 +79,15 @@ $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
 
 $renderer = $PAGE->get_renderer('mod_simplelesson');
+//$reporter = $PAGE->get_report_renderer('mod_simplelesson');
+
 echo $renderer->header($simplelesson->title, $course->fullname);
 
 // Show reports tab if permission exists and admin has allowed.
 $config = get_config('mod_simplelesson');
 if ($config->enablereports) {
     if (has_capability('mod/simplelesson:viewreportstab', $modulecontext)) {
-        echo $renderer->show_reports_tab($course->id, $simplelesson->id);
+        echo reporting::show_reports_tab($course->id, $simplelesson->id);
     }
 }
 

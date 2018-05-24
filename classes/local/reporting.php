@@ -47,62 +47,167 @@ class reporting  {
         return $records;
     }
     /**
-     * Return an array of lesson answers and associated data
-     * for multiple attempts at a single lesson.
+     * Returns HTML to display a report tab
      *
-     * @param $simplelessonid int id of simplelesson instance
-     * @return object array with one or more rows of answer data
+     * @param $courseid - current course id
+     * @param $simplelessonid - current instance id
+     * @return string, a set of tabs
      */
-    public static function get_lesson_answer_data($simplelessonid) {
-        global $DB;
-        // Get the records for this user on this attempt
-        $sql = "SELECT  a.id, a.simplelessonid, a.qatid,
-                        a.attemptid, a.pageid, a.timestarted,
-                        a.timecompleted, t.userid
-                  FROM  {simplelesson_answers} a
-                  JOIN  {simplelesson_attempts} t ON a.attemptid = t.id
-                   AND  a.simplelessonid = :slid";
+    public static function show_reports_tab($courseid, $simplelessonid) {
 
-        $answerdata = $DB->get_records_sql($sql,
-                array('slid' => $simplelessonid));
+        $tabs = $row = $inactive = $activated = array();
+        $currenttab = '';
+        $viewpage = new \moodle_url('/mod/simplelesson/view.php',
+        array('simplelessonid' => $simplelessonid));
+        $reportspage = new \moodle_url(
+                '/mod/simplelesson/reports.php',
+        array('courseid' => $courseid,
+                'simplelessonid' => $simplelessonid,
+                'report' => 'menu'));
 
-        // Add the data for the summary table.
-        foreach ($answerdata as $data) {
+        $row[] = new \tabobject('view', $viewpage,
+                get_string('viewtab', 'mod_simplelesson'));
+        $row[] = new \tabobject('reports', $reportspage,
+                get_string('reportstab', 'mod_simplelesson'));
 
-            // Get the records from our tables.
-            $pagedata = $DB->get_record('simplelesson_pages',
-                    array('id' => $data->pageid), '*',
-                    MUST_EXIST);
-            $questiondata = $DB->get_record('simplelesson_questions',
-                    array('simplelessonid' => $data->simplelessonid,
-                    'pageid' => $data->pageid), '*',
-                    MUST_EXIST);
+        $tabs[] = $row;
 
-            // Add the page and question name.
-            $data->pagename = pages::get_page_title($pagedata->id);
-            $data->qname = questions::fetch_question_name($questiondata->qid);
+        \print_tabs($tabs, $currenttab, $inactive, $activated);
 
-            // We'll need the slot to get the response data.
-            $data->slot = $questiondata->slot;
+    }
+    /**
+     * Returns HTML to a basic report of module usage
+     *
+     * @param $records - an array of data records
+     * @return string, html table
+     */
+    public static function show_basic_report($records) {
 
-            // Get the record from the question attempt data.
-            $qdata = $DB->get_record('question_attempts',
-                    array('id' => $data->qatid), '*',
-                    MUST_EXIST);
-            $data->youranswer = $qdata->responsesummary;
-            $data->rightanswer = $qdata->rightanswer;
-
-            // Get the userdata.
-            $userdata = $DB->get_record('user',
-                    array('id' => $data->userid), '*',
-                    MUST_EXIST);
-            $data->userid = $userdata->id;
-            $data->firstname = $userdata->firstname;
-            $data->lastname = $userdata->lastname;
-            $data->timetaken = date("s", ($data->timecompleted
-                    - $data->timestarted));
+        $table = new \html_table();
+        $table->head = array(
+                get_string('moduleid', 'mod_simplelesson'),
+                get_string('simplelessonname', 'mod_simplelesson'),
+                get_string('title', 'mod_simplelesson'),
+                get_string('timecreated', 'mod_simplelesson'));
+        $table->align = array('left', 'left', 'left', 'left');
+        $table->wrap = array('nowrap', '', 'nowrap', '');
+        $table->tablealign = 'left';
+        $table->cellspacing = 0;
+        $table->cellpadding = '2px';
+        $table->width = '80%';
+        foreach ($records as $record) {
+            $data = array();
+            $data[] = $record->id;
+            $data[] = $record->name;
+            $data[] = $record->title;
+            $data[] = $record->timecreated;
+            $table->data[] = $data;
         }
 
-        return $answerdata;
+        return \html_writer::table($table);
+    }
+    /*
+     * User Report - get the user attempt records for a lesson
+     *
+     * @param $simplelessonid - lesson to get records for
+     * @return array of objects
+     */
+    public static function fetch_user_data() {
+        global $DB;
+        $sql = "SELECT a.id, a.attemptid, a.simplelessonid,
+                       a.timestarted, a.timecompleted,
+                       t.userid, t.status, t.sessionscore,
+                       t.maxscore, u.firstname, u.lastname
+                  FROM {simplelesson_answers} a
+                  JOIN {simplelesson_attempts} t
+                    ON t.id = a.attemptid
+                  JOIN {user} u
+                    ON u.id = t.userid";
+
+
+        $records = $DB->get_records_sql($sql);
+
+        foreach ($records as $record) {
+          $record->datetaken = date("Y-m-d H:i:s",$record->timestarted);
+          $record->timetaken = (int) ($record->timecompleted
+                    - $record->timestarted);
+          $lessonname = $DB->get_record('simplelesson',
+                    array('id' => $record->simplelessonid), 'name',
+                    MUST_EXIST);
+          $record->lessonname = $lessonname->name;
+          $record->sessionscore = (int) $record->sessionscore;
+          $record->maxscore = (int) $record->maxcore;
+        }
+        return $records;
+    }
+    /**
+     * Returns HTML to a user report of lesson attempts
+     *
+     * @param $records - an array of attempt records
+     * @return string, html table
+     */
+    public static function show_user_report($records) {
+
+        $table = new \html_table();
+        $table->head = array(
+                get_string('firstname', 'mod_simplelesson'),
+                get_string('lastname', 'mod_simplelesson'),
+                get_string('date', 'mod_simplelesson'),
+                get_string('lessonname', 'mod_simplelesson'),
+                get_string('sessionscore', 'mod_simplelesson'),
+                get_string('maxscore', 'mod_simplelesson'),
+                get_string('timetaken', 'mod_simplelesson'));
+        $table->align = array('left', 'left', 'left',
+                'left', 'left', 'left', 'left');
+        $table->wrap = array('nowrap', '', 'nowrap','', '', '', '');
+        $table->tablealign = 'left';
+        $table->cellspacing = 0;
+        $table->cellpadding = '2px';
+        $table->width = '80%';
+        foreach ($records as $record) {
+            $data = array();
+            $data[] = $record->firstname;
+            $data[] = $record->lastname;
+            $data[] = $record->datetaken;
+            $data[] = $record->lessonname;
+            $data[] = $record->sessionscore;
+            $data[] = $record->maxscore;
+            $data[] = $record->timetaken;
+            $table->data[] = $data;
+        }
+
+        return \html_writer::table($table);
+    }
+    /**
+     * return the div showing the report menu buttons
+     *
+     * @param $courseid - current course id
+     * @param $simplelessonid - current instance id
+     * @return html to display buttons
+     */
+    public static function show_menu($courseid, $simplelessonid) {
+        // Buttons on reports tab
+        $buttons = array();
+
+        $type = 'basic';
+        $label = get_string('basic_report', 'mod_simplelesson');
+        $buttons[] =  self::create_button($courseid,
+            $simplelessonid, $type, $label);
+
+        $type = 'user';
+        $label = get_string('user_report', 'mod_simplelesson');
+        $buttons[] =  self::create_button($courseid,
+            $simplelessonid, $type, $label);
+
+        return $buttons;
+    }
+    public static function create_button($courseid,
+            $simplelessonid, $type, $label) {
+        $pageurl = new \moodle_url('reports.php',
+                array('courseid' => $courseid,
+                'simplelessonid'=> $simplelessonid,
+                'report' => $type));
+
+        return new \single_button($pageurl, $label);
     }
 }

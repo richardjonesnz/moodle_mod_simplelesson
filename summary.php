@@ -55,6 +55,7 @@ if ($mode == 'attempt') {
 
     // Summary data for this attempt by this user.
     $answerdata = attempts::get_lesson_answer_data($attemptid);
+    attempts::save_lesson_answerdata($answerdata);
     echo $OUTPUT->heading(get_string('summary_header', 'mod_simplelesson'), 2);
     $user = attempts::get_attempt_user($attemptid);
     $name = $user->firstname . ' ' . $user->lastname;

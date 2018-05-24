@@ -208,7 +208,8 @@ class attempts  {
             $sessionscore) {
         global $DB;
         $DB->set_field('simplelesson_attempts',
-                'status', 2, array('id' => $attemptid));
+                'status', MOD_SIMPLELESSON_ATTEMPT_COMPLETE,
+                array('id' => $attemptid));
         $DB->set_field('simplelesson_attempts',
                 'sessionscore', $sessionscore,
                 array('id' => $attemptid));
@@ -245,5 +246,31 @@ class attempts  {
                 array('userid' => $userid,
                 'simplelessonid' => $simplelessonid));
     }
+    /**
+     * save answer data
+     *
+     * @param $answerdata - array of objects
+     * @return none
+     */
+    public static function save_lesson_answerdata($answerdata) {
+        global $DB;
+        $data = new \stdClass();
 
+        foreach ($answerdata as $answer) {
+            $data->id = $answer->id;
+            $data->simplelessonid = $answer->simplelessonid;
+            $data->qatid = 0; // Data will be removed by cleanup.
+            $data->attemptid = $answer->attemptid;
+            $data->pageid = $answer->pageid;
+            $data->maxmark = $answer->maxmark;
+            $data->mark = $answer->mark;
+            $data->questionsummary = $answer->questionsummary;
+            $data->rightanswer = $answer->rightanswer;
+            $data->youranswer = $answer->youranswer;
+            $data->timestarted = $answer->timestarted;
+            $data->timecompleted = $answer->timecompleted;
+
+            $DB->update_record('simplelesson_answers', $data);
+        }
+    }
 }

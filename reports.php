@@ -28,6 +28,7 @@ require_once('../../config.php');
 
 $courseid = required_param('courseid', PARAM_INT);
 $simplelessonid  = required_param('simplelessonid', PARAM_INT);
+$report = optional_param('report', 'menu', PARAM_TEXT);
 
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 $cm = get_coursemodule_from_instance('simplelesson', $simplelessonid,
@@ -42,22 +43,32 @@ $coursecontext = context_course::instance($courseid);
 $modulecontext = context_module::instance($cm->id);
 
 require_capability('mod/simplelesson:viewreportstab', $modulecontext);
-
 $PAGE->set_context($modulecontext);
 $PAGE->set_pagelayout('course');
 $PAGE->set_heading(format_string($course->fullname));
 
 echo $OUTPUT->header();
+echo reporting::show_reports_tab($courseid, $simplelessonid);
+switch ($report) {
 
-$renderer = $PAGE->get_renderer('mod_simplelesson');
-echo $renderer->show_reports_tab($courseid, $simplelessonid);
-$data = reporting::fetch_module_data($courseid);
-echo $renderer->show_basic_report($data);
-
-// Home link.
-$returnview = new moodle_url('/mod/simplelesson/view.php',
-        array('simplelessonid' => $simplelessonid));
-echo html_writer::link($returnview,
-        get_string('homelink',  'mod_simplelesson'));
+    case 'menu':
+        $buttons = reporting::show_menu($courseid, $simplelessonid);
+        foreach ($buttons as $button) {
+            echo $OUTPUT->render($button);
+        }
+        break;
+    case 'basic':
+        $data = reporting::fetch_module_data($courseid);
+        echo reporting::show_basic_report($data);
+        break;
+    case 'user':
+        $data = reporting::fetch_user_data($courseid);
+        echo reporting::show_user_report($data);
+        break;
+    default:
+    // Developer debugging called.
+    debugging('Internal error: missing or invalid report type',
+            DEBUG_DEVELOPER);
+}
 
 echo $OUTPUT->footer();
