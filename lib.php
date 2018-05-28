@@ -162,28 +162,28 @@ function simplelesson_delete_instance($id) {
             array('id' => $id))) {
         return false;
     }
-
-    if (!$cm = get_coursemodule_from_instance('simplelesson',
-            $simplelesson->id)) {
-        return false;
+    if (!$cm = get_coursemodule_from_instance('simplelesson', $simplelesson->id)) {
+     return false;
     }
-    // Delete any dependent records.
-    $DB->delete_records('simplelesson_pages',
-            array('simplelessonid' => $simplelessonid));
-    $DB->delete_records('simplelesson_questions',
-            array('simplelessonid' => $simplelessonid));
-    $DB->delete_records('simplelesson_attempts',
-            array('simplelessonid' => $simplelessonid));
-    $DB->delete_records('simplelesson_answers',
-            array('simplelessonid' => $simplelessonid));
 
-    // Delete files.
+    // Delete any dependent records.
+    $DB->delete_records('simplelesson_questions',
+            array('simplelessonid' => $simplelesson->id));
+    $DB->delete_records('simplelesson_answers',
+            array('simplelessonid' => $simplelesson->id));
+    $DB->delete_records('simplelesson_attempts',
+            array('simplelessonid' => $simplelesson->id));
+    $DB->delete_records('simplelesson_pages',
+            array('simplelessonid' => $simplelesson->id));
+
+    // Delete the module record.
+    $DB->delete_records('simplelesson',
+            array('id' => $simplelesson->id));
+
+    // Delete files
     $context = context_module::instance($cm->id);
     $fs = get_file_storage();
-    $fs->delete_area_files($context->id);
-
-    // Delete the module table.
-    $DB->delete_records('simplelesson', array('id' => $simplelessonid));
+    $fs->delete_area_files($context->id, 'pagecontents');
 
     return true;
 }

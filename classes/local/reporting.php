@@ -112,7 +112,7 @@ class reporting  {
      * @param $simplelessonid - lesson to get records for
      * @return array of objects
      */
-    public static function fetch_user_data() {
+    public static function fetch_user_data($simplelessonid) {
         global $DB;
         $sql = "SELECT a.id, a.attemptid, a.simplelessonid,
                        a.timestarted, a.timecompleted,
@@ -122,10 +122,12 @@ class reporting  {
                   JOIN {simplelesson_attempts} t
                     ON t.id = a.attemptid
                   JOIN {user} u
-                    ON u.id = t.userid";
+                    ON u.id = t.userid
+                 WHERE a.simplelessonid = :slid";
 
 
-        $records = $DB->get_records_sql($sql);
+        $records = $DB->get_records_sql($sql,
+                array('slid' => $simplelessonid));
 
         foreach ($records as $record) {
           $record->datetaken = date("Y-m-d H:i:s",$record->timestarted);
@@ -149,6 +151,7 @@ class reporting  {
     public static function show_user_report($records) {
 
         $table = new \html_table();
+        $table->id = 'mod_simplelesson_ut1';
         $table->head = array(
                 get_string('firstname', 'mod_simplelesson'),
                 get_string('lastname', 'mod_simplelesson'),
@@ -175,8 +178,66 @@ class reporting  {
             $data[] = $record->timetaken;
             $table->data[] = $data;
         }
-
         return \html_writer::table($table);
+    }
+    /*
+     * Page export - get the columns for use'in user report
+     *
+     * @param none
+     * @return array of column names
+     */
+    public static function fetch_user_report_headers() {
+        $fields = array('firstname' => 'firstname',
+        'lastname' => 'lastname',
+        'date' => 'date',
+        'lessonname' => 'lessonname',
+        'sessionscore' => 'sessionscore',
+        'timetaken' => 'timetaken');
+
+        return $fields;
+    }
+    /*
+     * User Report - get the user attempt records for a lesson
+     *
+     * @param $simplelessonid - lesson to get records for
+     * @return array of objects
+     */
+    public static function fetch_user_report_data($simplelessonid) {
+        global $DB;
+        $sql = "SELECT a.id, a.attemptid, a.simplelessonid,
+                       a.timestarted, a.timecompleted,
+                       t.userid, t.status, t.sessionscore,
+                       t.maxscore, u.firstname, u.lastname
+                  FROM {simplelesson_answers} a
+                  JOIN {simplelesson_attempts} t
+                    ON t.id = a.attemptid
+                  JOIN {user} u
+                    ON u.id = t.userid
+                 WHERE a.simplelessonid = :slid";
+
+
+        $records = $DB->get_records_sql($sql,
+                array('slid' => $simplelessonid));
+        // I really only want certain fields for the user report
+        // csv download.  See fetch_user_report_headers.
+
+        $table = array();
+        foreach ($records as $record) {
+          $data = new \stdClass();
+          $data->firstname = $record->firstname;
+          $data->lastname = $record->lastname;
+          $data->datetaken = date("Y-m-d H:i:s",$record->timestarted);
+          $lessonname = $DB->get_record('simplelesson',
+                    array('id' => $record->simplelessonid), 'name',
+                    MUST_EXIST);
+          $data->lessonname = $lessonname->name;
+          $data->sessionscore = (int) $record->sessionscore;
+          $data->maxscore = (int) $record->maxscore;
+          $data->timetaken = (int) ($record->timecompleted
+                    - $record->timestarted);
+          $table[] = $data;
+        }
+        return $table;
     }
     /**
      * return the div showing the report menu buttons

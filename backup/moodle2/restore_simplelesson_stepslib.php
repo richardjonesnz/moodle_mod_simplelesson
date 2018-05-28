@@ -84,10 +84,8 @@ class restore_simplelesson_activity_structure_step extends restore_activity_stru
 
         $data = (object)$data;
         $oldid = $data->id;
-        $data->simplelessonid = $this->get_new_parentid('simplelesson');
-
-        // We'll remap all the prevpageid and nextpageid at the end
-        // when we know how :)
+        $data->simplelessonid =
+                $this->get_new_parentid('simplelesson');
 
         $newitemid = $DB->insert_record('simplelesson_pages', $data);
         $this->set_mapping('simplelesson_page', $oldid, $newitemid, true);
@@ -100,8 +98,5 @@ class restore_simplelesson_activity_structure_step extends restore_activity_stru
         // Add simplelesson related files, no need to match by itemname (just internally handled context).
         $this->add_related_files('mod_simplelesson', 'intro', null);
         $this->add_related_files('mod_simplelesson', 'pagecontents', 'simplelesson_pages');
-
-        // Check here, may have to remap the page links (prev, next)
-        // At the moment, user would have to go to manage pages to fix that up.
     }
 }

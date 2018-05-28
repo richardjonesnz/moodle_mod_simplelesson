@@ -55,6 +55,7 @@ $string['simplelesson:manage'] = 'Manage Simple lesson';
 $string['simplelesson:addinstance'] = 'Add a new Simple lesson';
 $string['simplelesson:viewreports'] = 'View the reports tab';
 $string['simplelesson:view'] = 'View Simple lesson';
+$string['simplelesson:exportpages'] = 'Export report pages';
 
 // Page management.
 $string['simplelesson_editing'] = 'Editing Simple lesson';
@@ -128,6 +129,7 @@ $string['date'] = 'Attempt date';
 $string['lessonname'] = 'Lesson';
 $string['sessionscore'] = 'Correct';
 $string['maxscore'] = 'Out of';
+$string['userreportdownload'] = 'Download user report (csv)';
 
 // Admin settings.
 $string['enablereports'] = 'Show reports tab';

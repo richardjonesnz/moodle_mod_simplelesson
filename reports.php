@@ -62,8 +62,13 @@ switch ($report) {
         echo reporting::show_basic_report($data);
         break;
     case 'user':
-        $data = reporting::fetch_user_data($courseid);
+        $data = reporting::fetch_user_data($simplelessonid);
         echo reporting::show_user_report($data);
+        $export_url = new moodle_url('/mod/simplelesson/export.php',
+                array('courseid' => $courseid,
+                'simplelessonid' => $simplelessonid));
+        echo html_writer::link($export_url,
+                get_string('userreportdownload','mod_simplelesson'));
         break;
     default:
     // Developer debugging called.

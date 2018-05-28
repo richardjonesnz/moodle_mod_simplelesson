@@ -77,7 +77,17 @@ $capabilities = array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
         ),
-        'clonepermissionsfrom' => 'moodle/course:manageactivities'   
+        'clonepermissionsfrom' => 'moodle/course:manageactivities'
+    ),
+    'mod/simplelesson:exportpages' => array (
+        'riskbitmask' => RISK_XSS,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => array (
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
+        ),
+        'clonepermissionsfrom' => 'moodle/course:manageactivities'
     ),
     'mod/simplelesson:viewreportstab' => array (
         'riskbitmask' => RISK_XSS,
@@ -87,6 +97,6 @@ $capabilities = array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
         ),
-        'clonepermissionsfrom' => 'moodle/course:manageactivities'  
-    )  
+        'clonepermissionsfrom' => 'moodle/course:manageactivities'
+    )
 );
