@@ -57,13 +57,14 @@ switch ($report) {
             echo $OUTPUT->render($button);
         }
         break;
-    case 'basic':
-        $data = reporting::fetch_module_data($courseid);
-        echo reporting::show_basic_report($data);
+    case 'answers':
+        $data = reporting::fetch_answer_data($simplelessonid);
+        echo reporting::show_answer_report($data);
         break;
-    case 'user':
-        $data = reporting::fetch_user_data($simplelessonid);
-        echo reporting::show_user_report($data);
+    case 'attempts':
+        $data = reporting::fetch_attempt_data($simplelessonid);
+        echo $OUTPUT->heading($cm->name, 2);
+        echo reporting::show_attempt_report($data);
         $export_url = new moodle_url('/mod/simplelesson/export.php',
                 array('courseid' => $courseid,
                 'simplelessonid' => $simplelessonid));

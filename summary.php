@@ -68,7 +68,7 @@ if ($mode == 'attempt') {
 
     // redirect to clean up page here, then back home...
     attempts::set_attempt_completed($attemptid,
-            $sessiondata->score);
+            $sessiondata);
 
     echo $renderer->show_attempt_completion_link($courseid,
             $simplelessonid, $attemptid);

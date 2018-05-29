@@ -52,6 +52,7 @@ $string['unlimited'] = 'Unlimited';
 
 // Capabilities.
 $string['simplelesson:manage'] = 'Manage Simple lesson';
+$string['simplelesson:manageattempts'] = 'Manage attempt records';
 $string['simplelesson:addinstance'] = 'Add a new Simple lesson';
 $string['simplelesson:viewreports'] = 'View the reports tab';
 $string['simplelesson:view'] = 'View Simple lesson';
@@ -124,7 +125,8 @@ $string['viewtab'] = 'view';
 $string['reportstab'] = 'reports';
 $string['timecreated'] = 'Time created';
 $string['basic_report'] = 'Basic report';
-$string['user_report'] = 'User report';
+$string['answer_report'] = 'User responses';
+$string['attempt_report'] = 'User attempts';
 $string['date'] = 'Attempt date';
 $string['lessonname'] = 'Lesson';
 $string['sessionscore'] = 'Correct';

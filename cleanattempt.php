@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Clean up usages and attempt data
+ * Clean up usages and attempt data, explicitly
  *
  * @package   mod_simplelesson
  * @copyright 2018 Richard Jones https://richardnz.net
@@ -33,14 +33,8 @@ $PAGE->set_url('/mod/simplelesson/cleanattempt.php',
         'attemptid' => $attemptid));
 require_course_login($courseid);
 
-// Remove the usage data (may have to do manually).
-// May need attempts management page.
-
 $qubaid = attempts::get_usageid($simplelessonid);
-// Doesn't seem to work.
-question_engine::delete_questions_usage_by_activity($qubaid);
-// If it doesn't work we'll do it in here.
-$qubaid = attempts::remove_usageid($simplelessonid);
+attempts::remove_usage_data($qubaid);
 
 $returnview = new moodle_url('/mod/simplelesson/view.php',
         array('simplelessonid' => $simplelessonid));

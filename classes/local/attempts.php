@@ -99,18 +99,33 @@ class attempts  {
      *
      * @param $simplelessonid - module instance id
      */
-    public static function remove_usageid($simplelessonid) {
+    public static function remove_usage_data($qubaid) {
         global $DB;
-        $qubaid = self::get_usageid($simplelessonid);
-        $DB->set_field('simplelesson',
-            'qubaid', (0),
-            array('id' => $simplelessonid));
+
         // Delete these records explicitly, we have the
         // attempt data we need in our attempts table.
-        $DB->delete_records('question_attempts',
+        $ataids = $DB->get_records('question_attempts',
+                array('questionusageid'=>$qubaid));
+        foreach ($ataids as $ataid) {
+            // get the attempt step id's
+            $atsteps = $DB->get_records('question_attempt_steps',
+                    array('questionattemptid'=>$ataid->id));
+                foreach ($atsteps as $atstep) {
+                    // Get the step data out
+                    $DB->delete_records(
+                            'question_attempt_step_data',
+                            array('attemptstepid'=>$atstep->id));
+                }
+                // get the attempt steps cleaned out
+                $DB->delete_records('question_attempt_steps',
+                        array('questionattemptid'=>$ataid->id));
+            }
+            // Delete the attempt data.
+            $DB->delete_records('question_attempts',
                    array('questionusageid'=>$qubaid));
+
         $DB->delete_records('question_usages',
-                   array('component'=>'mod_simplelesson'));
+                array('id'=> $qubaid));
     }
     /**
      * Return the wanted row from question attempts
@@ -205,13 +220,16 @@ class attempts  {
      * @param $sessionscore - Score for this attempt
      */
     public static function set_attempt_completed($attemptid,
-            $sessionscore) {
+            $sessiondata) {
         global $DB;
         $DB->set_field('simplelesson_attempts',
                 'status', MOD_SIMPLELESSON_ATTEMPT_COMPLETE,
                 array('id' => $attemptid));
         $DB->set_field('simplelesson_attempts',
-                'sessionscore', $sessionscore,
+                'sessionscore', $sessiondata->score,
+                array('id' => $attemptid));
+        $DB->set_field('simplelesson_attempts',
+                'timetaken', $sessiondata->stime,
                 array('id' => $attemptid));
     }
     /**

@@ -112,17 +112,15 @@ class reporting  {
      * @param $simplelessonid - lesson to get records for
      * @return array of objects
      */
-    public static function fetch_user_data($simplelessonid) {
+    public static function fetch_attempt_data($simplelessonid) {
         global $DB;
-        $sql = "SELECT a.id, a.attemptid, a.simplelessonid,
-                       a.timestarted, a.timecompleted,
-                       t.userid, t.status, t.sessionscore,
-                       t.maxscore, u.firstname, u.lastname
-                  FROM {simplelesson_answers} a
-                  JOIN {simplelesson_attempts} t
-                    ON t.id = a.attemptid
+        $sql = "SELECT a.id, a.simplelessonid,
+                       a.userid, a.status, a.sessionscore,
+                       a.maxscore, a.timetaken, a.timecreated,
+                       u.firstname, u.lastname
+                  FROM {simplelesson_attempts} a
                   JOIN {user} u
-                    ON u.id = t.userid
+                    ON u.id = a.userid
                  WHERE a.simplelessonid = :slid";
 
 
@@ -130,15 +128,7 @@ class reporting  {
                 array('slid' => $simplelessonid));
 
         foreach ($records as $record) {
-          $record->datetaken = date("Y-m-d H:i:s",$record->timestarted);
-          $record->timetaken = (int) ($record->timecompleted
-                    - $record->timestarted);
-          $lessonname = $DB->get_record('simplelesson',
-                    array('id' => $record->simplelessonid), 'name',
-                    MUST_EXIST);
-          $record->lessonname = $lessonname->name;
-          $record->sessionscore = (int) $record->sessionscore;
-          $record->maxscore = (int) $record->maxscore;
+          $record->datetaken = date("Y-m-d H:i:s",$record->timecreated);
         }
         return $records;
     }
@@ -148,21 +138,13 @@ class reporting  {
      * @param $records - an array of attempt records
      * @return string, html table
      */
-    public static function show_user_report($records) {
+    public static function show_attempt_report($records) {
 
         $table = new \html_table();
-        $table->id = 'mod_simplelesson_ut1';
-        $table->head = array(
-                get_string('firstname', 'mod_simplelesson'),
-                get_string('lastname', 'mod_simplelesson'),
-                get_string('date', 'mod_simplelesson'),
-                get_string('lessonname', 'mod_simplelesson'),
-                get_string('sessionscore', 'mod_simplelesson'),
-                get_string('maxscore', 'mod_simplelesson'),
-                get_string('timetaken', 'mod_simplelesson'));
+        $table->head = self::fetch_attempt_report_headers();
         $table->align = array('left', 'left', 'left',
-                'left', 'left', 'left', 'left');
-        $table->wrap = array('nowrap', '', 'nowrap','', '', '', '');
+                'left', 'left', 'left');
+        $table->wrap = array('nowrap', '', 'nowrap','', '', '');
         $table->tablealign = 'left';
         $table->cellspacing = 0;
         $table->cellpadding = '2px';
@@ -172,7 +154,6 @@ class reporting  {
             $data[] = $record->firstname;
             $data[] = $record->lastname;
             $data[] = $record->datetaken;
-            $data[] = $record->lessonname;
             $data[] = $record->sessionscore;
             $data[] = $record->maxscore;
             $data[] = $record->timetaken;
@@ -181,33 +162,35 @@ class reporting  {
         return \html_writer::table($table);
     }
     /*
-     * Page export - get the columns for use'in user report
+     * Page export - get the columns for attempts report
      *
      * @param none
      * @return array of column names
      */
-    public static function fetch_user_report_headers() {
+    public static function fetch_attempt_report_headers() {
         $fields = array('firstname' => 'firstname',
         'lastname' => 'lastname',
         'date' => 'date',
-        'lessonname' => 'lessonname',
         'sessionscore' => 'sessionscore',
+        'maxscore' => 'maxscore',
         'timetaken' => 'timetaken');
 
         return $fields;
     }
     /*
-     * User Report - get the user attempt records for a lesson
+     * User Report - get the user answer records for a lesson
      *
      * @param $simplelessonid - lesson to get records for
      * @return array of objects
      */
-    public static function fetch_user_report_data($simplelessonid) {
+    public static function fetch_answer_data($simplelessonid) {
         global $DB;
         $sql = "SELECT a.id, a.attemptid, a.simplelessonid,
+                       a.mark, a.questionsummary, a.rightanswer,
+                       a.youranswer,
                        a.timestarted, a.timecompleted,
-                       t.userid, t.status, t.sessionscore,
-                       t.maxscore, u.firstname, u.lastname
+                       t.userid, t.timecreated,
+                       u.firstname, u.lastname
                   FROM {simplelesson_answers} a
                   JOIN {simplelesson_attempts} t
                     ON t.id = a.attemptid
@@ -218,26 +201,67 @@ class reporting  {
 
         $records = $DB->get_records_sql($sql,
                 array('slid' => $simplelessonid));
-        // I really only want certain fields for the user report
-        // csv download.  See fetch_user_report_headers.
 
-        $table = array();
         foreach ($records as $record) {
-          $data = new \stdClass();
-          $data->firstname = $record->firstname;
-          $data->lastname = $record->lastname;
-          $data->datetaken = date("Y-m-d H:i:s",$record->timestarted);
-          $lessonname = $DB->get_record('simplelesson',
-                    array('id' => $record->simplelessonid), 'name',
-                    MUST_EXIST);
-          $data->lessonname = $lessonname->name;
-          $data->sessionscore = (int) $record->sessionscore;
-          $data->maxscore = (int) $record->maxscore;
-          $data->timetaken = (int) ($record->timecompleted
+          $record->datetaken = date("Y-m-d H:i:s",$record->timecreated);
+          $record->timetaken = (int) ($record->timecompleted
                     - $record->timestarted);
-          $table[] = $data;
         }
-        return $table;
+        return $records;
+    }
+    /*
+     * Page export - get the columns for use answer report
+     *
+     * @param none
+     * @return array of column names
+     */
+    public static function fetch_answer_report_headers() {
+        $fields = array('id'=> 'id',
+        'attemptid' => 'attemptid',
+        'firstname' => 'firstname',
+        'lastname' => 'lastname',
+        'date' => 'date',
+        'questionsummary' => 'questionsummary',
+        'rightanswer' => 'rightanswer',
+        'youranswer' => 'youranswer',
+        'timetaken' => 'timetaken');
+
+        return $fields;
+    }
+    /**
+     * Returns HTML to a user report of lesson answers
+     *
+     * @param $records - an array of attempt records
+     * @return string, html table
+     */
+    public static function show_answer_report($records) {
+
+        $table = new \html_table();
+        $table->head = self::fetch_answer_report_headers();
+        $table->align = array(
+                'left', 'left', 'left',
+                'left', 'left', 'left',
+                'left', 'left', 'left');
+        $table->wrap = array('nowrap', '', 'nowrap',
+                '', '', '', '', '', '');
+        $table->tablealign = 'left';
+        $table->cellspacing = 0;
+        $table->cellpadding = '2px';
+        $table->width = '80%';
+        foreach ($records as $record) {
+            $data = array();
+            $data[] = $record->id;
+            $data[] = $record->attemptid;
+            $data[] = $record->firstname;
+            $data[] = $record->lastname;
+            $data[] = $record->datetaken;
+            $data[] = $record->questionsummary;
+            $data[] = $record->rightanswer;
+            $data[] = $record->youranswer;
+            $data[] = $record->timetaken;
+            $table->data[] = $data;
+        }
+        return \html_writer::table($table);
     }
     /**
      * return the div showing the report menu buttons
@@ -250,13 +274,13 @@ class reporting  {
         // Buttons on reports tab
         $buttons = array();
 
-        $type = 'basic';
-        $label = get_string('basic_report', 'mod_simplelesson');
+        $type = 'answers';
+        $label = get_string('answer_report', 'mod_simplelesson');
         $buttons[] =  self::create_button($courseid,
             $simplelessonid, $type, $label);
 
-        $type = 'user';
-        $label = get_string('user_report', 'mod_simplelesson');
+        $type = 'attempts';
+        $label = get_string('attempt_report', 'mod_simplelesson');
         $buttons[] =  self::create_button($courseid,
             $simplelessonid, $type, $label);
 

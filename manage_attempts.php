@@ -15,35 +15,40 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Exports simplelesson pages to csv format
+ * Manage the attempt records.
  *
  * @package    mod_simplelesson
  * @copyright  2018 Richard Jones <richardnz@outlook.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @see https://github.com/moodlehq/moodle-mod_newmodule
- *
+ * @see https://github.com/justinhunt/moodle-mod_pairwork
  */
-use \mod_simplelesson\local\reporting;
+use mod_simplelesson\local\attempts;
 require_once('../../config.php');
-require_once($CFG->libdir.'/adminlib.php');
-require_once($CFG->libdir.'/dataformatlib.php');
 
 $courseid = required_param('courseid', PARAM_INT);
-$simplelessonid = required_param('simplelessonid', PARAM_INT);
+$simplelessonid  = required_param('simplelessonid', PARAM_INT);
 
-$course = $DB->get_record('course', array('id' => $courseid),
-        '*', MUST_EXIST);
+$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 $cm = get_coursemodule_from_instance('simplelesson', $simplelessonid,
         $courseid, false, MUST_EXIST);
-$moduleinstance  = $DB->get_record('simplelesson', array('id' => $simplelessonid), '*', MUST_EXIST);
-$modulecontext = context_module::instance($cm->id);
-require_login();
-require_capability('mod/simplelesson:exportpages', $modulecontext);
-$fields = reporting::fetch_user_report_headers();
-$records = reporting::fetch_user_report_data($simplelessonid);
 
-// Consider adding a form here to allow choice of filename and download format.
-$filename = clean_filename($moduleinstance->name) . '_user';
-$dataformat = 'csv';
-download_as_dataformat($filename, $dataformat, $fields, $records);
-exit;
+// Set up the page.
+$PAGE->set_url('/mod/simplelesson/manage_attempts.php',
+        array('courseid' => $courseid,
+        'simplelessonid' => $simplelessonid));
+
+require_login($course, true, $cm);
+$coursecontext = context_course::instance($courseid);
+$modulecontext = context_module::instance($cm->id);
+
+require_capability('mod/simplelesson:manageattempts', $modulecontext);
+$PAGE->set_context($modulecontext);
+$PAGE->set_pagelayout('course');
+$PAGE->set_heading(format_string($course->fullname));
+
+echo $OUTPUT->header();
+
+
+
+echo $OUTPUT->footer();
