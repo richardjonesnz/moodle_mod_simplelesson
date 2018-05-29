@@ -127,10 +127,20 @@ class reporting  {
         $records = $DB->get_records_sql($sql,
                 array('slid' => $simplelessonid));
 
+        // Select and arrange for report/csv export.
+        $table = array();
         foreach ($records as $record) {
-          $record->datetaken = date("Y-m-d H:i:s",$record->timecreated);
+            $data = new \stdClass();
+            $data->firstname = $record->firstname;
+            $data->lastname = $record->lastname;
+            $data->datetaken = date("Y-m-d H:i:s",$record->timecreated);
+            $data->status = $record->status;
+            $data->sessionscore = $record->sessionscore;
+            $data->maxscore = $record->maxscore;
+            $data->timetaken = $record->timetaken;
+            $table[] = $data;
         }
-        return $records;
+        return $table;
     }
     /**
      * Returns HTML to a user report of lesson attempts
@@ -142,9 +152,9 @@ class reporting  {
 
         $table = new \html_table();
         $table->head = self::fetch_attempt_report_headers();
-        $table->align = array('left', 'left', 'left',
+        $table->align = array('left', 'left', 'left', 'left',
                 'left', 'left', 'left');
-        $table->wrap = array('nowrap', '', 'nowrap','', '', '');
+        $table->wrap = array('nowrap', '', 'nowrap','', '', '', '');
         $table->tablealign = 'left';
         $table->cellspacing = 0;
         $table->cellpadding = '2px';
@@ -154,6 +164,7 @@ class reporting  {
             $data[] = $record->firstname;
             $data[] = $record->lastname;
             $data[] = $record->datetaken;
+            $data[] = $record->status;
             $data[] = $record->sessionscore;
             $data[] = $record->maxscore;
             $data[] = $record->timetaken;
@@ -171,6 +182,7 @@ class reporting  {
         $fields = array('firstname' => 'firstname',
         'lastname' => 'lastname',
         'date' => 'date',
+        'status' => "status",
         'sessionscore' => 'sessionscore',
         'maxscore' => 'maxscore',
         'timetaken' => 'timetaken');
@@ -185,7 +197,7 @@ class reporting  {
      */
     public static function fetch_answer_data($simplelessonid) {
         global $DB;
-        $sql = "SELECT a.id, a.attemptid, a.simplelessonid,
+        $sql = "SELECT a.id, a.attemptid,
                        a.mark, a.questionsummary, a.rightanswer,
                        a.youranswer,
                        a.timestarted, a.timecompleted,
@@ -202,12 +214,23 @@ class reporting  {
         $records = $DB->get_records_sql($sql,
                 array('slid' => $simplelessonid));
 
+        // Select and order these for the csv export process.
+        $table = array();
         foreach ($records as $record) {
-          $record->datetaken = date("Y-m-d H:i:s",$record->timecreated);
-          $record->timetaken = (int) ($record->timecompleted
+          $data = new \stdClass();
+          $data->id = $record->id;
+          $data->attemptid = $record->attemptid;
+          $data->firstname = $record->firstname;
+          $data->lastname = $record->lastname;
+          $data->datetaken = date("Y-m-d H:i:s",$record->timecreated);
+          $data->questionsummary = $record->questionsummary;
+          $data->rightanswer = $record->rightanswer;
+          $data->youranswer = $record->youranswer;
+          $data->timetaken = (int) ($record->timecompleted
                     - $record->timestarted);
+          $table[] = $data;
         }
-        return $records;
+        return $table;
     }
     /*
      * Page export - get the columns for use answer report

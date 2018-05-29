@@ -49,6 +49,10 @@ $PAGE->set_heading(format_string($course->fullname));
 
 echo $OUTPUT->header();
 echo reporting::show_reports_tab($courseid, $simplelessonid);
+$export_url = new moodle_url('/mod/simplelesson/export.php',
+                array('courseid' => $courseid,
+                'simplelessonid' => $simplelessonid,
+                'type' =>$report));
 switch ($report) {
 
     case 'menu':
@@ -60,14 +64,13 @@ switch ($report) {
     case 'answers':
         $data = reporting::fetch_answer_data($simplelessonid);
         echo reporting::show_answer_report($data);
+        echo html_writer::link($export_url,
+                get_string('userreportdownload','mod_simplelesson'));
         break;
     case 'attempts':
         $data = reporting::fetch_attempt_data($simplelessonid);
         echo $OUTPUT->heading($cm->name, 2);
         echo reporting::show_attempt_report($data);
-        $export_url = new moodle_url('/mod/simplelesson/export.php',
-                array('courseid' => $courseid,
-                'simplelessonid' => $simplelessonid));
         echo html_writer::link($export_url,
                 get_string('userreportdownload','mod_simplelesson'));
         break;

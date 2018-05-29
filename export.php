@@ -30,7 +30,7 @@ require_once($CFG->libdir.'/dataformatlib.php');
 
 $courseid = required_param('courseid', PARAM_INT);
 $simplelessonid = required_param('simplelessonid', PARAM_INT);
-
+$type = required_param('type', PARAM_TEXT);
 $course = $DB->get_record('course', array('id' => $courseid),
         '*', MUST_EXIST);
 $cm = get_coursemodule_from_instance('simplelesson', $simplelessonid,
@@ -39,11 +39,18 @@ $moduleinstance  = $DB->get_record('simplelesson', array('id' => $simplelessonid
 $modulecontext = context_module::instance($cm->id);
 require_login();
 require_capability('mod/simplelesson:exportpages', $modulecontext);
-$fields = reporting::fetch_user_report_headers();
-$records = reporting::fetch_user_report_data($simplelessonid);
+
+if ($type == 'answers') {
+    $records = reporting::fetch_answer_data($simplelessonid);
+    $fields = reporting::fetch_answer_report_headers($simplelessonid);
+    $filename = clean_filename($moduleinstance->name) . '_answers';
+} else { // attempts
+    $records = reporting::fetch_attempt_data($simplelessonid);
+    $fields = reporting::fetch_attempt_report_headers();
+    $filename = clean_filename($moduleinstance->name) . '_attempts';
+}
 
 // Consider adding a form here to allow choice of filename and download format.
-$filename = clean_filename($moduleinstance->name) . '_user';
 $dataformat = 'csv';
 download_as_dataformat($filename, $dataformat, $fields, $records);
 exit;
