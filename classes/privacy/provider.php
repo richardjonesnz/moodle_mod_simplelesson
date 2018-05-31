@@ -16,9 +16,10 @@
 /**
  * Privacy implementation for GDPR
  *
- * @package    mod_simplelesson
- * @copyright  Richard Jones https://richardnz.net
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package mod_simplelesson
+ * @copyright Richard Jones https://richardnz.net
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @see mod_choice privacy.php 2018 Jun Pataleta
  */
 namespace mod_simplelesson\privacy;
 use core_privacy\local\metadata\collection;
@@ -124,6 +125,7 @@ class provider implements
 
         list($contextsql, $contextparams) = $DB->get_in_or_equal($contextlist->get_contextids(), SQL_PARAMS_NAMED);
 
+         // Gather data for items specified in metadata.
         $sql = "SELECT cm.id AS cmid,
                        co.mark as mark,
                        co.youranswer as youranswer,
@@ -145,17 +147,21 @@ class provider implements
 
         // Track the last instance id.
         $lastcmid = null;
+
+        // Get the data to export.
         $answers = $DB->get_recordset_sql($sql, $params);
 
-        // var_dump($answers);exit;
+        // Prepare the data for writing
         foreach ($answers as $answer) {
-            // If we've moved to a new simplelesson, then write the last simplelesson data and reinit the simplelesson data array.
+
+            // Check for last item.
             if ($lastcmid != $answer->cmid) {
                 if (!empty($simplelessondata)) {
                     $context = \context_module::instance($lastcmid);
                     self::export_simplelesson_data_for_user(
                             $simplelessondata, $context, $user);
                 }
+                // Set up for next item.
                 $simplelessondata = [
                     'mark' => [],
                     'youranswer' => [],
@@ -165,6 +171,7 @@ class provider implements
                     'timecreated' => \core_privacy\local\request\transform::datetime($simplelessonanswer->timecreated),
                 ];
             }
+            // Get the data for the last item.
             $simplelessondata['mark'][] = $answer->mark;
             $simplelessondata['youranswer'][] = $answer->youranswer;
             $simplelessondata['status'][] = $answer->status;
@@ -175,14 +182,19 @@ class provider implements
         }
         $answers->close();
 
-        // The data for the last activity won't have been written yet, so make sure to write it now!
+        // Write the data for the last item.
         if (!empty($simplelessondata)) {
             $context = \context_module::instance($lastcmid);
             self::export_simplelesson_data_for_user(
                     $simplelessondata, $context, $user);
         }
-
     }
+    /**
+     * Prepare the data for export
+     * @param array $choicedata the personal data to export.
+     * @param \context_module $context the simplelesson context.
+     * @param \stdClass $user the user record
+     */
     protected static function export_simplelesson_data_for_user(
             array $simplelessondata, \context_module $context,
             \stdClass $user) {
@@ -198,14 +210,60 @@ class provider implements
         // Write generic module intro files.
         helper::export_context_files($context, $user);
     }
-    public static function delete_data_for_all_users_in_context(\context
-            $context) {
+    /**
+     * Delete all data for all users in the specified context.
+     *
+     * @param \context $context the context to delete in.
+     */
+    public static function delete_data_for_all_users_in_context(
+            \context $context) {
         global $DB;
+
+        if (!$context instanceof \context_module) {
+            return;
+        }
+
+        if ($cm = get_coursemodule_from_id('simplelesson',
+                $context->instanceid)) {
+
+            $DB->delete_records('simplelesson_answers',
+                    ['simplelessonid' => $cm->instance]);
+            $DB->delete_records('simplelesson_attempts',
+                    ['simplelessonid' => $cm->instance]);
+        }
+    /**
+     * Delete all user data for the specified user,
+     * in the specified contexts.
+     *
+     * @param approved_contextlist $contextlist
+     * a list of contexts approved for deletion.
+     */
     }
-    public static function delete_data_for_user(approved_contextlist
-            $contextlist) {
+    public static function delete_data_for_user(
+            approved_contextlist $contextlist) {
         global $DB;
 
+        if (empty($contextlist->count())) {
+            return;
+        }
 
+        $userid = $contextlist->get_user()->id;
+
+        foreach ($contextlist->get_contexts() as $context) {
+
+            if (!$context instanceof \context_module) {
+                continue;
+            }
+            $instanceid = $DB->get_field('course_modules',
+                    'instance',
+                    ['id' => $context->instanceid], MUST_EXIST);
+
+            $DB->delete_records('simplelesson_answers',
+                    ['simplelessonid' => $instanceid,
+                    'userid' => $userid]);
+            $DB->delete_records('simplelesson_attempts',
+                    ['simplelessonid' => $instanceid,
+                    'userid' => $userid]);
+        }
     }
 }
