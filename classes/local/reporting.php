@@ -219,7 +219,7 @@ class reporting  {
         foreach ($records as $record) {
           $data = new \stdClass();
           $data->id = $record->id;
-          $data->id = $record->attemptid;
+          $data->attemptid = $record->attemptid;
           $data->firstname = $record->firstname;
           $data->lastname = $record->lastname;
           $data->datetaken = date("Y-m-d H:i:s",$record->timecreated);

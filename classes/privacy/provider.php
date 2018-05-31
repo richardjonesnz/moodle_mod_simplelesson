@@ -70,9 +70,6 @@ class provider implements
             'privacy:metadata:simplelesson_answers'
         );
 
-        $items->add_subsystem_link('core_question', [],
-                'privacy:metadata:core_question');
-
         return $items;
     }
 
@@ -86,32 +83,26 @@ class provider implements
      */
     public static function get_contexts_for_userid(int $userid) : contextlist {
 
+       $sql = "SELECT c.id
+                  FROM {context} c
+            INNER JOIN {course_modules} cm
+                    ON cm.id = c.instanceid
+                   AND c.contextlevel = :contextlevel
+            INNER JOIN {modules} m
+                    ON m.id = cm.module
+                   AND m.name = :modname
+            INNER JOIN {simplelesson} ch ON ch.id = cm.instance
+                  JOIN {simplelesson_attempts} co
+                    ON ch.id = co.simplelessonid
+                 WHERE co.userid = :userid";
+
+        $params = [
+            'modname'       => 'simplelesson',
+            'contextlevel'  => CONTEXT_MODULE,
+            'userid'        => $userid
+        ];
         $contextlist = new contextlist();
-
-        $sql = "
-            SELECT DISTINCT ctx.id
-            FROM {simplelesson} l
-            JOIN {modules} m
-              ON m.name = :simplelesson
-            JOIN {course_modules} cm
-              ON cm.instance = l.id
-             AND cm.module = m.id
-             JOIN {context} ctx
-               ON ctx.instanceid = cm.id
-              AND ctx.contextlevel = :modulelevel
-        LEFT JOIN {simplelesson_attempts} at
-               ON at.simplelessonid = l.id
-        LEFT JOIN {simplelesson_answers} an
-               ON an.attemptid = at.id
-            WHERE l.id IS NOT NULL
-              AND at.userid = :userid";
-
-        $params = ['simplelesson' => 'simplelesson',
-                'modulelevel' => CONTEXT_MODULE,
-                'userid' => $userid];
-
         $contextlist->add_from_sql($sql, $params);
-
         return $contextlist;
     }
     /**
@@ -130,12 +121,83 @@ class provider implements
         }
 
         $user = $contextlist->get_user();
-        $userid = $user->id;
 
+        list($contextsql, $contextparams) = $DB->get_in_or_equal($contextlist->get_contextids(), SQL_PARAMS_NAMED);
 
+        $sql = "SELECT cm.id AS cmid,
+                       co.mark as mark,
+                       co.youranswer as youranswer,
+                       ca.status as status,
+                       ca.sessionscore as sessionscore,
+                       ca.timetaken as timetaken,
+                       co.timestarted as timecreated
+                  FROM {context} c
+            INNER JOIN {course_modules} cm ON cm.id = c.instanceid AND c.contextlevel = :contextlevel
+            INNER JOIN {modules} m ON m.id = cm.module AND m.name = :modname
+            INNER JOIN {simplelesson} ch ON ch.id = cm.instance
+            INNER JOIN {simplelesson_answers} co ON co.simplelessonid = ch.id
+            INNER JOIN {simplelesson_attempts} ca ON ca.id = co.attemptid AND ca.simplelessonid = ch.id
+                 WHERE c.id {$contextsql}
+                       AND ca.userid = :userid
+              ORDER BY cm.id";
+
+        $params = ['modname' => 'simplelesson', 'contextlevel' => CONTEXT_MODULE, 'userid' => $user->id] + $contextparams;
+
+        // Track the last instance id.
+        $lastcmid = null;
+        $answers = $DB->get_recordset_sql($sql, $params);
+
+        // var_dump($answers);exit;
+        foreach ($answers as $answer) {
+            // If we've moved to a new simplelesson, then write the last simplelesson data and reinit the simplelesson data array.
+            if ($lastcmid != $answer->cmid) {
+                if (!empty($simplelessondata)) {
+                    $context = \context_module::instance($lastcmid);
+                    self::export_simplelesson_data_for_user(
+                            $simplelessondata, $context, $user);
+                }
+                $simplelessondata = [
+                    'mark' => [],
+                    'youranswer' => [],
+                    'status' => [],
+                    'sessionscore' => [],
+                    'timetaken' => [],
+                    'timecreated' => \core_privacy\local\request\transform::datetime($simplelessonanswer->timecreated),
+                ];
+            }
+            $simplelessondata['mark'][] = $answer->mark;
+            $simplelessondata['youranswer'][] = $answer->youranswer;
+            $simplelessondata['status'][] = $answer->status;
+            $simplelessondata['sessionscore'][] =
+                    $answer->sessionscore;
+            $simplelessondata['timetaken'][] = $answer->timetaken;
+            $lastcmid = $answer->cmid;
+        }
+        $answers->close();
+
+        // The data for the last activity won't have been written yet, so make sure to write it now!
+        if (!empty($simplelessondata)) {
+            $context = \context_module::instance($lastcmid);
+            self::export_simplelesson_data_for_user(
+                    $simplelessondata, $context, $user);
+        }
 
     }
+    protected static function export_simplelesson_data_for_user(
+            array $simplelessondata, \context_module $context,
+            \stdClass $user) {
 
+        // Fetch the generic module data for the simplelesson.
+        $contextdata = helper::get_context_data($context, $user);
+
+        // Merge with simplelesson data and write it.
+        $contextdata = (object)array_merge((array)$contextdata,
+                $simplelessondata);
+        writer::with_context($context)->export_data([], $contextdata);
+
+        // Write generic module intro files.
+        helper::export_context_files($context, $user);
+    }
     public static function delete_data_for_all_users_in_context(\context
             $context) {
         global $DB;

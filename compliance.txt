@@ -1,0 +1,61 @@
+The following plugins are not compliant:
+=> 
+
+Testing the compliant plugins:
+== mod_simplelesson (mod_simplelesson\privacy\provider) ==
+object(mysqli_native_moodle_recordset)#137 (2) {
+  ["result":protected]=>
+  object(mysqli_result)#136 (5) {
+    ["current_field"]=>
+    int(0)
+    ["field_count"]=>
+    int(8)
+    ["lengths"]=>
+    array(8) {
+      [0]=>
+      int(2)
+      [1]=>
+      int(9)
+      [2]=>
+      int(123)
+      [3]=>
+      int(1)
+      [4]=>
+      int(9)
+      [5]=>
+      int(9)
+      [6]=>
+      int(2)
+      [7]=>
+      int(10)
+    }
+    ["num_rows"]=>
+    int(3)
+    ["type"]=>
+    int(0)
+  }
+  ["current":protected]=>
+  array(8) {
+    ["cmid"]=>
+    string(2) "27"
+    ["mark"]=>
+    string(9) "0.0000000"
+    ["youranswer"]=>
+    string(123) "Liverpool
+ -> Anfield; Bournemouth
+
+ -> Vitality Stadium; Tottenham Hotspur
+ -> The Emirates; Newcastle
+ -> Emperor Stadium"
+    ["status"]=>
+    string(1) "2"
+    ["sessionscore"]=>
+    string(9) "0.0000000"
+    ["maxscore"]=>
+    string(9) "3.0000000"
+    ["timetaken"]=>
+    string(2) "19"
+    ["timecreated"]=>
+    string(10) "1527743053"
+  }
+}

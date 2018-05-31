@@ -39,7 +39,8 @@ $string['simplelessonfieldset'] = 'Custom example fieldset';
 $string['simplelessonname'] = 'Simple lesson name';
 $string['simplelessonname_help'] = 'Choose a suitable name for your Simple lesson.';
 $string['pluginadministration'] = 'simplelesson administration';
-$string['pluginname'] = 'simplelesson';
+$string['pluginname'] = 'Simple lesson';
+$string['simplelessonviewed'] = 'Simple lesson viewed';
 
 // The mod_form settings.
 $string['simplelesson_settings'] = 'Simplelesson settings';
