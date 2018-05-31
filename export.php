@@ -27,7 +27,7 @@ use \mod_simplelesson\local\reporting;
 require_once('../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 require_once($CFG->libdir.'/dataformatlib.php');
-
+defined('MOODLE_INTERNAL') || die();
 $courseid = required_param('courseid', PARAM_INT);
 $simplelessonid = required_param('simplelessonid', PARAM_INT);
 $type = required_param('type', PARAM_TEXT);

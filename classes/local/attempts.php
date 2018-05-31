@@ -291,4 +291,14 @@ class attempts  {
             $DB->update_record('simplelesson_answers', $data);
         }
     }
+    /**
+     * Delete the record for an attempt
+     *
+     * @param $attemptid the attempt record id
+     */
+    public static function delete_attempt($attemptid) {
+        global $DB;
+        return $DB->delete_records('simplelesson_attempts',
+                array('id' => $attemptid));
+    }
 }

@@ -25,6 +25,7 @@
 
 use \mod_simplelesson\local\pages;
 require_once('../../config.php');
+defined('MOODLE_INTERNAL') || die();
 $courseid = required_param('courseid', PARAM_INT);
 $simplelessonid = required_param('simplelessonid', PARAM_INT);
 $PAGE->set_url('/mod/simplelesson/autosequence.php',

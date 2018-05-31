@@ -23,32 +23,46 @@
  * @see https://github.com/moodlehq/moodle-mod_newmodule
  * @see https://github.com/justinhunt/moodle-mod_pairwork
  */
-use mod_simplelesson\local\attempts;
+use \mod_simplelesson\local\reporting;
+use \mod_simplelesson\local\attempts;
 require_once('../../config.php');
 
 $courseid = required_param('courseid', PARAM_INT);
-$simplelessonid  = required_param('simplelessonid', PARAM_INT);
-
-$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
-$cm = get_coursemodule_from_instance('simplelesson', $simplelessonid,
-        $courseid, false, MUST_EXIST);
+$action = optional_param('action', 'none', PARAM_TEXT);
+$attemptid = optional_param('attemptid', 0, PARAM_INT);
+$course = $DB->get_record('course', array('id' => $courseid),
+        '*', MUST_EXIST);
 
 // Set up the page.
 $PAGE->set_url('/mod/simplelesson/manage_attempts.php',
-        array('courseid' => $courseid,
-        'simplelessonid' => $simplelessonid));
+        array('courseid' => $courseid));
 
-require_login($course, true, $cm);
+require_login($course, true);
 $coursecontext = context_course::instance($courseid);
-$modulecontext = context_module::instance($cm->id);
 
-require_capability('mod/simplelesson:manageattempts', $modulecontext);
-$PAGE->set_context($modulecontext);
+require_capability('mod/simplelesson:manageattempts', $coursecontext);
+
 $PAGE->set_pagelayout('course');
 $PAGE->set_heading(format_string($course->fullname));
+$returnmanage = new moodle_url('/mod/simplelesson/manage_attempts.php',
+        array('courseid' => $courseid));
+
+if ( ($action == 'delete') && ($attemptid != 0) ){
+    $status = attempts::delete_attempt($attemptid);
+    if ($status) {
+        $message = get_string('attempt_deleted', 'mod_simplelesson');
+    } else {
+        $message = get_string('attempt_not_deleted', 'mod_simplelesson');
+    }
+
+    redirect($returnmanage, $message);
+}
+
+$renderer = $PAGE->get_renderer('mod_simplelesson');
 
 echo $OUTPUT->header();
 
-
+$records = reporting::fetch_course_attempt_data($courseid);
+echo reporting::show_course_attempt_report($records, $courseid);
 
 echo $OUTPUT->footer();

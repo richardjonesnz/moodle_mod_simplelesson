@@ -552,5 +552,10 @@ function simplelesson_extend_navigation(navigation_node $navref, stdClass $cours
  * @param navigation_node $simplelessonnode simplelesson administration node
  */
 function simplelesson_extend_settings_navigation(settings_navigation $settingsnav, navigation_node $simplelessonnode=null) {
-    // TODO Delete this function and its docblock, or implement it.
+    // Provide a link to the attempts management page.
+    global $PAGE;
+    $attempts_url = new moodle_url(
+            '/mod/simplelesson/manage_attempts.php',
+            array('courseid' => $PAGE->course->id));
+    $simplelessonnode->add(get_string('manage_attempts', 'mod_simplelesson'), $attempts_url);
 }

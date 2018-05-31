@@ -164,3 +164,20 @@ $string['numattempts'] = 'Attempts made: {$a} of';
 $string['unlimited_attempts'] = 'Unlimited attempts';
 $string['no_questions'] = 'There are no questions to attempt (use preview)';
 $string['cleanattemptlink'] = 'Finish review';
+
+// Attempts management
+$string['manage_attempts'] = 'Manage attempts';
+$string['delete'] = 'delete ';
+$string['attempt_deleted'] = 'Attempt deleted';
+$string['attempt_not_deleted'] = 'Attempt to delete record failed';
+
+// Privacy
+$string['privacy:metadata:simplelesson_attempts'] = 'Information about users simplelesson attempts including completion status, the number of correct responses (a score) and the time taken (seconds) for the attempt.';
+$string['privacy:metadata:simplelesson_attempts:userid'] = 'The id of the user taking the attempt.';
+$string['privacy:metadata:simplelesson_attempts:status'] = 'The completion status of the attempt.';
+$string['privacy:metadata:simplelesson_attempts:sessionscore'] = 'The score achieved on the attempt.';
+$string['privacy:metadata:simplelesson_attempts:timetaken'] = 'The timetaken to complete the attempt (seconds).';
+
+$string['privacy:metadata:simplelesson_answers'] = 'Information about users simplelesson attempts at individual questions including their response and a score.';
+$string['privacy:metadata:simplelesson_answers:mark'] = 'The score of the user answering the question.';
+$string['privacy:metadata:simplelesson_answers:youranswer'] = 'The response of the user to the question.';

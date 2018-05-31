@@ -25,7 +25,7 @@
 use \mod_simplelesson\local\pages;
 require_once('../../config.php');
 require_once('edit_page_form.php');
-
+defined('MOODLE_INTERNAL') || die();
 global $DB;
 
 // Fetch URL parameters.

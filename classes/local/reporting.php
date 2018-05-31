@@ -219,7 +219,7 @@ class reporting  {
         foreach ($records as $record) {
           $data = new \stdClass();
           $data->id = $record->id;
-          $data->attemptid = $record->attemptid;
+          $data->id = $record->attemptid;
           $data->firstname = $record->firstname;
           $data->lastname = $record->lastname;
           $data->datetaken = date("Y-m-d H:i:s",$record->timecreated);
@@ -317,5 +317,106 @@ class reporting  {
                 'report' => $type));
 
         return new \single_button($pageurl, $label);
+    }
+/*
+     * Attempts management- get all user attempt records
+     *
+     * @param $courseid - Course to get records for
+     * @return array of objects
+     */
+    public static function fetch_course_attempt_data($courseid) {
+        global $DB;
+        $sql = "SELECT a.id, a.simplelessonid,
+                       a.userid, a.status, a.sessionscore,
+                       a.maxscore, a.timetaken, a.timecreated,
+                       u.firstname, u.lastname, s.name
+                  FROM {simplelesson_attempts} a
+                  JOIN {simplelesson} s
+                    ON s.id = a.simplelessonid
+                  JOIN {user} u
+                    ON u.id = a.userid
+                 WHERE s.course = :cid";
+
+
+        $records = $DB->get_records_sql($sql,
+                array('cid' => $courseid));
+
+        // Select and arrange for report/csv export.
+        $table = array();
+        foreach ($records as $record) {
+            $data = new \stdClass();
+            $data->id = $record->id;
+            $data->lessonname = $record->name;
+            $data->firstname = $record->firstname;
+            $data->lastname = $record->lastname;
+            $data->datetaken = date("Y-m-d H:i:s",$record->timecreated);
+            $data->status = $record->status;
+            $data->sessionscore = $record->sessionscore;
+            $data->maxscore = $record->maxscore;
+            $data->timetaken = $record->timetaken;
+            $table[] = $data;
+        }
+        return $table;
+    }
+    /**
+     * Returns HTML to course report of lesson attempts
+     *
+     * @param $records - an array of attempt records
+     * @return string, html table
+     */
+    public static function show_course_attempt_report($records,
+        $courseid) {
+
+        $table = new \html_table();
+        $table->head = self::fetch_course_attempt_report_headers();
+        $table->align = array('left', 'left', 'left', 'left',
+                'left', 'left', 'left');
+        $table->wrap = array('nowrap', '', 'nowrap','', '', '', '');
+        $table->tablealign = 'left';
+        $table->cellspacing = 0;
+        $table->cellpadding = '2px';
+        $table->width = '80%';
+
+        foreach ($records as $record) {
+            $data = array();
+            $data[] = $record->id;
+            $data[] = $record->firstname;
+            $data[] = $record->lastname;
+            $data[] = $record->lessonname;
+            $data[] = $record->datetaken;
+            $data[] = $record->status;
+            $data[] = $record->sessionscore;
+            $data[] = $record->maxscore;
+            $data[] = $record->timetaken;$url = new \moodle_url(
+                '/mod/simplelesson/manage_attempts.php',
+                array('courseid' => $courseid,
+                'action' => 'delete',
+                'attemptid' => $record->id));
+            $link = \html_writer::link($url, get_string('delete',
+                'mod_simplelesson'));
+            $data[] = $link;
+            $table->data[] = $data;
+        }
+        return \html_writer::table($table);
+    }
+    /*
+     * Page export - get the columns for attempts report
+     *
+     * @param none
+     * @return array of column names
+     */
+    public static function fetch_course_attempt_report_headers() {
+        $fields = array('id' => 'id',
+        'firstname' => 'firstname',
+        'lastname' => 'lastname',
+        'lessonname' => 'lessonname',
+        'date' => 'date',
+        'status' => "status",
+        'sessionscore' => 'sessionscore',
+        'maxscore' => 'maxscore',
+        'timetaken' => 'timetaken',
+        'action' => 'action');
+
+        return $fields;
     }
 }

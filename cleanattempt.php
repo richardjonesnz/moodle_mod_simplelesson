@@ -24,6 +24,7 @@
 use \mod_simplelesson\local\attempts;
 use \question_engine;
 require_once('../../config.php');
+defined('MOODLE_INTERNAL') || die();
 $courseid = required_param('courseid', PARAM_INT);
 $simplelessonid = required_param('simplelessonid', PARAM_INT);
 $attemptid = required_param('attemptid', PARAM_INT);

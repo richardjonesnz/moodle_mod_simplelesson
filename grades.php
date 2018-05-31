@@ -23,6 +23,7 @@
  *
  */
 require_once("../../config.php");
+defined('MOODLE_INTERNAL') || die();
 $id = required_param('id', PARAM_INT);// Course module ID.
 // Item number may be != 0 for activities that allow more than one grade per user.
 $itemnumber = optional_param('itemnumber', 0, PARAM_INT);
