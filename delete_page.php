@@ -23,6 +23,7 @@
  */
 
 use \mod_simplelesson\local\pages;
+use \mod_simplelesson\event\page_deleted;
 require_once('../../config.php');
 require_once('edit_page_form.php');
 defined('MOODLE_INTERNAL') || die();
@@ -68,6 +69,16 @@ pages::fix_page_links($simplelessonid, $pageid);
 $DB->delete_records('simplelesson_pages',
         array('simplelessonid' => $simplelessonid,
         'id' => $pageid));
+
+// Log the page deleted event.
+$event = page_deleted::create(array(
+        'objectid' => $cm->id,
+        'context' => $modulecontext,
+    ));
+
+$event->add_record_snapshot('course', $course);
+$event->add_record_snapshot($cm->modname, $simplelesson);
+$event->trigger();
 
 // Find the sequence number of the current last.
 $lastpage = pages::count_pages($simplelessonid);

@@ -42,7 +42,7 @@ class display_options  {
         // Question options - note just 1 question in the attempt.
         $options = new \question_display_options();
         $options->marks = \question_display_options::MAX_ONLY;
-        $options->markdp = 0; // Mark display.
+        $options->markdp = 2; // Mark display.
         $options->feedback = $feedback;
         $options->generalfeedback = \question_display_options::HIDDEN;
         $options->variant = 100;

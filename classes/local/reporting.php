@@ -117,11 +117,12 @@ class reporting  {
         $sql = "SELECT a.id, a.simplelessonid,
                        a.userid, a.status, a.sessionscore,
                        a.maxscore, a.timetaken, a.timecreated,
-                       u.firstname, u.lastname
+                       u.firstname, u.lastname, u.deleted
                   FROM {simplelesson_attempts} a
-                  JOIN {user} u
+            INNER JOIN {user} u
                     ON u.id = a.userid
-                 WHERE a.simplelessonid = :slid";
+                 WHERE a.simplelessonid = :slid
+                   AND u.deleted <> 1";
 
 
         $records = $DB->get_records_sql($sql,
@@ -135,8 +136,8 @@ class reporting  {
             $data->lastname = $record->lastname;
             $data->datetaken = date("Y-m-d H:i:s",$record->timecreated);
             $data->status = $record->status;
-            $data->sessionscore = $record->sessionscore;
-            $data->maxscore = $record->maxscore;
+            $data->sessionscore = (int) $record->sessionscore;
+            $data->maxscore = (int) $record->maxscore;
             $data->timetaken = $record->timetaken;
             $table[] = $data;
         }
@@ -202,13 +203,14 @@ class reporting  {
                        a.youranswer,
                        a.timestarted, a.timecompleted,
                        t.userid, t.timecreated,
-                       u.firstname, u.lastname
+                       u.firstname, u.lastname, u.deleted
                   FROM {simplelesson_answers} a
-                  JOIN {simplelesson_attempts} t
+            INNER JOIN {simplelesson_attempts} t
                     ON t.id = a.attemptid
-                  JOIN {user} u
+            INNER JOIN {user} u
                     ON u.id = t.userid
-                 WHERE a.simplelessonid = :slid";
+                 WHERE a.simplelessonid = :slid
+                   AND u.deleted <> 1";
 
 
         $records = $DB->get_records_sql($sql,
@@ -329,13 +331,15 @@ class reporting  {
         $sql = "SELECT a.id, a.simplelessonid,
                        a.userid, a.status, a.sessionscore,
                        a.maxscore, a.timetaken, a.timecreated,
-                       u.firstname, u.lastname, s.name
+                       u.firstname, u.lastname, u.deleted,
+                       s.name
                   FROM {simplelesson_attempts} a
-                  JOIN {simplelesson} s
+            INNER JOIN {simplelesson} s
                     ON s.id = a.simplelessonid
-                  JOIN {user} u
+            INNER JOIN {user} u
                     ON u.id = a.userid
-                 WHERE s.course = :cid";
+                 WHERE s.course = :cid
+                   AND u.deleted <> 1";
 
 
         $records = $DB->get_records_sql($sql,
@@ -351,8 +355,8 @@ class reporting  {
             $data->lastname = $record->lastname;
             $data->datetaken = date("Y-m-d H:i:s",$record->timecreated);
             $data->status = $record->status;
-            $data->sessionscore = $record->sessionscore;
-            $data->maxscore = $record->maxscore;
+            $data->sessionscore = (int) $record->sessionscore;
+            $data->maxscore = (int) $record->maxscore;
             $data->timetaken = $record->timetaken;
             $table[] = $data;
         }

@@ -132,7 +132,7 @@ class provider implements
                        ca.status as status,
                        ca.sessionscore as sessionscore,
                        ca.timetaken as timetaken,
-                       co.timestarted as timecreated
+                       co.timestarted as timestarted
                   FROM {context} c
             INNER JOIN {course_modules} cm ON cm.id = c.instanceid AND c.contextlevel = :contextlevel
             INNER JOIN {modules} m ON m.id = cm.module AND m.name = :modname
@@ -168,7 +168,7 @@ class provider implements
                     'status' => [],
                     'sessionscore' => [],
                     'timetaken' => [],
-                    'timecreated' => \core_privacy\local\request\transform::datetime($simplelessonanswer->timecreated),
+                    'timestarted' => \core_privacy\local\request\transform::datetime($answer->timestarted),
                 ];
             }
             // Get the data for the last item.
@@ -226,11 +226,10 @@ class provider implements
         if ($cm = get_coursemodule_from_id('simplelesson',
                 $context->instanceid)) {
 
-            $DB->delete_records('simplelesson_answers',
-                    ['simplelessonid' => $cm->instance]);
             $DB->delete_records('simplelesson_attempts',
                     ['simplelessonid' => $cm->instance]);
         }
+    }
     /**
      * Delete all user data for the specified user,
      * in the specified contexts.
@@ -238,7 +237,6 @@ class provider implements
      * @param approved_contextlist $contextlist
      * a list of contexts approved for deletion.
      */
-    }
     public static function delete_data_for_user(
             approved_contextlist $contextlist) {
         global $DB;
@@ -258,9 +256,19 @@ class provider implements
                     'instance',
                     ['id' => $context->instanceid], MUST_EXIST);
 
-            $DB->delete_records('simplelesson_answers',
+            // Answer table doesn't have a userid field.
+            // Get the attempt id to delete answers for.
+            $attemptid = $DB->get_field('simplelesson_attempts',
+                    'attemptid',
                     ['simplelessonid' => $instanceid,
                     'userid' => $userid]);
+
+            if ($attemptid) {
+                $DB->delete_records('simplelesson_answers',
+                        ['simplelessonid' => $instanceid,
+                        'attemptid' => $attemptid]);
+            }
+
             $DB->delete_records('simplelesson_attempts',
                     ['simplelessonid' => $instanceid,
                     'userid' => $userid]);

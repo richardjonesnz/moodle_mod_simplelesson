@@ -27,6 +27,7 @@ use \mod_simplelesson\local\pages;
 use \mod_simplelesson\local\questions;
 use \mod_simplelesson\local\attempts;
 use \mod_simplelesson\local\display_options;
+use \mod_simplelesson\event\page_viewed;
 require_once('../../config.php');
 require_once(dirname(__FILE__).'/lib.php');
 require_once($CFG->libdir . '/questionlib.php');
@@ -48,6 +49,17 @@ $PAGE->set_url('/mod/simplelesson/showpage.php',
         'pageid' => $pageid));
 
 require_login($course, true, $cm);
+
+// Log the page viewed event.
+$event = page_viewed::create(array(
+        'objectid' => $cm->id,
+        'context' => $modulecontext,
+    ));
+
+$event->add_record_snapshot('course', $course);
+$event->add_record_snapshot($cm->modname, $simplelesson);
+$event->trigger();
+
 $coursecontext = context_course::instance($courseid);
 $modulecontext = context_module::instance($cm->id);
 
@@ -70,15 +82,13 @@ if ( ($questionentry) && ($mode == 'attempt') ) {
 
     // Display and feedback options.
     $options = display_options::get_options($feedback);
-
-    // Actually not allowing deferred feedback (yet).
-    $deferred = $options->feedback == 'deferredfeedback';
 }
 
 $actionurl = new moodle_url ('/mod/simplelesson/showpage.php',
         array('courseid' => $courseid,
         'simplelessonid' => $simplelessonid,
-        'pageid' => $pageid, 'mode' => $mode,
+        'pageid' => $pageid,
+        'mode' => $mode,
         'attemptid' => $attemptid));
 
 // Check if data submitted.
@@ -102,22 +112,22 @@ if (data_submitted() && confirm_sesskey()) {
     */
     $slot = questions::get_slot($simplelessonid, $pageid);
     $qdata = attempts::get_question_attempt_id($qubaid, $slot);
-
+    //var_dump($qdata);exit;
     $answerdata = new stdClass();
     $answerdata->simplelessonid = $simplelessonid;
     $answerdata->qatid = $qdata->id;
     $answerdata->attemptid = $attemptid;
     $answerdata->pageid = $pageid;
-    $answerdata->maxmark = 0;
+    $answerdata->maxmark = 1;
     $answerdata->mark = 0;
-    $answerdata->questionsummary = '';
-    $answerdata->rightanswer = '';
-    $answerdata->youranswer = '';
+    $answerdata->questionsummary = $qdata->questionsummary;
+    $answerdata->rightanswer = $qdata->rightanswer;
+    $answerdata->youranswer = $qdata->responsesummary;
     $answerdata->timestarted = $starttime;
     $answerdata->timecompleted = $timenow;
     $answerdata->id = $DB->insert_record('simplelesson_answers',
             $answerdata);
-
+    //var_dump($answerdata);exit;
     redirect($actionurl);
 }
 
@@ -153,14 +163,13 @@ echo $renderer->show_page($data);
 if ( ($questionentry) && ($mode == 'attempt') ) {
     $slot = questions::get_slot($simplelessonid, $pageid);
     echo $renderer->render_question_form($actionurl, $options,
-            $slot, $quba, $deferred, time());
+            $slot, $quba, time());
 }
 
 // If this is the last page, add link to the summary page.
 if (pages::is_last_page($data)) {
-    // Todo: Check here all questions answered or not.
-    echo $renderer->show_summary_page_link($courseid, $simplelessonid,
-            $mode, $attemptid);
+        echo $renderer->show_summary_page_link($courseid, $simplelessonid,
+                $mode, $attemptid, $pageid);
 }
 
 // Show the navigation links.

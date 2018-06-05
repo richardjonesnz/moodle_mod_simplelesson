@@ -81,6 +81,8 @@ if ($data = $mform->get_data()) {
     $data->prevpageid = (int) $data->prevpageid;
     $data->id = $pageid;
     pages::update_page_record($data, $modulecontext);
+
+    // Back to showpage.
     redirect($returnpage,
             get_string('page_updated', 'mod_simplelesson'), 2);
 }

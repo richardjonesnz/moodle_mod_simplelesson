@@ -108,23 +108,23 @@ class mod_simplelesson_mod_form extends moodleform_mod {
         $mform->setType('maxattempts', PARAM_INT);
 
         // Might use this later.
-        $boptions = question_engine::get_behaviour_options('immediatefeedback');
-
-        // Not using deferred options (yet).
-        unset($boptions['deferredfeedback']);
-        unset($boptions['deferredcbm']);
+        //$boptions = question_engine::get_behaviour_options('immediatefeedback');
 
         // Returns a list of available question behaviour options.
-        $behaviouroptions = array(
+        $boptions = array(
                 'immediatefeedback' => get_string('immediatefeedback',
                 'mod_simplelesson'),
-                'deferredfeedback' => get_string('deferredfeedback',
+                'immediatefeedbackcbm' => get_string('immediatecbm',
+                'mod_simplelesson'),
+                'adaptive' => get_string('adaptive',
                 'mod_simplelesson'));
+
         $mform->addElement('select', 'behaviour',
                 get_string('behaviour', 'mod_simplelesson'),
                 $boptions);
         $mform->setType('behaviour', PARAM_TEXT);
-
+        $mform->addHelpButton('behaviour', 'behaviour',
+                'mod_simplelesson');
         // Question usage field.
         $mform->addElement('hidden', 'qubaid', 0);
         $mform->setType('qubaid', PARAM_INT);

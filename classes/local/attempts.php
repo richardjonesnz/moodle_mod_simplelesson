@@ -95,7 +95,9 @@ class attempts  {
     /**
      * Remove the usage id for a simplelesson instance
      * Also clean up Moodle's attempt data as this doesn't
-     $ seem to get done by question engine.
+     * seem to get done by question engine.
+     *
+     * Will also make it easier when dealing with GDPR.
      *
      * @param $simplelessonid - module instance id
      */
@@ -154,31 +156,18 @@ class attempts  {
 
         $answerdata = $DB->get_records('simplelesson_answers',
                 array('attemptid' => $attemptid));
-
+        // var_dump($answerdata);exit;
         // Add the data for the summary table.
         foreach ($answerdata as $data) {
 
             // Add the page title
             $data->pagename = pages::get_page_title($data->pageid);
 
-            // get the response data from the question_attempts table
-            $qdata = $DB->get_record('question_attempts',
-                    array('id' => $data->qatid), '*',
-                    MUST_EXIST);
-            $summary = $qdata->questionsummary;
-            if (strlen($summary) > 100) {
-                $summary = substr($summary,
-                        0, 95) . '...';
-            }
-            $data->questionsummary = $summary;
-            $data->youranswer = $qdata->responsesummary;
-            $data->rightanswer = $qdata->rightanswer;
-
             // If correct, maxmarks (may need to do more later)
             if ($data->youranswer == $data->rightanswer) {
-                $data->mark = $qdata->maxmark;
+                $data->mark = (int) $data->maxmark;
             } else {
-                $data->mark = 0.0;
+                $data->mark = 0;
             }
 
             // Calculate the elapsed time (s)
@@ -272,9 +261,9 @@ class attempts  {
      */
     public static function save_lesson_answerdata($answerdata) {
         global $DB;
-        $data = new \stdClass();
-
+        // var_dump($answerdata);exit;
         foreach ($answerdata as $answer) {
+            $data = new \stdClass();
             $data->id = $answer->id;
             $data->simplelessonid = $answer->simplelessonid;
             $data->qatid = 0; // Data will be removed by cleanup.

@@ -29,6 +29,7 @@ $courseid = required_param('courseid', PARAM_INT);
 $simplelessonid = required_param('simplelessonid', PARAM_INT);
 $mode = optional_param('mode', 'preview', PARAM_TEXT);
 $attemptid = optional_param('attemptid', 0, PARAM_INT);
+$pageid = optional_param('pageid', 0, PARAM_INT);
 
 $moduleinstance  = $DB->get_record('simplelesson', array('id' => $simplelessonid), '*', MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
@@ -51,8 +52,8 @@ $renderer = $PAGE->get_renderer('mod_simplelesson');
 // Mode is either preview or attempt.
 
 if ($mode == 'attempt') {
-    echo $OUTPUT->header();
 
+    echo $OUTPUT->header();
     // Summary data for this attempt by this user.
     $answerdata = attempts::get_lesson_answer_data($attemptid);
     attempts::save_lesson_answerdata($answerdata);
@@ -62,13 +63,27 @@ if ($mode == 'attempt') {
     echo get_string('summary_user', 'mod_simplelesson', $name);
     echo $renderer->lesson_summary($answerdata);
 
+    // Log the event.
+    $event = attempt_completed::create(array(
+        'objectid' => $cm->id,
+        'context' => $modulecontext,
+    ));
+
+    $event->add_record_snapshot('course', $course);
+    $event->add_record_snapshot($cm->modname, $simplelesson);
+    $event->trigger();
+
     // Record attempt completion data.
     $sessiondata = attempts::get_sessiondata($answerdata);
     echo $renderer->get_summary_data($sessiondata);
 
-    // redirect to clean up page here, then back home...
+    // Clean up our attempt data.
     attempts::set_attempt_completed($attemptid,
             $sessiondata);
+
+    // Clean up question usage and attempt data
+    $qubaid = attempts::get_usageid($simplelessonid);
+    attempts::remove_usage_data($qubaid);
 
     echo $renderer->show_attempt_completion_link($courseid,
             $simplelessonid, $attemptid);

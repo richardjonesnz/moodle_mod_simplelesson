@@ -79,7 +79,6 @@ $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
 
 $renderer = $PAGE->get_renderer('mod_simplelesson');
-//$reporter = $PAGE->get_report_renderer('mod_simplelesson');
 
 echo $renderer->header($simplelesson->title, $course->fullname);
 

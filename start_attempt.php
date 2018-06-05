@@ -23,6 +23,7 @@
 use \mod_simplelesson\local\questions;
 use \mod_simplelesson\local\attempts;
 use \mod_simplelesson\local\pages;
+use \mod_simplelesson\event\attempt_started;
 require_once('../../config.php');
 global $DB, $USER;
 // Fetch URL parameters.
@@ -87,6 +88,17 @@ $attemptdata->timemodified = 0;
 
 // Record an attempt in attempts table.
 $attemptid = attempts::set_attempt_start($attemptdata);
+
+// Log the event.
+$event = attempt_started::create(array(
+        'objectid' => $cm->id,
+        'context' => $modulecontext,
+    ));
+
+$event->add_record_snapshot('course', $course);
+$event->add_record_snapshot($cm->modname, $simplelesson);
+$event->trigger();
+
 
 // Go to to the first lesson page.
 $pageid = pages::get_page_id_from_sequence($simplelessonid, 1);

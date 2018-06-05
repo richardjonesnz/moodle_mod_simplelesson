@@ -537,7 +537,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
       * @return string html for the link
       */
     public function show_summary_page_link($courseid, $simplelessonid,
-            $mode, $attemptid) {
+            $mode, $attemptid, $pageid) {
         $html = '';
         $html .= html_writer::start_div(
                 'mod_simplelesson_page');
@@ -545,6 +545,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
                 array('courseid' => $courseid,
                 'simplelessonid' => $simplelessonid,
                 'mode' => $mode,
+                'pageid' => $pageid,
                 'attemptid' => $attemptid));
         $html .= html_writer::link($url,
                 get_string('end_lesson', 'mod_simplelesson'));
@@ -648,8 +649,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      *
      */
     public function render_question_form(
-            $actionurl, $options, $slot, $quba,
-            $deferred, $starttime) {
+            $actionurl, $options, $slot, $quba, $starttime) {
 
         $html = html_writer::start_div('mod_simplelesson_question');
         $headtags = '';
@@ -680,27 +680,10 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         // Finish the question form.
         $html .= html_writer::start_tag(
                 'mod_simplelesson_action_buttons');
-
-        // Action button on the form.
-        // We only need this for deferred feedback I think
-        // So we won't implement for now
-        /*
-        if ($deferred) {
-            $html .= html_writer::empty_tag(
-                    'input', array('type' => 'submit',
-                    'name' => 'submit',
-                    'value' =>
-                    get_string('submit', 'mod_simplelesson')));
-        }
-        // put this button option in mod form (allow terminate)
-        $html .= html_writer::empty_tag(
-                'input', array('type' => 'submit',
-                'name' => 'finish', 'value' =>
-                get_string('stoplesson', 'mod_simplelesson')));
-        */
         $html .= html_writer::end_tag('div');
         $html .= html_writer::end_tag('form');
         $html .= html_writer::end_div('div');
+
         return $html;
     }
     /**

@@ -40,15 +40,29 @@ $string['simplelessonname'] = 'Simple lesson name';
 $string['simplelessonname_help'] = 'Choose a suitable name for your Simple lesson.';
 $string['pluginadministration'] = 'simplelesson administration';
 $string['pluginname'] = 'Simple lesson';
+
+// Events.
 $string['simplelessonviewed'] = 'Simple lesson viewed';
+$string['pagecreated'] = 'New page created';
+$string['pageviewed'] = 'Simple lesson page viewed';
+$string['pagedeleted'] = 'Simplelesson page deleted';
+$string['attemptstarted'] = 'Simple lesson attempt started';
+$string['attemptcompleted'] = 'Simple lesson attempt started';
+
 
 // The mod_form settings.
 $string['simplelesson_settings'] = 'Simplelesson settings';
 $string['simplelesson_title'] = 'Title of this resource';
 $string['showindex'] = 'Show the page index';
 $string['immediatefeedback'] = 'Immediate feedback';
-$string['deferredfeedback'] = 'Deferred feedback';
+$string['immediatecbm'] = 'Immediate feedback with CBM';
+$string['adaptive'] = 'Adaptive feedback';
 $string['behaviour'] = 'Question behaviour';
+$string['behaviour_help'] = 'Immediate feedback has one attempt available and with CBM a certainty must be implemented as well.  With Adaptive feedback the user has multiple tries at each question.  This can only be set on a lesson basis, not per question';
+$string['category_select'] = 'Select category';
+$string['categoryid'] = 'Category';
+$string['categoryid_help'] = 'Choose one category for the questions that can be added to this simplelesson.';
+$string['nocategory'] = 'none';
 $string['unlimited'] = 'Unlimited';
 
 // Capabilities.
@@ -85,10 +99,6 @@ $string['add_question'] = 'Add question';
 $string['question_adding'] = 'Adding questions to Simple lesson';
 $string['questions_added'] = 'Added questions';
 $string['select_questions'] = 'Select questions';
-$string['category_select'] = 'Select category';
-$string['categoryid'] = 'Category';
-$string['categoryid_help'] = 'Choose one category for the questions that can be added to this simplelesson.';
-$string['nocategory'] = 'none';
 $string['selecting_page'] = 'Select the page for this question.';
 $string['editing_question_page'] = 'Select the page';
 $string['question_exists'] = 'That page has a question already';
@@ -165,6 +175,7 @@ $string['numattempts'] = 'Attempts made: {$a} of';
 $string['unlimited_attempts'] = 'Unlimited attempts';
 $string['no_questions'] = 'There are no questions to attempt (use preview)';
 $string['cleanattemptlink'] = 'Finish review';
+$string['answerquestions'] = 'Please answer all the questions';
 
 // Attempts management
 $string['manage_attempts'] = 'Manage attempts';

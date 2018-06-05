@@ -23,6 +23,7 @@
  */
 
 use \mod_simplelesson\local\pages;
+use \mod_simplelesson\event\page_created;
 
 require_once('../../config.php');
 require_once('edit_page_form.php');
@@ -84,6 +85,15 @@ if ($data = $mform->get_data()) {
     $data->nextpageid = (int) $data->nextpageid;
     $data->prevpageid = (int) $data->prevpageid;
     pages::add_page_record($data, $modulecontext);
+
+    //Trigger the page created event.
+    $eventparams = array('context' => $modulecontext,
+            'objectid' => $data->id);
+    $event = page_created::create($eventparams);
+    $event->add_record_snapshot('course', $PAGE->course);
+    $event->add_record_snapshot($PAGE->cm->modname, $moduleinstance);
+    $event->trigger();
+
     redirect($returnview, get_string('page_saved', 'mod_simplelesson'), 2);
 }
 
