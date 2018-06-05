@@ -32,6 +32,8 @@ $simplelessonid = required_param('simplelessonid', PARAM_INT);
 $moduleinstance  = $DB->get_record('simplelesson', array('id' => $simplelessonid), '*', MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 $cm = get_coursemodule_from_instance('simplelesson', $simplelessonid, $courseid, false, MUST_EXIST);
+$simplelesson = $DB->get_record('simplelesson',
+            array('id' => $simplelessonid), '*', MUST_EXIST);
 // Set up the page.
 $PAGE->set_url('/mod/simplelesson/start_attempt.php',
         array('courseid' => $courseid,
@@ -91,7 +93,7 @@ $attemptid = attempts::set_attempt_start($attemptdata);
 
 // Log the event.
 $event = attempt_started::create(array(
-        'objectid' => $cm->id,
+        'objectid' => $attemptid,
         'context' => $modulecontext,
     ));
 

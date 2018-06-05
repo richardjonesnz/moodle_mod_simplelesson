@@ -65,20 +65,22 @@ $returnedit = new moodle_url('/mod/simplelesson/edit.php',
 $pageid = pages::get_page_id_from_sequence($simplelessonid, $sequence);
 pages::fix_page_links($simplelessonid, $pageid);
 
+// Log the page deleted event.
+$page = $DB->get_record('simplelesson_pages',
+        array('simplelessonid' => $simplelessonid,
+        'id' => $pageid), '*', MUST_EXIST);
+$event = page_deleted::create(array(
+        'objectid' => $pageid,
+        'context' => $modulecontext,
+    ));
+$event->add_record_snapshot('course', $course);
+$event->add_record_snapshot('simplelesson_pages', $page);
+$event->trigger();
+
 // Delete the page.
 $DB->delete_records('simplelesson_pages',
         array('simplelessonid' => $simplelessonid,
         'id' => $pageid));
-
-// Log the page deleted event.
-$event = page_deleted::create(array(
-        'objectid' => $cm->id,
-        'context' => $modulecontext,
-    ));
-
-$event->add_record_snapshot('course', $course);
-$event->add_record_snapshot($cm->modname, $simplelesson);
-$event->trigger();
 
 // Find the sequence number of the current last.
 $lastpage = pages::count_pages($simplelessonid);

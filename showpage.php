@@ -43,23 +43,13 @@ $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 $cm = get_coursemodule_from_instance('simplelesson', $simplelessonid,
         $courseid, false, MUST_EXIST);
 $moduleinstance  = $DB->get_record('simplelesson', array('id' => $simplelessonid), '*', MUST_EXIST);
+
 $PAGE->set_url('/mod/simplelesson/showpage.php',
         array('courseid' => $courseid,
         'simplelessonid' => $simplelessonid,
         'pageid' => $pageid));
 
 require_login($course, true, $cm);
-
-// Log the page viewed event.
-$event = page_viewed::create(array(
-        'objectid' => $cm->id,
-        'context' => $modulecontext,
-    ));
-
-$event->add_record_snapshot('course', $course);
-$event->add_record_snapshot($cm->modname, $simplelesson);
-$event->trigger();
-
 $coursecontext = context_course::instance($courseid);
 $modulecontext = context_module::instance($cm->id);
 
@@ -112,7 +102,7 @@ if (data_submitted() && confirm_sesskey()) {
     */
     $slot = questions::get_slot($simplelessonid, $pageid);
     $qdata = attempts::get_question_attempt_id($qubaid, $slot);
-    //var_dump($qdata);exit;
+
     $answerdata = new stdClass();
     $answerdata->simplelessonid = $simplelessonid;
     $answerdata->qatid = $qdata->id;
@@ -127,8 +117,21 @@ if (data_submitted() && confirm_sesskey()) {
     $answerdata->timecompleted = $timenow;
     $answerdata->id = $DB->insert_record('simplelesson_answers',
             $answerdata);
-    //var_dump($answerdata);exit;
+
     redirect($actionurl);
+} else {
+    // Log the page viewed event (but not for every
+    // question attempt).
+    $page = $DB->get_record('simplelesson_pages',
+            array('simplelessonid' => $simplelessonid,
+            'id' => $pageid), '*', MUST_EXIST);
+    $event = page_viewed::create(array(
+            'objectid' => $pageid,
+            'context' => $modulecontext,
+        ));
+    $event->add_record_snapshot('course', $course);
+    $event->add_record_snapshot('simplelesson_pages', $page);
+    $event->trigger();
 }
 
 echo $OUTPUT->header();

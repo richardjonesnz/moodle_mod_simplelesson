@@ -22,7 +22,6 @@
  */
 use \mod_simplelesson\local\pages;
 namespace mod_simplelesson\local;
-require_once('../../config.php');
 defined('MOODLE_INTERNAL') || die();
 /**
  * Utility class for handling questions from question bank

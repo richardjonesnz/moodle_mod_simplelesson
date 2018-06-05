@@ -22,9 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  */
-
 defined('MOODLE_INTERNAL') || die;
-
 require_once($CFG->dirroot . '/mod/simplelesson/backup/moodle2/backup_simplelesson_stepslib.php');
 require_once($CFG->dirroot . '/mod/simplelesson/backup/moodle2/backup_simplelesson_settingslib.php');
 /**
@@ -59,15 +57,15 @@ class backup_simplelesson_activity_task extends backup_activity_task {
     static public function encode_content_links($content) {
         global $CFG;
 
-        $base = preg_quote($CFG->wwwroot,"/");
+        $base = preg_quote($CFG->wwwroot, "/");
 
-        // Link to the list of simplelessons
-        $search="/(".$base."\/mod\/simplelesson\/index.php\?id\=)([0-9]+)/";
-        $content= preg_replace($search, '$@SIMPLELESSONINDEX*$2@$', $content);
+        // Link to the list of simplelessons.
+        $search = "/(".$base."\/mod\/simplelesson\/index.php\?id\=)([0-9]+)/";
+        $content = preg_replace($search, '$@SIMPLELESSONINDEX*$2@$', $content);
 
-        // Link to simplelesson view by moduleid
-        $search="/(".$base."\/mod\/simplelesson\/view.php\?id\=)([0-9]+)/";
-        $content= preg_replace($search, '$@SIMPLELESSONVIEWBYID*$2@$', $content);
+        // Link to simplelesson view by moduleid.
+        $search = "/(".$base."\/mod\/simplelesson\/view.php\?id\=)([0-9]+)/";
+        $content = preg_replace($search, '$@SIMPLELESSONVIEWBYID*$2@$', $content);
 
         return $content;
     }

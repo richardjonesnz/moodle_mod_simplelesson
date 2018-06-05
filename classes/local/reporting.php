@@ -25,7 +25,6 @@
  */
 
 namespace mod_simplelesson\local;
-
 defined('MOODLE_INTERNAL') || die;
 
 class reporting  {
@@ -124,7 +123,6 @@ class reporting  {
                  WHERE a.simplelessonid = :slid
                    AND u.deleted <> 1";
 
-
         $records = $DB->get_records_sql($sql,
                 array('slid' => $simplelessonid));
 
@@ -134,7 +132,7 @@ class reporting  {
             $data = new \stdClass();
             $data->firstname = $record->firstname;
             $data->lastname = $record->lastname;
-            $data->datetaken = date("Y-m-d H:i:s",$record->timecreated);
+            $data->datetaken = date("Y-m-d H:i:s", $record->timecreated);
             $data->status = $record->status;
             $data->sessionscore = (int) $record->sessionscore;
             $data->maxscore = (int) $record->maxscore;
@@ -155,7 +153,8 @@ class reporting  {
         $table->head = self::fetch_attempt_report_headers();
         $table->align = array('left', 'left', 'left', 'left',
                 'left', 'left', 'left');
-        $table->wrap = array('nowrap', '', 'nowrap','', '', '', '');
+        $table->wrap = array('nowrap', '', 'nowrap', '', '',
+                '', '');
         $table->tablealign = 'left';
         $table->cellspacing = 0;
         $table->cellpadding = '2px';
@@ -212,25 +211,25 @@ class reporting  {
                  WHERE a.simplelessonid = :slid
                    AND u.deleted <> 1";
 
-
         $records = $DB->get_records_sql($sql,
                 array('slid' => $simplelessonid));
 
         // Select and order these for the csv export process.
         $table = array();
         foreach ($records as $record) {
-          $data = new \stdClass();
-          $data->id = $record->id;
-          $data->attemptid = $record->attemptid;
-          $data->firstname = $record->firstname;
-          $data->lastname = $record->lastname;
-          $data->datetaken = date("Y-m-d H:i:s",$record->timecreated);
-          $data->questionsummary = $record->questionsummary;
-          $data->rightanswer = $record->rightanswer;
-          $data->youranswer = $record->youranswer;
-          $data->timetaken = (int) ($record->timecompleted
+            $data = new \stdClass();
+            $data->id = $record->id;
+            $data->attemptid = $record->attemptid;
+            $data->firstname = $record->firstname;
+            $data->lastname = $record->lastname;
+            $data->datetaken = date("Y-m-d H:i:s",
+                    $record->timecreated);
+            $data->questionsummary = $record->questionsummary;
+            $data->rightanswer = $record->rightanswer;
+            $data->youranswer = $record->youranswer;
+            $data->timetaken = (int) ($record->timecompleted
                     - $record->timestarted);
-          $table[] = $data;
+            $table[] = $data;
         }
         return $table;
     }
@@ -241,7 +240,7 @@ class reporting  {
      * @return array of column names
      */
     public static function fetch_answer_report_headers() {
-        $fields = array('id'=> 'id',
+        $fields = array('id' => 'id',
         'attemptid' => 'attemptid',
         'firstname' => 'firstname',
         'lastname' => 'lastname',
@@ -296,17 +295,17 @@ class reporting  {
      * @return html to display buttons
      */
     public static function show_menu($courseid, $simplelessonid) {
-        // Buttons on reports tab
+        // Buttons on reports tab.
         $buttons = array();
 
         $type = 'answers';
         $label = get_string('answer_report', 'mod_simplelesson');
-        $buttons[] =  self::create_button($courseid,
+        $buttons[] = self::create_button($courseid,
             $simplelessonid, $type, $label);
 
         $type = 'attempts';
         $label = get_string('attempt_report', 'mod_simplelesson');
-        $buttons[] =  self::create_button($courseid,
+        $buttons[] = self::create_button($courseid,
             $simplelessonid, $type, $label);
 
         return $buttons;
@@ -315,12 +314,12 @@ class reporting  {
             $simplelessonid, $type, $label) {
         $pageurl = new \moodle_url('reports.php',
                 array('courseid' => $courseid,
-                'simplelessonid'=> $simplelessonid,
+                'simplelessonid' => $simplelessonid,
                 'report' => $type));
 
         return new \single_button($pageurl, $label);
     }
-/*
+    /*
      * Attempts management- get all user attempt records
      *
      * @param $courseid - Course to get records for
@@ -341,7 +340,6 @@ class reporting  {
                  WHERE s.course = :cid
                    AND u.deleted <> 1";
 
-
         $records = $DB->get_records_sql($sql,
                 array('cid' => $courseid));
 
@@ -353,7 +351,8 @@ class reporting  {
             $data->lessonname = $record->name;
             $data->firstname = $record->firstname;
             $data->lastname = $record->lastname;
-            $data->datetaken = date("Y-m-d H:i:s",$record->timecreated);
+            $data->datetaken = date("Y-m-d H:i:s",
+                    $record->timecreated);
             $data->status = $record->status;
             $data->sessionscore = (int) $record->sessionscore;
             $data->maxscore = (int) $record->maxscore;
@@ -373,9 +372,9 @@ class reporting  {
 
         $table = new \html_table();
         $table->head = self::fetch_course_attempt_report_headers();
-        $table->align = array('left', 'left', 'left', 'left',
-                'left', 'left', 'left');
-        $table->wrap = array('nowrap', '', 'nowrap','', '', '', '');
+        $table->align = array('left', 'left', 'left', 'left', 'left', 'left', 'left');
+        $table->wrap = array('nowrap', '', 'nowrap',
+                '', '', '', '');
         $table->tablealign = 'left';
         $table->cellspacing = 0;
         $table->cellpadding = '2px';

@@ -108,7 +108,7 @@ if ($numpages > 0) {
 
 $canmanage = has_capability('mod/simplelesson:manage', $modulecontext);
 
-// First page summary
+// First page summary.
 $userattempts = attempts::get_number_of_attempts($USER->id,
         $simplelesson->id);
 echo $renderer->fetch_lesson_info($numpages, $userattempts,

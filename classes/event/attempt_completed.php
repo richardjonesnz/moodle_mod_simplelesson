@@ -36,7 +36,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2018 Richard Jones
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
  */
-class attempt_started extends \core\event\base {
+class attempt_completed extends \core\event\base {
 
     /**
      * Set basic properties for the event.
@@ -61,6 +61,10 @@ class attempt_started extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        return "The user with id '$this->userid' has completed an attempt with the id '$this->objectid' in the simplelesson activity with course module id '$this->contextinstanceid'.";
+        return "The user with id '$this->userid' has
+                completed an attempt with the
+                id '$this->objectid' in the simplelesson
+                activity with course module id
+                '$this->contextinstanceid'.";
     }
 }

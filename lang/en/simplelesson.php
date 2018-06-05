@@ -49,7 +49,6 @@ $string['pagedeleted'] = 'Simplelesson page deleted';
 $string['attemptstarted'] = 'Simple lesson attempt started';
 $string['attemptcompleted'] = 'Simple lesson attempt started';
 
-
 // The mod_form settings.
 $string['simplelesson_settings'] = 'Simplelesson settings';
 $string['simplelesson_title'] = 'Title of this resource';
@@ -157,8 +156,7 @@ $string['end_lesson'] = "Exit lesson";
 $string['preview'] = "Preview";
 $string['attempt'] = "Attempt lesson";
 $string['starting_attempt'] = "Starting Attempt";
-$string['preview_completed'] = "Preview completed";
-$string['attempt_completed'] = "Attempt completed";
+$string['previewcompleted'] = "Preview completed";
 $string['summary_header'] = "Attempt summary";
 $string['summary_user'] = 'User report for {$a}';
 $string['summary_score'] = 'Score for this attempt: {$a}';
@@ -174,16 +172,16 @@ $string['max_attempts_exceeded'] = "No more attempts allowed";
 $string['numattempts'] = 'Attempts made: {$a} of';
 $string['unlimited_attempts'] = 'Unlimited attempts';
 $string['no_questions'] = 'There are no questions to attempt (use preview)';
-$string['cleanattemptlink'] = 'Finish review';
+$string['finishreview'] = 'Finish review';
 $string['answerquestions'] = 'Please answer all the questions';
 
-// Attempts management
+// Attempts management.
 $string['manage_attempts'] = 'Manage attempts';
 $string['delete'] = 'delete ';
 $string['attempt_deleted'] = 'Attempt deleted';
 $string['attempt_not_deleted'] = 'Attempt to delete record failed';
 
-// Privacy
+// Privacy.
 $string['privacy:metadata:simplelesson_attempts'] = 'Information about users simplelesson attempts including completion status, the number of correct responses (a score) and the time taken (seconds) for the attempt.';
 $string['privacy:metadata:simplelesson_attempts:userid'] = 'The id of the user taking the attempt.';
 $string['privacy:metadata:simplelesson_attempts:status'] = 'The completion status of the attempt.';

@@ -44,7 +44,7 @@ if ($type == 'answers') {
     $records = reporting::fetch_answer_data($simplelessonid);
     $fields = reporting::fetch_answer_report_headers($simplelessonid);
     $filename = clean_filename($moduleinstance->name) . '_answers';
-} else { // attempts
+} else { // Attempts.
     $records = reporting::fetch_attempt_data($simplelessonid);
     $fields = reporting::fetch_attempt_report_headers();
     $filename = clean_filename($moduleinstance->name) . '_attempts';

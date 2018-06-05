@@ -162,8 +162,9 @@ function simplelesson_delete_instance($id) {
             array('id' => $id))) {
         return false;
     }
-    if (!$cm = get_coursemodule_from_instance('simplelesson', $simplelesson->id)) {
-     return false;
+    if (!$cm = get_coursemodule_from_instance('simplelesson',
+            $simplelesson->id)) {
+        return false;
     }
 
     // Delete any dependent records.
@@ -180,7 +181,7 @@ function simplelesson_delete_instance($id) {
     $DB->delete_records('simplelesson',
             array('id' => $simplelesson->id));
 
-    // Delete files
+    // Delete files.
     $context = context_module::instance($cm->id);
     $fs = get_file_storage();
     $fs->delete_area_files($context->id, 'pagecontents');
@@ -554,8 +555,8 @@ function simplelesson_extend_navigation(navigation_node $navref, stdClass $cours
 function simplelesson_extend_settings_navigation(settings_navigation $settingsnav, navigation_node $simplelessonnode=null) {
     // Provide a link to the attempts management page.
     global $PAGE;
-    $attempts_url = new moodle_url(
+    $attemptsurl = new moodle_url(
             '/mod/simplelesson/manage_attempts.php',
             array('courseid' => $PAGE->course->id));
-    $simplelessonnode->add(get_string('manage_attempts', 'mod_simplelesson'), $attempts_url);
+    $simplelessonnode->add(get_string('manage_attempts', 'mod_simplelesson'), $attemptsurl);
 }

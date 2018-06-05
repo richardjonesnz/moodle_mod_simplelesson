@@ -48,33 +48,42 @@ class backup_simplelesson_activity_structure_step extends backup_activity_struct
         $userinfo = $this->get_setting_value('userinfo');
 
         // Define the root element describing the simplelesson instance.
-        $simplelesson = new backup_nested_element('simplelesson', array('id'), array('course', 'name', 'intro', 'introformat', 'title', 'showindex', 'categoryid', 'behaviour',
-            'qubaid', 'maxattempts', 'grade', 'timecreated','timemodified'));
+        $simplelesson = new backup_nested_element('simplelesson',
+                array('id'),
+                array('course', 'name', 'intro', 'introformat',
+                'title', 'showindex', 'categoryid', 'behaviour',
+                'qubaid', 'maxattempts', 'grade', 'timecreated',
+                'timemodified'));
 
         // Define the child elements.
         $pages = new backup_nested_element('pages');
         $page = new backup_nested_element('page', array('id'),
-                array('simplelessonid', 'sequence', 'prevpageid','nextpageid',
-                'pagetitle','pagecontents','pagecontentsformat',
-                'showindex','timecreated',
+                array('simplelessonid', 'sequence', 'prevpageid',
+                'nextpageid', 'pagetitle', 'pagecontents',
+                'pagecontentsformat', 'showindex', 'timecreated',
                 'timemodified'));
 
         $attempts = new backup_nested_element('attempts');
-        $attempt = new backup_nested_element('attempt', array('id'),
+        $attempt = new backup_nested_element('attempt',
+                array('id'),
                 array('simplelessonid', 'userid', 'status',
-                'sessionscore', 'maxscore','timecreated',
+                'sessionscore', 'maxscore', 'timecreated',
                 'timemodified'));
 
         $answers = new backup_nested_element('answers');
-        $answer = new backup_nested_element('answer', array('id'),
-                array('simplelessonid', 'qatid', 'attemptid',
-                'pageid', 'maxmark','questionsummary','rightanswer',
-                'youranswer', 'timestarted', 'timecompleted'));
+        $answer = new backup_nested_element('answer',
+                array('id'),
+                array('simplelessonid', 'qatid',
+                'attemptid', 'pageid', 'maxmark',
+                'questionsummary', 'rightanswer',
+                'youranswer', 'timestarted',
+                'timecompleted'));
 
         $questions = new backup_nested_element('questions');
-        $question = new backup_nested_element('question', array('id'),
-                array('qid', 'pageid', 'simplelessonid','slot'));
-
+        $question = new backup_nested_element('question',
+                array('id'),
+                array('qid', 'pageid', 'simplelessonid',
+                'slot'));
 
         // Build the tree.
         $simplelesson->add_child($pages);
@@ -92,26 +101,26 @@ class backup_simplelesson_activity_structure_step extends backup_activity_struct
         // Define data sources.
         $simplelesson->set_source_table('simplelesson', array('id' => backup::VAR_ACTIVITYID));
 
-        // Backup pages
+        // Backup pages.
         $page->set_source_table('simplelesson_pages',
                 array('simplelessonid' => backup::VAR_PARENTID));
 
-        // Backup answers
+        // Backup answers.
         $answer->set_source_table('simplelesson_answers',
                 array('simplelessonid' => backup::VAR_PARENTID));
 
-        // Backup questions
+        // Backup questions.
         $question->set_source_table('simplelesson_questions',
                 array('simplelessonid' => backup::VAR_PARENTID));
 
-        // The attempts table has a userid
+        // The attempts table has a userid.
         if ($userinfo) {
             $attempt->set_source_table('simplelesson_attempts',
                     array('simplelessonid' => backup::VAR_PARENTID));
         }
         $attempt->annotate_ids('user', 'userid');
 
-        // Define file annotations
+        // Define file annotations.
         $simplelesson->annotate_files('mod_simplelesson', 'intro',
                 null);
         $page->annotate_files('mod_simplelesson', 'pagecontents', 'id');

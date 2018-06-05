@@ -53,7 +53,7 @@ class page_deleted extends \core\event\base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventpagedeleted', 'mod_simplelesson');
+        return get_string('pagedeleted', 'mod_simplelesson');
     }
     /**
      * Returns non-localised event description with id's for admin use only.
@@ -61,6 +61,10 @@ class page_deleted extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        return "The user with id '$this->userid' has deleted a page with the id '$this->objectid' in the simplelesson activity with course module id '$this->contextinstanceid'.";
+        return "The user with id '$this->userid' has
+                deleted a page with the id
+                '$this->objectid' in the simplelesson
+                activity with course module id
+                '$this->contextinstanceid'.";
     }
 }

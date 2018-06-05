@@ -23,11 +23,10 @@
 use \mod_simplelesson\local\pages;
 use \mod_simplelesson\local\questions;
 use \mod_simplelesson\local\reporting;
+defined('MOODLE_INTERNAL') || die;
 namespace mod_simplelesson\local;
-require_once('../../config.php');
 require_once($CFG->libdir . '/questionlib.php');
 
-defined('MOODLE_INTERNAL') || die();
 /**
  * Utility class for question usage actions
  *
@@ -107,27 +106,27 @@ class attempts  {
         // Delete these records explicitly, we have the
         // attempt data we need in our attempts table.
         $ataids = $DB->get_records('question_attempts',
-                array('questionusageid'=>$qubaid));
+                array('questionusageid' => $qubaid));
         foreach ($ataids as $ataid) {
-            // get the attempt step id's
+            // Get the attempt step id's.
             $atsteps = $DB->get_records('question_attempt_steps',
-                    array('questionattemptid'=>$ataid->id));
-                foreach ($atsteps as $atstep) {
-                    // Get the step data out
-                    $DB->delete_records(
-                            'question_attempt_step_data',
-                            array('attemptstepid'=>$atstep->id));
-                }
-                // get the attempt steps cleaned out
-                $DB->delete_records('question_attempt_steps',
-                        array('questionattemptid'=>$ataid->id));
+                    array('questionattemptid' => $ataid->id));
+            foreach ($atsteps as $atstep) {
+                // Get the step data out.
+                $DB->delete_records(
+                        'question_attempt_step_data',
+                        array('attemptstepid' => $atstep->id));
             }
-            // Delete the attempt data.
-            $DB->delete_records('question_attempts',
-                   array('questionusageid'=>$qubaid));
+            // Get the attempt steps cleaned out.
+            $DB->delete_records('question_attempt_steps',
+                    array('questionattemptid' => $ataid->id));
+        }
+        // Delete the attempt data.
+        $DB->delete_records('question_attempts',
+               array('questionusageid' => $qubaid));
 
         $DB->delete_records('question_usages',
-                array('id'=> $qubaid));
+                array('id' => $qubaid));
     }
     /**
      * Return the wanted row from question attempts
@@ -156,21 +155,21 @@ class attempts  {
 
         $answerdata = $DB->get_records('simplelesson_answers',
                 array('attemptid' => $attemptid));
-        // var_dump($answerdata);exit;
+
         // Add the data for the summary table.
         foreach ($answerdata as $data) {
 
-            // Add the page title
+            // Add the page title.
             $data->pagename = pages::get_page_title($data->pageid);
 
-            // If correct, maxmarks (may need to do more later)
+            // If correct, maxmarks (may need to do more later).
             if ($data->youranswer == $data->rightanswer) {
                 $data->mark = (int) $data->maxmark;
             } else {
                 $data->mark = 0;
             }
 
-            // Calculate the elapsed time (s)
+            // Calculate the elapsed time (s).
             $data->timetaken = (int) ($data->timecompleted
                     - $data->timestarted);
         }
@@ -261,7 +260,7 @@ class attempts  {
      */
     public static function save_lesson_answerdata($answerdata) {
         global $DB;
-        // var_dump($answerdata);exit;
+
         foreach ($answerdata as $answer) {
             $data = new \stdClass();
             $data->id = $answer->id;

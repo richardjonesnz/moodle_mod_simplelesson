@@ -22,6 +22,7 @@
  */
 use \mod_simplelesson\local\attempts;
 use \mod_simplelesson\local\questions;
+use \mod_simplelesson\event\attempt_completed;
 use \question_engine;
 require_once('../../config.php');
 
@@ -34,6 +35,8 @@ $pageid = optional_param('pageid', 0, PARAM_INT);
 $moduleinstance  = $DB->get_record('simplelesson', array('id' => $simplelessonid), '*', MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 $cm = get_coursemodule_from_instance('simplelesson', $simplelessonid, $courseid, false, MUST_EXIST);
+$simplelesson = $DB->get_record('simplelesson',
+            array('id' => $simplelessonid), '*', MUST_EXIST);
 $PAGE->set_url('/mod/simplelesson/summary.php',
         array('courseid' => $courseid,
               'simplelessonid' => $simplelessonid,
@@ -47,10 +50,11 @@ $PAGE->set_context($modulecontext);
 $PAGE->set_pagelayout('course');
 $PAGE->set_heading(format_string($course->fullname));
 $renderer = $PAGE->get_renderer('mod_simplelesson');
-
-// If we got here, the user got to the last page and hit the exit link.
-// Mode is either preview or attempt.
-
+/*
+    If we got here, the user got to the last page
+    and hit the exit link.
+    Mode is either preview or attempt.
+*/
 if ($mode == 'attempt') {
 
     echo $OUTPUT->header();
@@ -65,7 +69,7 @@ if ($mode == 'attempt') {
 
     // Log the event.
     $event = attempt_completed::create(array(
-        'objectid' => $cm->id,
+        'objectid' => $attemptid,
         'context' => $modulecontext,
     ));
 
@@ -81,7 +85,7 @@ if ($mode == 'attempt') {
     attempts::set_attempt_completed($attemptid,
             $sessiondata);
 
-    // Clean up question usage and attempt data
+    // Clean up question usage and attempt data.
     $qubaid = attempts::get_usageid($simplelessonid);
     attempts::remove_usage_data($qubaid);
 

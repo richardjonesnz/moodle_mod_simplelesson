@@ -23,11 +23,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace mod_simplelesson\local;
-require_once('../../config.php');
+defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/questionlib.php');
 require_once('../../question/previewlib.php');
 require_once('../../question/engine/lib.php');
-defined('MOODLE_INTERNAL') || die();
+
 /**
  * Control question display options
  */

@@ -17,15 +17,13 @@
 /**
  * Provides the restore activity task class
  *
- * @package    mod_simplelesson
- * @copyright  2018 Richard Jones <richardnz@outlook.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package mod_simplelesson
+ * @copyright 2018 Richard Jones <richardnz@outlook.com>
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @see https://github.com/moodlehq/moodle-mod_newmodule
  *
  */
-
 defined('MOODLE_INTERNAL') || die();
-
 require_once($CFG->dirroot . '/mod/simplelesson/backup/moodle2/restore_simplelesson_stepslib.php');
 
 /**
@@ -76,9 +74,15 @@ class restore_simplelesson_activity_task extends restore_activity_task {
 
         $rules[] = new restore_decode_rule('MULTIPAGEVIEWBYID', '/mod/simplelesson/view.php?id=$1', 'course_module');
 
-        $rules[] = new restore_decode_rule('MULTIPAGEINDEX', '/mod/simplelesson/index.php?id=$1', 'course');
-        
-        $rules[] = new restore_decode_rule('MULTIPAGESHOWPAGE', '/mod/simplelesson/showpage.php?id=$1&pageid=$2', array('course', 'simplelesson_pages'));
+        $rules[] = new restore_decode_rule(
+               'MULTIPAGEINDEX',
+               '/mod/simplelesson/index.php?id=$1',
+               'course');
+
+        $rules[] = new restore_decode_rule(
+                'MULTIPAGESHOWPAGE',
+                '/mod/simplelesson/showpage.php?id=$1&pageid=$2',
+                array('course', 'simplelesson_pages'));
         return $rules;
     }
 
@@ -91,11 +95,19 @@ class restore_simplelesson_activity_task extends restore_activity_task {
     static public function define_restore_log_rules() {
         $rules = array();
 
-        $rules[] = new restore_log_rule('simplelesson', 'add', 'view.php?id={course_module}', '{simplelesson}');
-        $rules[] = new restore_log_rule('simplelesson', 'edit', 'view.php?id={course_module}', '{simplelesson}');
-        $rules[] = new restore_log_rule('simplelesson', 'view', 'view.php?id={course_module}', '{simplelesson}');
-        $rules[] = new restore_log_rule('simplelesson', 'update', 'view.php?id={course_module}', '{simplelesson}');
-        
+        $rules[] = new restore_log_rule('simplelesson',
+                'add', 'view.php?id={course_module}',
+                '{simplelesson}');
+        $rules[] = new restore_log_rule('simplelesson',
+                'edit', 'view.php?id={course_module}',
+                '{simplelesson}');
+        $rules[] = new restore_log_rule('simplelesson',
+                'view', 'view.php?id={course_module}',
+                '{simplelesson}');
+        $rules[] = new restore_log_rule('simplelesson',
+                'update', 'view.php?id={course_module}',
+                '{simplelesson}');
+
         return $rules;
     }
 
@@ -112,7 +124,8 @@ class restore_simplelesson_activity_task extends restore_activity_task {
     static public function define_restore_log_rules_for_course() {
         $rules = array();
 
-        $rules[] = new restore_log_rule('simplelesson', 'view all', 'index.php?id={course}', null);
+        $rules[] = new restore_log_rule('simplelesson',
+                'view all', 'index.php?id={course}', null);
 
         return $rules;
     }

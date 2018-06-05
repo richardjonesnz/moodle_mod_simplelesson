@@ -86,7 +86,7 @@ if ($data = $mform->get_data()) {
     $data->prevpageid = (int) $data->prevpageid;
     pages::add_page_record($data, $modulecontext);
 
-    //Trigger the page created event.
+    // Trigger the page created event.
     $eventparams = array('context' => $modulecontext,
             'objectid' => $data->id);
     $event = page_created::create($eventparams);

@@ -25,6 +25,7 @@
  * @see https://github.com/moodlehq/moodle-mod_newmodule
  *
  */
+defined('MOODLE_INTERNAL') || die();
 /**
  * Custom uninstallation procedure
  */

@@ -47,7 +47,7 @@ $PAGE->set_heading(format_string($course->fullname));
 $returnmanage = new moodle_url('/mod/simplelesson/manage_attempts.php',
         array('courseid' => $courseid));
 
-if ( ($action == 'delete') && ($attemptid != 0) ){
+if ( ($action == 'delete') && ($attemptid != 0) ) {
     $status = attempts::delete_attempt($attemptid);
     if ($status) {
         $message = get_string('attempt_deleted', 'mod_simplelesson');

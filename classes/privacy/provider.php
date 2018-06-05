@@ -42,8 +42,7 @@ class provider implements
      * @return The updated collection
      */
 
-    public static function get_metadata(collection $items)
-            : collection {
+    public static function get_metadata(collection $items) :collection {
         /*
         * The data tables and fields which hold data relevant to
         * user privacy requests.
@@ -84,7 +83,7 @@ class provider implements
      */
     public static function get_contexts_for_userid(int $userid) : contextlist {
 
-       $sql = "SELECT c.id
+        $sql = "SELECT c.id
                   FROM {context} c
             INNER JOIN {course_modules} cm
                     ON cm.id = c.instanceid
@@ -151,7 +150,7 @@ class provider implements
         // Get the data to export.
         $answers = $DB->get_recordset_sql($sql, $params);
 
-        // Prepare the data for writing
+        // Prepare the data for writing.
         foreach ($answers as $answer) {
 
             // Check for last item.

@@ -341,7 +341,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
                 get_string('actions', 'mod_simplelesson'));
         $table->align = array('left', 'left', 'left', 'left',
                 'center', 'left');
-        $table->wrap = array('', 'nowrap', '', '','nowrap', '');
+        $table->wrap = array('', 'nowrap', '', '', 'nowrap', '');
         $table->tablealign = 'center';
         $table->cellspacing = 0;
         $table->cellpadding = '2px';
@@ -365,12 +365,14 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
             $data[] = $alldata->pagetitle;
             $data[] = $prevpage;
             $data[] = $nextpage;
-            if (questions::page_has_question($simplelesson->id, $pageid)) {
-              $data[] = $this->output->pix_icon('i/valid', '*');
+            if (questions::page_has_question($simplelesson->id,
+                    $pageid)) {
+                $data[] = $this->output->pix_icon('i/valid', '*');
             } else {
-              $data[] = $this->output->pix_icon('i/invalid', 'x');
+                $data[] = $this->output->pix_icon('i/invalid', 'x');
             }
-            if (has_capability('mod/simplelesson:manage', $context)) {
+            if (has_capability('mod/simplelesson:manage',
+                    $context)) {
                 $data[] = $this->page_action_links($courseid,
                       $simplelesson->id, $alldata);
             } else {
@@ -674,7 +676,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
                 'name' => 'starttime', 'value' => $starttime));
         $html .= html_writer::end_tag('div');
 
-        // Output the question. slot = display number
+        // Output the question. slot = display number.
         $html .= $quba->render_question($slot, $options);
 
         // Finish the question form.
@@ -757,14 +759,14 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $url = new moodle_url('/mod/simplelesson/autosequence.php',
                 array('courseid' => $courseid,
                 'simplelessonid' => $simplelessonid));
-        $links[] =  html_writer::link($url,
+        $links[] = html_writer::link($url,
                 get_string('autosequencelink', 'mod_simplelesson'));
 
         $html .= html_writer::alist($links, null, 'ul');
         $html .= html_writer::end_div();
 
         return $html;
-      }
+    }
     /**
      * Returns the html for attempt summary page
      * @param object $sessiondata - score and time
@@ -780,7 +782,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         return $html;
     }
     /**
-     * Returns the html for link to attempt cleanup page
+     * Returns the html for link to view page
      * @param object $simplelessonid - the lesson
      * @param object $attemptid - the attempt
      * @return string, html page link
@@ -788,12 +790,10 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
     public function show_attempt_completion_link($courseid,
             $simplelessonid, $attemptid) {
 
-        // Link to attempt cleanup page.
-        $url = new moodle_url('/mod/simplelesson/cleanattempt.php',
+        $url = new moodle_url('/mod/simplelesson/view.php',
                 array('courseid' => $courseid,
-                'simplelessonid' => $simplelessonid,
-                'attemptid' => $attemptid));
+                'simplelessonid' => $simplelessonid));
         return  html_writer::link($url,
-                get_string('cleanattemptlink', 'mod_simplelesson'));
+                get_string('finishreview', 'mod_simplelesson'));
     }
 }

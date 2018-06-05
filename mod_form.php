@@ -107,9 +107,6 @@ class mod_simplelesson_mod_form extends moodleform_mod {
         $mform->addElement('select', 'maxattempts', get_string('maxattempts', 'mod_simplelesson'), $attemptoptions);
         $mform->setType('maxattempts', PARAM_INT);
 
-        // Might use this later.
-        //$boptions = question_engine::get_behaviour_options('immediatefeedback');
-
         // Returns a list of available question behaviour options.
         $boptions = array(
                 'immediatefeedback' => get_string('immediatefeedback',
