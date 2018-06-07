@@ -278,14 +278,18 @@ class attempts  {
         }
     }
     /**
-     * Delete the record for an attempt
+     * Delete the record for an attempt and the associated answers
      *
      * @param $attemptid the attempt record id
      */
     public static function delete_attempt($attemptid) {
         global $DB;
+
+        $DB->delete_records('simplelesson_answers',
+            array('attemptid' => $attemptid));
+
         return $DB->delete_records('simplelesson_attempts',
-                array('id' => $attemptid));
+            array('id' => $attemptid));
     }
 
     /**

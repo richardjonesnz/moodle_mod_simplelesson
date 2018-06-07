@@ -355,7 +355,9 @@ class reporting  {
             $data->lastname = $record->lastname;
             $data->datetaken = date("Y-m-d H:i:s",
                     $record->timecreated);
-            $data->status = $record->status;
+            $status = ($record->status == MOD_SIMPLELESSON_ATTEMPT_STARTED) ?
+                    "Incomplete" : "Complete";
+            $data->status = $status;
             $data->sessionscore = (int) $record->sessionscore;
             $data->maxscore = (int) $record->maxscore;
             $data->timetaken = $record->timetaken;
