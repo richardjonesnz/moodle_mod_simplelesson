@@ -291,25 +291,4 @@ class attempts  {
         return $DB->delete_records('simplelesson_attempts',
             array('id' => $attemptid));
     }
-
-    /**
-     * Clean unwanted usages from the question usage tables
-     * for attempts that remain incomplete.  The data for
-     * these is still recorded in our own tables.
-     *
-     * @param int $userid the id of the current user
-     * @param int $simplelessonid the id of the simplelesson
-    */
-    public static function cleanup_usages($simplelessonid) {
-        global $DB;
-
-        $attempts = $DB->get_records('simplelesson_attempts',
-                array('status' => MOD_SIMPLELESSON_ATTEMPT_STARTED));
-
-        foreach ($attempts as $attempt) {
-            self::remove_usage_data($attempt->qubaid);
-            $DB->set_field('simplelesson_attempts', 'qubaid', 0,
-                    array('id' => $attempt->id));
-        }
-    }
 }

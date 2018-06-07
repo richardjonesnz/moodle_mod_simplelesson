@@ -86,7 +86,7 @@ if ($mode == 'attempt') {
             $sessiondata);
 
     // Clean up question usage and attempt data.
-    $qubaid = attempts::get_usageid($simplelessonid);
+    $qubaid = attempts::get_usageid($attemptid);
     attempts::remove_usage_data($qubaid);
     $DB->set_field('simplelesson_attempts', 'qubaid', 0,
             array('id' => $attemptid));

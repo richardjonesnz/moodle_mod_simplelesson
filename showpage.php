@@ -57,6 +57,9 @@ $modulecontext = context_module::instance($cm->id);
 $feedback = $moduleinstance->behaviour;
 $maxattempts = $moduleinstance->maxattempts;
 
+// Question usage id.
+$qubaid = attempts::get_usageid($attemptid);
+
 $PAGE->set_context($modulecontext);
 $PAGE->set_pagelayout('course');
 $PAGE->set_heading(format_string($course->fullname));
@@ -67,14 +70,11 @@ $renderer = $PAGE->get_renderer('mod_simplelesson');
 $questionentry = questions::page_has_question($simplelessonid, $pageid);
 if ( ($questionentry) && ($mode == 'attempt') ) {
 
-    $qubaid = attempts::get_usageid($attemptid);
     $quba = \question_engine::load_questions_usage_by_activity($qubaid);
 
     // Display and feedback options.
     $options = display_options::get_options($feedback);
 }
-// Question usage id.
-$qubaid = attempts::get_usageid($attemptid);
 $actionurl = new moodle_url ('/mod/simplelesson/showpage.php',
         array('courseid' => $courseid,
         'simplelessonid' => $simplelessonid,

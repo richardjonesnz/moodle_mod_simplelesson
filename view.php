@@ -120,9 +120,5 @@ if ($canmanage) {
             $simplelesson->id, $numpages);
 }
 
-// Just check when we reach this page, if we have unfinished attempt
-// usages to cleanup from Moodle's tables.
-attempts::cleanup_usages($simplelessonid);
-
 // Finish the page.
 echo $OUTPUT->footer();
