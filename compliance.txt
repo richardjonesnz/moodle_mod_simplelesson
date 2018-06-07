@@ -1,9 +1,0 @@
-The following plugins are not compliant:
-=> 
-
-Testing the compliant plugins:
-== mod_simplelesson (mod_simplelesson\privacy\provider) ==
-    Successfully ran a test export
-
-
-== Done ==
