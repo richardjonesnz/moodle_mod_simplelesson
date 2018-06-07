@@ -8,6 +8,7 @@ This is hopefully a good basis for a simple lesson module that has basic feature
 2.  Consists of multimedia pages with simple hyperlinked navigation
 3.  Summary lesson attempt reports for students and teacher's
 4.  Implements GDPR privacy requests for reporting and deletion of user data
+5.  Designed for Moodle 3.5
 
 For more complex needs (timing, access restrictions, use the Lesson activity module)
 For summative activities use the quiz or lesson.
