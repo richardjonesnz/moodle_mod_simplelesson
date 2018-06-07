@@ -67,13 +67,14 @@ $renderer = $PAGE->get_renderer('mod_simplelesson');
 $questionentry = questions::page_has_question($simplelessonid, $pageid);
 if ( ($questionentry) && ($mode == 'attempt') ) {
 
-    $qubaid = attempts::get_usageid($simplelessonid);
+    $qubaid = attempts::get_usageid($attemptid);
     $quba = \question_engine::load_questions_usage_by_activity($qubaid);
 
     // Display and feedback options.
     $options = display_options::get_options($feedback);
 }
-
+// Question usage id.
+$qubaid = attempts::get_usageid($attemptid);
 $actionurl = new moodle_url ('/mod/simplelesson/showpage.php',
         array('courseid' => $courseid,
         'simplelessonid' => $simplelessonid,
@@ -85,7 +86,6 @@ $actionurl = new moodle_url ('/mod/simplelesson/showpage.php',
 if (data_submitted() && confirm_sesskey()) {
     $timenow = time();
     $transaction = $DB->start_delegated_transaction();
-    $qubaid = attempts::get_usageid($simplelessonid);
     $quba = \question_engine::load_questions_usage_by_activity($qubaid);
     $quba->process_all_actions($timenow);
     question_engine::save_questions_usage_by_activity($quba);
@@ -101,8 +101,8 @@ if (data_submitted() && confirm_sesskey()) {
        We will keep this data because we will remove the attempt data from the question_attempts table during cleanup.
     */
     $slot = questions::get_slot($simplelessonid, $pageid);
-    $qdata = attempts::get_question_attempt_id($qubaid, $slot);
-
+    $qdata = attempts::get_question_attempt_data($qubaid, $slot);
+    //var_dump($qdata);exit;
     $answerdata = new stdClass();
     $answerdata->simplelessonid = $simplelessonid;
     $answerdata->qatid = $qdata->id;
@@ -113,11 +113,12 @@ if (data_submitted() && confirm_sesskey()) {
     $answerdata->questionsummary = $qdata->questionsummary;
     $answerdata->rightanswer = $qdata->rightanswer;
     $answerdata->youranswer = $qdata->responsesummary;
+    $answerdata->timetaken = 0;
     $answerdata->timestarted = $starttime;
     $answerdata->timecompleted = $timenow;
     $answerdata->id = $DB->insert_record('simplelesson_answers',
             $answerdata);
-
+    //var_dump($answerdata);exit;
     redirect($actionurl);
 } else {
     // Log the page viewed event (but not for every

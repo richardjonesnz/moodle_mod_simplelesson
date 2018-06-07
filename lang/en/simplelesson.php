@@ -128,7 +128,7 @@ $string['homelink'] = 'Home';
 $string['gotonextpage'] = 'Next';
 $string['gotoprevpage'] = 'Previous';
 $string['page_index_header'] = 'Index';
-
+$string['preview_completed'] = 'preview completed';
 // Reporting.
 $string['moduleid'] = 'id';
 $string['viewtab'] = 'view';

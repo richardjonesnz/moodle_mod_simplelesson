@@ -25,7 +25,7 @@ use \mod_simplelesson\local\questions;
 use \mod_simplelesson\event\attempt_completed;
 use \question_engine;
 require_once('../../config.php');
-
+global $DB;
 $courseid = required_param('courseid', PARAM_INT);
 $simplelessonid = required_param('simplelessonid', PARAM_INT);
 $mode = optional_param('mode', 'preview', PARAM_TEXT);
@@ -88,6 +88,8 @@ if ($mode == 'attempt') {
     // Clean up question usage and attempt data.
     $qubaid = attempts::get_usageid($simplelessonid);
     attempts::remove_usage_data($qubaid);
+    $DB->set_field('simplelesson_attempts', 'qubaid', 0,
+            array('id' => $attemptid));
 
     echo $renderer->show_attempt_completion_link($courseid,
             $simplelessonid, $attemptid);

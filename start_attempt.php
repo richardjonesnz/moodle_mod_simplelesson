@@ -63,6 +63,7 @@ if (!has_capability('mod/simplelesson:manage', $modulecontext)) {
 $questionentries = questions::fetch_attempt_questions(
         $moduleinstance->id);
 if (!empty($questionentries)) {
+     // Create usage for this attempt.
     $qubaid = attempts::create_usage(
             $modulecontext,
             $moduleinstance->behaviour,
@@ -78,6 +79,7 @@ if (!empty($questionentries)) {
 
 // Count this as starting an attempt, record it.
 $attemptdata = new stdClass();
+$attemptdata->qubaid = $qubaid;
 $attemptdata->courseid = $courseid;
 $attemptdata->simplelessonid = $simplelessonid;
 $attemptdata->pageid = 0;  // Set this later, per page.
@@ -85,6 +87,7 @@ $attemptdata->userid = $USER->id;
 $attemptdata->status = MOD_SIMPLELESSON_ATTEMPT_STARTED;
 $attemptdata->sessionscore = 0;
 $attemptdata->maxscore = count($questionentries);
+$attemptdata->timetaken = 0;
 $attemptdata->timecreated = time();
 $attemptdata->timemodified = 0;
 
@@ -95,7 +98,7 @@ $attemptid = attempts::set_attempt_start($attemptdata);
 $event = attempt_started::create(array(
         'objectid' => $attemptid,
         'context' => $modulecontext,
-    ));
+));
 
 $event->add_record_snapshot('course', $course);
 $event->add_record_snapshot($cm->modname, $simplelesson);

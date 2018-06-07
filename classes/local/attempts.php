@@ -23,8 +23,9 @@
 use \mod_simplelesson\local\pages;
 use \mod_simplelesson\local\questions;
 use \mod_simplelesson\local\reporting;
-defined('MOODLE_INTERNAL') || die;
+
 namespace mod_simplelesson\local;
+defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/questionlib.php');
 
 /**
@@ -60,9 +61,7 @@ class attempts  {
         $quba->start_all_questions();
         \question_engine::save_questions_usage_by_activity($quba);
         $qubaid = $quba->get_id();
-        $DB->set_field('simplelesson',
-                    'qubaid', $qubaid,
-                    array('id' => $simplelessonid));
+
         return $qubaid;
     }
     /**
@@ -85,11 +84,10 @@ class attempts  {
      * @param $simplelessonid - module instance id
      * @return $qubaid - the question usage id associated with this lesson
      */
-    public static function get_usageid($simplelessonid) {
+    public static function get_usageid($attemptid) {
         global $DB;
-        return $DB->get_field('simplelesson',
-                'qubaid',
-                array('id' => $simplelessonid));
+        return $DB->get_field('simplelesson_attempts',
+                'qubaid', array('id' => $attemptid));
     }
     /**
      * Remove the usage id for a simplelesson instance
@@ -135,7 +133,7 @@ class attempts  {
      * @param $slot question attempt slot
      * @return object corresponding row in question attempts
      */
-    public static function get_question_attempt_id(
+    public static function get_question_attempt_data(
             $qubaid, $slot) {
         global $DB;
         $data = $DB->get_record('question_attempts',
@@ -288,5 +286,26 @@ class attempts  {
         global $DB;
         return $DB->delete_records('simplelesson_attempts',
                 array('id' => $attemptid));
+    }
+
+    /**
+     * Clean unwanted usages from the question usage tables
+     * for attempts that remain incomplete.  The data for
+     * these is still recorded in our own tables.
+     *
+     * @param int $userid the id of the current user
+     * @param int $simplelessonid the id of the simplelesson
+    */
+    public static function cleanup_usages($simplelessonid) {
+        global $DB;
+
+        $attempts = $DB->get_records('simplelesson_attempts',
+                array('status' => MOD_SIMPLELESSON_ATTEMPT_STARTED));
+
+        foreach ($attempts as $attempt) {
+            self::remove_usage_data($attempt->qubaid);
+            $DB->set_field('simplelesson_attempts', 'qubaid', 0,
+                    array('id' => $attempt->id));
+        }
     }
 }

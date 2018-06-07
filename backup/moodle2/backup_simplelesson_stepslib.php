@@ -52,7 +52,7 @@ class backup_simplelesson_activity_structure_step extends backup_activity_struct
                 array('id'),
                 array('course', 'name', 'intro', 'introformat',
                 'title', 'showindex', 'categoryid', 'behaviour',
-                'qubaid', 'maxattempts', 'grade', 'timecreated',
+                'maxattempts', 'grade', 'timecreated',
                 'timemodified'));
 
         // Define the child elements.
@@ -66,16 +66,15 @@ class backup_simplelesson_activity_structure_step extends backup_activity_struct
         $attempts = new backup_nested_element('attempts');
         $attempt = new backup_nested_element('attempt',
                 array('id'),
-                array('simplelessonid', 'userid', 'status',
-                'sessionscore', 'maxscore', 'timecreated',
+                array('simplelessonid', 'qubaid', 'userid', 'status',
+                'sessionscore', 'maxscore', 'timetaken', 'timecreated',
                 'timemodified'));
 
         $answers = new backup_nested_element('answers');
         $answer = new backup_nested_element('answer',
                 array('id'),
-                array('simplelessonid', 'qatid',
-                'attemptid', 'pageid', 'maxmark',
-                'questionsummary', 'rightanswer',
+                array('simplelessonid', 'qatid', 'attemptid', 'pageid',
+                'maxmark', 'mark', 'questionsummary', 'rightanswer',
                 'youranswer', 'timestarted',
                 'timecompleted'));
 

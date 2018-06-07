@@ -15,16 +15,14 @@
         <FIELD NAME="showindex" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Whether to show page index"/>
         <FIELD NAME="categoryid" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Question category id"/>
         <FIELD NAME="behaviour" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" DEFAULT="immediatefeedback" COMMENT="Question behaviour"/>
-         <FIELD NAME="qubaid" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="Question usage id"/>
-         <FIELD NAME="maxattempts" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="maxattempts"/>
-         <FIELD NAME="grade" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="100" SEQUENCE="false" COMMENT="The maximum grade. Can be negative to indicate the use of a scale."/>        
-         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false"/>
+        <FIELD NAME="maxattempts" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="maxattempts"/>
+        <FIELD NAME="grade" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="100" SEQUENCE="false" COMMENT="The maximum grade. Can be negative to indicate the use of a scale."/>        
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
         <KEY NAME="categoryid" TYPE="foreign" FIELDS="categoryid" REFTABLE="question_categories" REFFIELDS="id"/>
-        <KEY NAME="qubaid" TYPE="foreign" FIELDS="qubaid" REFTABLE="question_usages" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
@@ -68,16 +66,19 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="simplelessonid" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" COMMENT="Course simplelesson activity belongs to"/>
+        <FIELD NAME="qubaid" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="Question usage id"/>
         <FIELD NAME="userid" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" COMMENT="Course simplelesson activity belongs to"/>
         <FIELD NAME="status" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="status"/>
         <FIELD NAME="sessionscore" TYPE="number" LENGTH="12" NOTNULL="true" DEFAULT="0" SEQUENCE="false" DECIMALS="7"  COMMENT="the score for this attempt"/>
         <FIELD NAME="maxscore" TYPE="number" LENGTH="12" NOTNULL="true" DEFAULT="0" SEQUENCE="false" DECIMALS="7"  COMMENT="the available score for the attempt"/>        
-        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timetaken" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
         <KEY NAME="simplelessonid" TYPE="foreign" FIELDS="simplelessonid" REFTABLE="simplelesson" REFFIELDS="id"/>
+        <KEY NAME="qubaid" TYPE="foreign" FIELDS="qubaid" REFTABLE="question_usages" REFFIELDS="id"/>
         <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
@@ -92,7 +93,8 @@
         <FIELD NAME="mark" TYPE="number" LENGTH="12" NOTNULL="true" DEFAULT="0" SEQUENCE="false" DECIMALS="7" COMMENT="grade for this answer."/>
         <FIELD NAME="questionsummary" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="This is a summary of the question"/>
         <FIELD NAME="rightanswer" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="This is a summary of the right answer to this question."/>
-        <FIELD NAME="responsesummary" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="This is a summary of the student's response."/>
+        <FIELD NAME="youranswer" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="This is a summary of the student's response."/>
+        <FIELD NAME="timetaken" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="timestarted" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="timecompleted" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
       </FIELDS>
@@ -101,7 +103,7 @@
         <KEY NAME="simplelessonid" TYPE="foreign" FIELDS="simplelessonid" REFTABLE="simplelesson" REFFIELDS="id"/>
         <KEY NAME="qatid" TYPE="foreign" FIELDS="qatid" REFTABLE="question_attempts" REFFIELDS="id"/>
         <KEY NAME="attemptid" TYPE="foreign" FIELDS="attemptid" REFTABLE="simplelesson_attempts" REFFIELDS="id"/>
-        <KEY NAME="pageid" TYPE="foreign" FIELDS="pageid" REFTABLE="question_pages" REFFIELDS="id"/>
+        <KEY NAME="pageid" TYPE="foreign" FIELDS="pageid" REFTABLE="simplelesson_pages" REFFIELDS="id"/>
       </KEYS>
     </TABLE>  
   </TABLES>
