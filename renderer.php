@@ -753,7 +753,8 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      * @param int $simplelessonid current lesson
      * @return string, html link
      */
-    public function show_page_management_links($courseid, $simplelessonid) {
+    public function show_page_management_links($courseid,
+            $simplelessonid, $export, $import) {
 
         $html = '';
         $links = array();
@@ -767,6 +768,21 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
                 'simplelessonid' => $simplelessonid));
         $links[] = html_writer::link($url,
                 get_string('autosequencelink', 'mod_simplelesson'));
+
+        if ($export) {
+          $url = new moodle_url('/mod/simplelesson/export_pages.php',
+                array('courseid' => $courseid,
+                'simplelessonid' => $simplelessonid));
+          $links[] = html_writer::link($url,
+                get_string('exportpagelink', 'mod_simplelesson'));
+        }
+        if ($import) {
+          $url = new moodle_url('/mod/simplelesson/import_pages.php',
+                array('courseid' => $courseid,
+                'simplelessonid' => $simplelessonid));
+          $links[] = html_writer::link($url,
+                get_string('importpagelink', 'mod_simplelesson'));
+        }
 
         $html .= html_writer::alist($links, null, 'ul');
         $html .= html_writer::end_div();

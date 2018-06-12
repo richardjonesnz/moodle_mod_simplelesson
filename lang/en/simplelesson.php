@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  * English strings for simplelesson
  *
@@ -31,9 +30,7 @@ defined('MOODLE_INTERNAL') || die();
 $string['modulename'] = 'Simple lesson';
 $string['modulenameplural'] = 'Simple lessons';
 $string['modulename_help'] = 'Use the Simple lesson module for a simple sequential display of pages with an optional index.
-
  The simplelesson module allows the creation and addition of multiple pages of content.
-
 It allows the use of questions from a selected question bank.  User attempt data is recorded.';
 $string['simplelessonfieldset'] = 'Custom example fieldset';
 $string['simplelessonname'] = 'Simple lesson name';
@@ -53,6 +50,7 @@ $string['attemptcompleted'] = 'Simple lesson attempt started';
 $string['simplelesson_settings'] = 'Simplelesson settings';
 $string['simplelesson_title'] = 'Title of this resource';
 $string['showindex'] = 'Show the page index';
+$string['showindex_help'] = 'The page index is optional and will show on the top right of every content page by default. This can be overriden by themes.';
 $string['immediatefeedback'] = 'Immediate feedback';
 $string['immediatecbm'] = 'Immediate feedback with CBM';
 $string['adaptive'] = 'Adaptive feedback';
@@ -60,7 +58,7 @@ $string['behaviour'] = 'Question behaviour';
 $string['behaviour_help'] = 'Immediate feedback has one attempt available and with CBM a certainty must be implemented as well.  With Adaptive feedback the user has multiple tries at each question.  This can only be set on a lesson basis, not per question';
 $string['category_select'] = 'Select category';
 $string['categoryid'] = 'Category';
-$string['categoryid_help'] = 'Choose one category for the questions that can be added to this simplelesson.';
+$string['categoryid_help'] = 'Choose one category for the questions that can be added to this simplelesson.  You can return here later and add other categories from module settings.';
 $string['nocategory'] = 'none';
 $string['unlimited'] = 'Unlimited';
 
@@ -70,7 +68,9 @@ $string['simplelesson:manageattempts'] = 'Manage attempt records';
 $string['simplelesson:addinstance'] = 'Add a new Simple lesson';
 $string['simplelesson:viewreports'] = 'View the reports tab';
 $string['simplelesson:view'] = 'View Simple lesson';
+$string['simplelesson:exportreportpages'] = 'Export report pages';
 $string['simplelesson:exportpages'] = 'Export report pages';
+$string['simplelesson:importpages'] = 'Export report pages';
 
 // Page management.
 $string['simplelesson_editing'] = 'Editing Simple lesson';
@@ -86,6 +86,9 @@ $string['showpage'] = 'Preview page';
 $string['autosequencelink'] = 'Auto-sequence pages';
 $string['sequence_updated'] = 'Page sequences updated';
 $string['hasquestion'] = 'Has question';
+$string['exportpagelink'] = 'Export pages';
+$string['importpagelink'] = 'Import pages';
+
 
 // Question management.
 $string['manage_questions'] = 'Manage questions';
@@ -129,6 +132,7 @@ $string['gotonextpage'] = 'Next';
 $string['gotoprevpage'] = 'Previous';
 $string['page_index_header'] = 'Index';
 $string['preview_completed'] = 'preview completed';
+
 // Reporting.
 $string['moduleid'] = 'id';
 $string['viewtab'] = 'view';
@@ -139,9 +143,16 @@ $string['answer_report'] = 'User responses';
 $string['attempt_report'] = 'User attempts';
 $string['date'] = 'Attempt date';
 $string['lessonname'] = 'Lesson';
+$string['firstname'] = 'First name';
+$string['lastname'] = 'Last name';
+$string['status'] = 'Status';
 $string['sessionscore'] = 'Correct';
 $string['maxscore'] = 'Out of';
+$string['timetaken'] = 'Time taken (s)';
 $string['userreportdownload'] = 'Download user report (csv)';
+$string['attemptid'] = "Attempt";
+$string['questionsummary'] = 'Question';
+$string['action'] = 'Action';
 
 // Admin settings.
 $string['enablereports'] = 'Show reports tab';

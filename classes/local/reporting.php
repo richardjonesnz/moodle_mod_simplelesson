@@ -181,13 +181,21 @@ class reporting  {
      * @return array of column names
      */
     public static function fetch_attempt_report_headers() {
-        $fields = array('firstname' => 'firstname',
-        'lastname' => 'lastname',
-        'date' => 'date',
-        'status' => "status",
-        'sessionscore' => 'sessionscore',
-        'maxscore' => 'maxscore',
-        'timetaken' => 'timetaken');
+        $fields = array(
+                'firstname' =>
+                get_string('firstname', 'mod_simplelesson'),
+                'lastname' =>
+                get_string('lastname', 'mod_simplelesson'),
+                'date' =>
+                get_string('date', 'mod_simplelesson'),
+                'status' =>
+                get_string('status', 'mod_simplelesson'),
+                'sessionscore' =>
+                get_string('sessionscore', 'mod_simplelesson'),
+                'maxscore' =>
+                get_string('maxscore', 'mod_simplelesson'),
+                'timetaken' =>
+                get_string('timetaken', 'mod_simplelesson'));
 
         return $fields;
     }
@@ -243,14 +251,16 @@ class reporting  {
      */
     public static function fetch_answer_report_headers() {
         $fields = array('id' => 'id',
-        'attemptid' => 'attemptid',
-        'firstname' => 'firstname',
-        'lastname' => 'lastname',
-        'date' => 'date',
-        'questionsummary' => 'questionsummary',
-        'rightanswer' => 'rightanswer',
-        'youranswer' => 'youranswer',
-        'timetaken' => 'timetaken');
+        'attemptid' => get_string('attemptid', 'mod_simplelesson'),
+        'firstname' => get_string('firstname', 'mod_simplelesson'),
+        'lastname' => get_string('lastname', 'mod_simplelesson'),
+        'date' => get_string('date', 'mod_simplelesson'),
+        'questionsummary' => get_string('questionsummary',
+                'mod_simplelesson'),
+        'rightanswer' => get_string('rightanswer',
+                'mod_simplelesson'),
+        'youranswer' => get_string('youranswer', 'mod_simplelesson'),
+        'timetaken' => get_string('timetaken', 'mod_simplelesson'));
 
         return $fields;
     }
@@ -407,23 +417,86 @@ class reporting  {
         return \html_writer::table($table);
     }
     /*
-     * Page export - get the columns for attempts report
+     * Attempts export - get the column names
      *
      * @param none
      * @return array of column names
      */
     public static function fetch_course_attempt_report_headers() {
+
         $fields = array('id' => 'id',
-        'firstname' => 'firstname',
-        'lastname' => 'lastname',
-        'lessonname' => 'lessonname',
-        'date' => 'date',
-        'status' => "status",
-        'sessionscore' => 'sessionscore',
-        'maxscore' => 'maxscore',
-        'timetaken' => 'timetaken',
-        'action' => 'action');
+        'firstname' => get_string('firstname', 'mod_simplelesson'),
+        'lastname' => get_string('lastname', 'mod_simplelesson'),
+        'lessonname' => get_string('lessonname', 'mod_simplelesson'),
+        'date' => get_string('date', 'mod_simplelesson'),
+        'status' => get_string('status', 'mod_simplelesson'),
+        'sessionscore' => get_string('sessionscore',
+                'mod_simplelesson'),
+        'maxscore' => get_string('maxscore', 'mod_simplelesson'),
+        'timetaken' => get_string('timetaken', 'mod_simplelesson'),
+        'action' => get_string('action', 'mod_simplelesson'));
 
         return $fields;
+    }
+    /*
+     * Page export - get the column names
+     *
+     * @param none
+     * @return array of column names from simplelesson_pages
+     */
+    public static function fetch_page_headers() {
+        return array('id' =>'id',
+                'simplelessonid' => 'simplelessonid',
+                'sequence' => 'sequence',
+                'prevpageid' => 'prevpageid',
+                'nextpageid' => 'nextpageid',
+                'pagetitle' => 'pagetitle',
+                'pagecontents' => 'pagecontents',
+                'pagecontentsformat' => 'pagecontentsformat',
+                'showindex' => 'showindex',
+                'timecreated' => 'timecreated',
+                'timemodified' => 'timemodified',
+                'qid' => 'qid');
+    }
+    /*
+     * Page export - get the page records, ordered by sequence
+     *
+     * @param $simplelessonid, the simplelesson
+     * @return array of records from simplelesson_pages
+     */
+    public static function fetch_page_data($simplelessonid) {
+        global $DB;
+        $records = $DB->get_records('simplelesson_pages',
+                array('simplelessonid' => $simplelessonid));
+
+        foreach($records as $record) {
+            $record->qid = $DB->get_field('simplelesson_questions',
+                    'qid', array('simplelessonid' => $simplelessonid,
+                    'pageid' => $record->id));
+
+            $filedata = self::get_file_data($record->pagecontents);
+        }
+        //var_dump($records);exit;
+        return $records;
+    }
+    /*
+     * Locate any pluginfiles in the page content
+     *
+     * @param $content, the pagecotent
+     * @return array of filedata
+     */
+    public static function get_file_data($content) {
+        //var_dump($content);exit;
+        $find = "@@PLUGINFILE@@";
+        $filedata = new \stdClass();
+        $text = $content;
+        $fileno = 1;
+        while (strpos($text, $find) !== false) {
+            $filedata[] = 'found_' . $fileno;
+            $pos = strpos($text, $find);
+            $text = substr($text, strlen($find));
+            $fileno++;
+        }
+        return $filedata;
     }
 }

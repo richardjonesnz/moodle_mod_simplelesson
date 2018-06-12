@@ -73,7 +73,7 @@ class mod_simplelesson_mod_form extends moodleform_mod {
         }
 
         // Additional settings for the module.
-        $mform->addElement('static', 'label', get_string('simplelesson_settings', 'mod_simplelesson'));
+        $mform->addElement('header', 'label', get_string('simplelesson_settings', 'mod_simplelesson'));
 
         $mform->addElement('text', 'title', get_string('simplelesson_title', 'mod_simplelesson'));
         $mform->setType('title', PARAM_TEXT);
@@ -82,6 +82,8 @@ class mod_simplelesson_mod_form extends moodleform_mod {
         $mform->addElement('advcheckbox', 'showindex',
                 get_string('showindex', 'mod_simplelesson'));
         $mform->setDefault('showindex', 1);
+        $mform->addHelpButton('showindex', 'showindex',
+                'simplelesson');
 
         // Select the category for the questions that can be added.
         $categories = array();
