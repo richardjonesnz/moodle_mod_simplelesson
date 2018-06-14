@@ -110,11 +110,11 @@ if ($data = $mform->get_data()) {
         questions::update_question_table($data);
         redirect($PAGE->url,
                 get_string('updated', 'core', $data->name), 2,
-                notifications::NOTIFY_SUCCESS);
+                notification::NOTIFY_SUCCESS);
     } else {
         redirect($PAGE->url,
                 get_string('question_exists', 'mod_simplelesson'), 2,
-                notifications::NOTIFY_ERROR);
+                notification::NOTIFY_ERROR);
     }
 }
 

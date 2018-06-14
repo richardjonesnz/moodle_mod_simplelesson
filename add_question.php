@@ -85,7 +85,7 @@ if ($data = $mform->get_data()) {
     }
     redirect($returnmanage,
             get_string('questions_added', 'mod_simplelesson'), 2,
-            notifications::NOTIFY_SUCCESS);
+            notification::NOTIFY_SUCCESS);
 }
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('question_adding', 'mod_simplelesson'), 2);

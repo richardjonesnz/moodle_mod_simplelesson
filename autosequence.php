@@ -40,4 +40,4 @@ pages::fix_page_sequence($simplelessonid);
 // Go back to page where request came from.
 redirect($returnedit,
         get_string('sequence_updated', 'mod_simplelesson'), 2,
-        notifications::NOTIFY_SUCCESS);
+        notification::NOTIFY_SUCCESS);

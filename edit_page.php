@@ -86,7 +86,7 @@ if ($data = $mform->get_data()) {
     // Back to showpage.
     redirect($returnpage,
             get_string('page_updated', 'mod_simplelesson'), 2,
-            notifications::NOTIFY_SUCCESS);
+            notification::NOTIFY_SUCCESS);
 }
 
 $data = new stdClass();

@@ -58,7 +58,7 @@ if (!has_capability('mod/simplelesson:manage', $modulecontext)) {
                 array('simplelessonid' => $simplelessonid));
         redirect($returnview,
                 get_string('max_attempts_exceeded', 'mod_simplelesson'),
-                2, notifications::NOTIFY_ERROR);
+                2, notification::NOTIFY_ERROR);
     }
 }
 // Check for questions.
