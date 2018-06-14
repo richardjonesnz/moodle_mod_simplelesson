@@ -21,7 +21,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 use \mod_simplelesson\local\questions;
-use \core\output\notifications;
+use \core\output\notification;
 require_once('../../config.php');
 require_once($CFG->libdir . '/formslib.php');
 /**

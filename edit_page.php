@@ -23,7 +23,7 @@
  */
 
 use \mod_simplelesson\local\pages;
-use \core\output\notifications;
+use \core\output\notification;
 require_once('../../config.php');
 require_once('edit_page_form.php');
 

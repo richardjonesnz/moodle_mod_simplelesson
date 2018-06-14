@@ -24,7 +24,7 @@
  */
 
 use \mod_simplelesson\local\pages;
-use \core\output\notifications;
+use \core\output\notification;
 require_once('../../config.php');
 defined('MOODLE_INTERNAL') || die();
 $courseid = required_param('courseid', PARAM_INT);
