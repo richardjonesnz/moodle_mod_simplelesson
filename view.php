@@ -27,12 +27,14 @@ use mod_simplelesson\local\pages;
 use mod_simplelesson\local\attempts;
 use mod_simplelesson\event\course_module_viewed;
 use mod_simplelesson\local\reporting;
+use mod_simplelesson\local\questions;
 require_once('../../config.php');
 require_once(dirname(__FILE__).'/lib.php');
 global $DB, $USER;
 // Get a course module or instance id.
 $id = optional_param('id', 0, PARAM_INT);
 $simplelessonid  = optional_param('simplelessonid', 0, PARAM_INT);
+
 
 if ($id) {
     // Course module id.
@@ -102,8 +104,12 @@ $numpages = pages::count_pages($simplelesson->id);
 if ($numpages > 0) {
     // Get the record # for the first page.
     $pageid = pages::get_page_id_from_sequence($simplelesson->id, 1);
+    // Show the attempt link if we have questions.
+    $questionentries = questions::fetch_attempt_questions(
+            $simplelesson->id);
+    $attemptlink = (count($questionentries) > 0);
     echo $renderer->fetch_firstpage_links($course->id,
-            $simplelesson->id, $pageid);
+            $simplelesson->id, $pageid, $attemptlink);
 }
 
 $canmanage = has_capability('mod/simplelesson:manage', $modulecontext);

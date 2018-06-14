@@ -140,7 +140,8 @@ class questions  {
     /**
      * Given a simplelesson id and a page id
      *
-     * @param int $data the question data
+     * @param int $simplelessonid the simplelesson id
+     * @param int $pageid the relevant page id
      * @return boolean true if record exists in questions table
      */
     public static function page_has_question($simplelessonid, $pageid) {

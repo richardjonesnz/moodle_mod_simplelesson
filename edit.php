@@ -68,11 +68,5 @@ if ( ($sequence != 0) && ($action != 'none') ) {
 echo $renderer->page_management($course->id, $moduleinstance,
         $modulecontext);
 
-// Page links. Check import/export permissions
-$export = has_capability('mod/simplelesson:exportpages',
-        $modulecontext);
-$import = has_capability('mod/simplelesson:importpages',
-        $modulecontext);
-echo $renderer->show_page_management_links($courseid, $simplelessonid,
-        $export, $import);
+echo $renderer->show_page_management_links($courseid, $simplelessonid);
 echo $OUTPUT->footer();

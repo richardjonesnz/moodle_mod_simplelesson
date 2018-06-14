@@ -1,7 +1,9 @@
-Modified
+Sources
 ========
-This is modified from Moodle HQ's moodle-mod_newmodule and Justin Hunt's Pairwork activity module for Moodle.  
+This is modified from Moodle HQ's moodle-mod_newmodule and Justin Hunt's Pairwork activity module for Moodle.
 
+Brief description
+=================
 This is hopefully a good basis for a simple lesson module that has basic features as follows:
 
 1.  Supports adding questions from the question bank
@@ -13,12 +15,9 @@ This is hopefully a good basis for a simple lesson module that has basic feature
 For more complex needs (timing, access restrictions, use the Lesson activity module)
 For summative activities use the quiz or lesson.
 
-The current BETA version works in most respects with the remaining challenges:
-
-    Backup and restore don't backup the page contents - an export model like that of mod_glossary will be developed.
-    There is reporting but no grading just yet.
-
-These are being worked on.
+Limitations
+===========
+There is detailed reporting but no grading just yet.
 
 Optional features being considered (please consider making a request, especially if you are a teacher)
 
@@ -27,3 +26,4 @@ Optional features being considered (please consider making a request, especially
 
 Richard Jones
 richardnz@outlook.com
+June 2018
