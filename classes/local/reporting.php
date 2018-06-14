@@ -25,6 +25,8 @@
  */
 
 namespace mod_simplelesson\local;
+require_once($CFG->dirroot.'/config.php');
+require_once($CFG->libdir . '/filelib.php');
 defined('MOODLE_INTERNAL') || die;
 
 class reporting  {
@@ -464,7 +466,7 @@ class reporting  {
      * @param $simplelessonid, the simplelesson
      * @return array of records from simplelesson_pages
      */
-    public static function fetch_page_data($simplelessonid) {
+    public static function fetch_page_data($simplelessonid, $context) {
         global $DB;
         $records = $DB->get_records('simplelesson_pages',
                 array('simplelessonid' => $simplelessonid));
@@ -473,8 +475,9 @@ class reporting  {
             $record->qid = $DB->get_field('simplelesson_questions',
                     'qid', array('simplelessonid' => $simplelessonid,
                     'pageid' => $record->id));
-
-            $filedata = self::get_file_data($record->pagecontents);
+            // Replace image files with hashed data in content
+            $record->pagecontents = self::get_file_data($record->pagecontents,
+                    $context->id, $record->id);
         }
         //var_dump($records);exit;
         return $records;
@@ -482,21 +485,31 @@ class reporting  {
     /*
      * Locate any pluginfiles in the page content
      *
-     * @param $content, the pagecotent
+     * @param $content, the pagecontent
      * @return array of filedata
      */
-    public static function get_file_data($content) {
+    public static function get_file_data($content, $contextid, $pageid) {
         //var_dump($content);exit;
-        $find = "@@PLUGINFILE@@";
-        $filedata = new \stdClass();
-        $text = $content;
-        $fileno = 1;
-        while (strpos($text, $find) !== false) {
-            $filedata[] = 'found_' . $fileno;
-            $pos = strpos($text, $find);
-            $text = substr($text, strlen($find));
-            $fileno++;
+        // Quick check.
+        $find = '@@PLUGINFILE@@/';
+        $pos = strpos($content, $find);
+        if ($pos === false) {
+            return $content;
         }
-        return $filedata;
+         $fs = get_file_storage();
+         $files = $fs->get_area_files($contextid, 'mod_simplelesson', 'pagecontents',
+             $content);
+         var_dump($files);exit;
+
+/*
+        $fs = get_file_storage();
+        $fullpath = "/$contextid/mod_simplelesson/pagecontents/$pageid/mb_quizzes.png";
+        $file = $fs->get_file_by_hash(sha1($fullpath));
+        $filename = $file->get_filename();
+        $filetype = pathinfo($filename, PATHINFO_EXTENSION);
+        $base_64 = 'data:image/' . $filetype . ';base64,' .
+                base64_encode($file->get_content());
+        var_dump($base_64);exit;
+*/
     }
 }

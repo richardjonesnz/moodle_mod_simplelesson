@@ -24,7 +24,6 @@
  */
 defined('MOODLE_INTERNAL') || die;
 require_once($CFG->dirroot . '/mod/simplelesson/backup/moodle2/backup_simplelesson_stepslib.php');
-require_once($CFG->dirroot . '/mod/simplelesson/backup/moodle2/backup_simplelesson_settingslib.php');
 /**
  * Provides the steps to perform one complete backup of the simplelesson instance.
  *

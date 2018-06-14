@@ -72,17 +72,13 @@ class restore_simplelesson_activity_task extends restore_activity_task {
     static public function define_decode_rules() {
         $rules = array();
 
-        $rules[] = new restore_decode_rule('MULTIPAGEVIEWBYID', '/mod/simplelesson/view.php?id=$1', 'course_module');
+        $rules[] = new restore_decode_rule('SIMPLELESSONVIEWBYID', '/mod/simplelesson/view.php?id=$1', 'course_module');
 
         $rules[] = new restore_decode_rule(
-               'MULTIPAGEINDEX',
+               'SIMPLELESSONINDEX',
                '/mod/simplelesson/index.php?id=$1',
                'course');
 
-        $rules[] = new restore_decode_rule(
-                'MULTIPAGESHOWPAGE',
-                '/mod/simplelesson/showpage.php?id=$1&pageid=$2',
-                array('course', 'simplelesson_pages'));
         return $rules;
     }
 

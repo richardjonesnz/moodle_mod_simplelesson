@@ -23,6 +23,7 @@
  * @see https://github.com/moodlehq/moodle-mod_newmodule
  *
  */
+use \mod_simplelesson\local\pages;
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -41,9 +42,24 @@ class restore_simplelesson_activity_structure_step extends restore_activity_stru
      * @return array of {@link restore_path_element}
      */
     protected function define_structure() {
-
+        $userinfo = $this->get_setting_value('userinfo');
         $paths = array();
-        $paths[] = new restore_path_element('simplelesson', '/activity/simplelesson');
+
+        $paths[] = new restore_path_element('simplelesson',
+                '/activity/simplelesson');
+
+        $paths[] = new restore_path_element('simplelesson_page',
+                '/activity/simplelesson/pages/page');
+        // Backup if user info available/selected
+        if ($userinfo) {
+            $paths[] = new restore_path_element(
+                    'simplelesson_attempt',
+                    '/activity/simplelesson/attempts/attempt');
+
+            $paths[] = new restore_path_element(
+                    'simplelesson_answer',
+                    '/activity/simplelesson/answers/answer');
+        }
 
         // Return the paths wrapped into standard activity structure.
         return $this->prepare_activity_structure($paths);
@@ -56,7 +72,6 @@ class restore_simplelesson_activity_structure_step extends restore_activity_stru
      */
     protected function process_simplelesson($data) {
         global $DB;
-
         $data = (object)$data;
         $oldid = $data->id;
         $data->course = $this->get_courseid();
@@ -69,11 +84,6 @@ class restore_simplelesson_activity_structure_step extends restore_activity_stru
             $data->timemodified = time();
         }
 
-        if ($data->grade < 0) {
-            // Scale found, get mapping.
-            $data->grade = -($this->get_mappingid('scale', abs($data->grade)));
-        }
-
         // Create the simplelesson instance.
         $newitemid = $DB->insert_record('simplelesson', $data);
         $this->apply_activity_instance($newitemid);
@@ -81,7 +91,6 @@ class restore_simplelesson_activity_structure_step extends restore_activity_stru
 
     protected function process_simplelesson_page($data) {
         global $DB;
-
         $data = (object)$data;
         $oldid = $data->id;
         $data->simplelessonid =
@@ -91,12 +100,67 @@ class restore_simplelesson_activity_structure_step extends restore_activity_stru
         $this->set_mapping('simplelesson_page', $oldid, $newitemid, true);
 
     }
+    protected function process_simplelesson_attempt($data) {
+        global $DB;
+        $data = (object)$data;
+        $oldid = $data->id;
+        $data->simplelessonid =
+                $this->get_new_parentid('simplelesson');
+
+        $data->userid = $this->get_mappingid('user', $data->userid);
+
+        $newitemid = $DB->insert_record('simplelesson_attempts', $data);
+        $this->set_mapping('simplelesson_attempt', $oldid, $newitemid,
+                true);
+
+    }
+    protected function process_simplelesson_answer($data) {
+        global $DB;
+        $data = (object)$data;
+        $oldid = $data->id;
+        $data->simplelessonid =
+                $this->get_new_parentid('simplelesson');
+
+        $newitemid = $DB->insert_record('simplelesson_answers', $data);
+        $this->set_mapping('simplelesson_answer', $oldid, $newitemid, true);
+
+    }
+
     /**
      * Post-execution actions
      */
     protected function after_execute() {
-        // Add simplelesson related files, no need to match by itemname (just internally handled context).
-        $this->add_related_files('mod_simplelesson', 'intro', null);
-        $this->add_related_files('mod_simplelesson', 'pagecontents', 'simplelesson_pages');
+        global $DB;
+        // Add simplelesson related files.
+        $this->add_related_files('mod_simplelesson', 'intro',
+                null);
+        $this->add_related_files('mod_simplelesson',
+            'pagecontents', 'simplelesson_page');
+
+        // Fix up page id's using the sequence number.
+        $simplelessonid = $this->get_new_parentid('simplelesson');
+
+        // How many pages to fix:
+        $pagecount = pages::count_pages($simplelessonid);
+
+        for ($p = 1; $p <= $pagecount; $p++) {
+            $newpageid = pages::get_page_id_from_sequence($simplelessonid,
+            $p);
+            $nextpageid = ($p == $pagecount) ? 0 :
+                    pages::get_page_id_from_sequence($simplelessonid,
+                            $p + 1);
+            $prevpageid = ($p == 1) ? 0 :
+                    pages::get_page_id_from_sequence($simplelessonid,
+                            $p - 1);
+
+            $DB->set_field('simplelesson_pages', 'nextpageid',
+                    $nextpageid,
+                    array('id' => $newpageid,
+                    'simplelessonid' => $simplelessonid));
+            $DB->set_field('simplelesson_pages', 'prevpageid',
+                    $prevpageid,
+                    array('id' => $newpageid,
+                    'simplelessonid' => $simplelessonid));
+        }
     }
 }

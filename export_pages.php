@@ -40,7 +40,7 @@ require_login();
 require_capability('mod/simplelesson:exportpages', $modulecontext);
 
 $fields = reporting::fetch_page_headers();
-$records = reporting::fetch_page_data($simplelessonid);
+$records = reporting::fetch_page_data($simplelessonid, $modulecontext);
 $filename = clean_filename($moduleinstance->name). '_pages';;
 $dataformat = 'json';
 download_as_dataformat($filename, $dataformat, $fields, $records);

@@ -511,12 +511,8 @@ function mod_simplelesson_question_pluginfile($course, $context, $component,
          $filearea, $qubaid, $slot, $args,
          $forcedownload, array $options = array()) {
 
-    /* require_login($course) - I probably should fix this up.
-     * But it's hard to know how qubaid, slot and so on are
-     * actually used within this callback.  All I know
-     * is that it seems to work.  Quiz does something similar
-     * but with much more complexity.
-     */
+    require_login($course);
+
     $fs = get_file_storage();
     $relativepath = implode('/', $args);
     $fullpath = "/$context->id/$component/$filearea/$relativepath";

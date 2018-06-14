@@ -40,6 +40,10 @@ class backup_simplelesson_activity_structure_step extends backup_activity_struct
     /**
      * Defines the backup structure of the module
      *
+     * We will backup attempts and answers if userdata is requested
+     * but we will not backup questions as the old question
+     * categories will not be available in a new course.
+     *
      * @return backup_nested_element
      */
     protected function define_structure() {
@@ -75,14 +79,8 @@ class backup_simplelesson_activity_structure_step extends backup_activity_struct
                 array('id'),
                 array('simplelessonid', 'qatid', 'attemptid', 'pageid',
                 'maxmark', 'mark', 'questionsummary', 'rightanswer',
-                'youranswer', 'timestarted',
+                'youranswer', 'timetaken', 'timestarted',
                 'timecompleted'));
-
-        $questions = new backup_nested_element('questions');
-        $question = new backup_nested_element('question',
-                array('id'),
-                array('qid', 'pageid', 'simplelessonid',
-                'slot'));
 
         // Build the tree.
         $simplelesson->add_child($pages);
@@ -94,9 +92,6 @@ class backup_simplelesson_activity_structure_step extends backup_activity_struct
         $simplelesson->add_child($answers);
         $answers->add_child($answer);
 
-        $simplelesson->add_child($questions);
-        $questions->add_child($question);
-
         // Define data sources.
         $simplelesson->set_source_table('simplelesson', array('id' => backup::VAR_ACTIVITYID));
 
@@ -104,25 +99,27 @@ class backup_simplelesson_activity_structure_step extends backup_activity_struct
         $page->set_source_table('simplelesson_pages',
                 array('simplelessonid' => backup::VAR_PARENTID));
 
-        // Backup answers.
-        $answer->set_source_table('simplelesson_answers',
-                array('simplelessonid' => backup::VAR_PARENTID));
+        // If there is no user data, don't back up attempts
+        // or answers.
 
-        // Backup questions.
-        $question->set_source_table('simplelesson_questions',
-                array('simplelessonid' => backup::VAR_PARENTID));
-
-        // The attempts table has a userid.
         if ($userinfo) {
+            // Backup attempts - table has a userid.
             $attempt->set_source_table('simplelesson_attempts',
-                    array('simplelessonid' => backup::VAR_PARENTID));
+                    array('simplelessonid' =>
+                    backup::VAR_PARENTID));
+            $attempt->annotate_ids('user', 'userid');
+
+            // Backup answers.
+            $answer->set_source_table('simplelesson_answers',
+                    array('simplelessonid' =>
+                    backup::VAR_PARENTID));
         }
-        $attempt->annotate_ids('user', 'userid');
 
         // Define file annotations.
         $simplelesson->annotate_files('mod_simplelesson', 'intro',
                 null);
-        $page->annotate_files('mod_simplelesson', 'pagecontents', 'id');
+        $page->annotate_files('mod_simplelesson', 'pagecontents',
+                'id');
 
         // Return the root element (simplelesson), wrapped into standard activity structure.
         return $this->prepare_activity_structure($simplelesson);
