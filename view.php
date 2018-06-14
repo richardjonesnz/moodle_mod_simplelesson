@@ -35,7 +35,6 @@ global $DB, $USER;
 $id = optional_param('id', 0, PARAM_INT);
 $simplelessonid  = optional_param('simplelessonid', 0, PARAM_INT);
 
-
 if ($id) {
     // Course module id.
     $cm = get_coursemodule_from_id('simplelesson',

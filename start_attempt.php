@@ -24,6 +24,7 @@ use \mod_simplelesson\local\questions;
 use \mod_simplelesson\local\attempts;
 use \mod_simplelesson\local\pages;
 use \mod_simplelesson\event\attempt_started;
+use \core\output\notifications;
 require_once('../../config.php');
 global $DB, $USER;
 // Fetch URL parameters.
@@ -56,7 +57,8 @@ if (!has_capability('mod/simplelesson:manage', $modulecontext)) {
         $returnview = new moodle_url('/mod/simplelesson/view.php',
                 array('simplelessonid' => $simplelessonid));
         redirect($returnview,
-                get_string('max_attempts_exceeded', 'mod_simplelesson', 2));
+                get_string('max_attempts_exceeded', 'mod_simplelesson'),
+                2, notifications::NOTIFY_ERROR);
     }
 }
 // Check for questions.

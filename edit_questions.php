@@ -21,6 +21,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 use \mod_simplelesson\local\questions;
+use \core\output\notifications;
 require_once('../../config.php');
 require_once($CFG->libdir . '/formslib.php');
 /**
@@ -108,10 +109,12 @@ if ($data = $mform->get_data()) {
             || ($data->pagetitle == 0) ) {
         questions::update_question_table($data);
         redirect($PAGE->url,
-                get_string('updated', 'core', $data->name), 2);
+                get_string('updated', 'core', $data->name), 2,
+                notifications::NOTIFY_SUCCESS);
     } else {
         redirect($PAGE->url,
-                get_string('question_exists', 'mod_simplelesson'), 2);
+                get_string('question_exists', 'mod_simplelesson'), 2,
+                notifications::NOTIFY_ERROR);
     }
 }
 

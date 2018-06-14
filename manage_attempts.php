@@ -58,11 +58,8 @@ if ( ($action == 'delete') && ($attemptid != 0) ) {
     redirect($returnmanage, $message);
 }
 
-$renderer = $PAGE->get_renderer('mod_simplelesson');
-
+$simplelesson = $PAGE->cm;
 echo $OUTPUT->header();
-
 $records = reporting::fetch_course_attempt_data($courseid);
 echo reporting::show_course_attempt_report($records, $courseid);
-
 echo $OUTPUT->footer();

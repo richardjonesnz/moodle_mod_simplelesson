@@ -121,10 +121,10 @@ class questions  {
         return $pagetitles;
     }
     /**
-     * Given a question table id
-     * update the pageid field
+     * Given a question data record
+     * update the pageid field and slot
      *
-     * @param int $data the question data
+     * @param object $data the question data
      * @return none
      */
     public static function update_question_table($data) {

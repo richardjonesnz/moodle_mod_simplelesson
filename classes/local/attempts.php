@@ -79,9 +79,9 @@ class attempts  {
                 'pageid' => $pageid));
     }
     /**
-     * Get the usage id for a simplelesson instance
+     * Get the usage id for a simplelesson attempt
      *
-     * @param $simplelessonid - module instance id
+     * @param $attemptid - module instance id
      * @return $qubaid - the question usage id associated with this lesson
      */
     public static function get_usageid($attemptid) {
@@ -129,8 +129,8 @@ class attempts  {
     /**
      * Return the wanted row from question attempts
      *
-     * @param $qubaid usage id
-     * @param $slot question attempt slot
+     * @param int $qubaid usage id
+     * @param int $slot question attempt slot
      * @return object corresponding row in question attempts
      */
     public static function get_question_attempt_data(
@@ -145,7 +145,7 @@ class attempts  {
     /**
      * Return an array of lesson answers and associated data
      *
-     * @param $attemptid int id of attempt (simplelesson_attempts)
+     * @param int $attemptid int id of attempt (simplelesson_attempts)
      * @return object array with one or more rows of answer data
      */
     public static function get_lesson_answer_data($attemptid) {
@@ -181,14 +181,12 @@ class attempts  {
      */
     public static function set_attempt_start($data) {
         global $DB;
-        return $DB->insert_record(
-                'simplelesson_attempts',
-                $data);
+        return $DB->insert_record('simplelesson_attempts', $data);
     }
     /**
      * Get the user record for an attempt
      *
-     * @param $attemptid the attempt record id
+     * @param int $attemptid the attempt record id
      * @return object - user data from the users table
      */
     public static function get_attempt_user($attemptid) {
@@ -202,8 +200,8 @@ class attempts  {
      * Set status the attempts table
      *
      * Need some constants here: 0, 1 (started), 2 (complete).
-     * @param $attemptid - record id to update
-     * @param $sessionscore - Score for this attempt
+     * @param int $attemptid - record id to update
+     * @param object $sessiondata - Score & time for this attempt
      */
     public static function set_attempt_completed($attemptid,
             $sessiondata) {
@@ -239,8 +237,8 @@ class attempts  {
     /**
      * Get the user attempts at this lesson instance
      *
-     * @param $userid - relevant user
-     * @param $simplelessonid - relevant lesson
+     * @param int $userid - relevant user
+     * @param int $simplelessonid - relevant lesson
      * @return int number of attempts by user
      *         on this lesson and course
      */

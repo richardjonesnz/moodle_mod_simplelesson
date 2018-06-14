@@ -24,6 +24,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 use \mod_simplelesson\local\questions;
+use \core\output\notifications;
 require_once('../../config.php');
 require_once('add_question_form.php');
 
@@ -83,7 +84,8 @@ if ($data = $mform->get_data()) {
         }
     }
     redirect($returnmanage,
-            get_string('questions_added', 'mod_simplelesson'), 2);
+            get_string('questions_added', 'mod_simplelesson'), 2,
+            notifications::NOTIFY_SUCCESS);
 }
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('question_adding', 'mod_simplelesson'), 2);

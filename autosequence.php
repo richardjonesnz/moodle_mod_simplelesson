@@ -24,6 +24,7 @@
  */
 
 use \mod_simplelesson\local\pages;
+use \core\output\notifications;
 require_once('../../config.php');
 defined('MOODLE_INTERNAL') || die();
 $courseid = required_param('courseid', PARAM_INT);
@@ -38,4 +39,5 @@ $returnedit = new moodle_url('/mod/simplelesson/edit.php',
 pages::fix_page_sequence($simplelessonid);
 // Go back to page where request came from.
 redirect($returnedit,
-        get_string('sequence_updated', 'mod_simplelesson'), 2);
+        get_string('sequence_updated', 'mod_simplelesson'), 2,
+        notifications::NOTIFY_SUCCESS);

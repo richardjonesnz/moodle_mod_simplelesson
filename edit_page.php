@@ -23,6 +23,7 @@
  */
 
 use \mod_simplelesson\local\pages;
+use \core\output\notifications;
 require_once('../../config.php');
 require_once('edit_page_form.php');
 
@@ -84,7 +85,8 @@ if ($data = $mform->get_data()) {
 
     // Back to showpage.
     redirect($returnpage,
-            get_string('page_updated', 'mod_simplelesson'), 2);
+            get_string('page_updated', 'mod_simplelesson'), 2,
+            notifications::NOTIFY_SUCCESS);
 }
 
 $data = new stdClass();

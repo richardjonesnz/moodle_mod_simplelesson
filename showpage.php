@@ -102,7 +102,6 @@ if (data_submitted() && confirm_sesskey()) {
     */
     $slot = questions::get_slot($simplelessonid, $pageid);
     $qdata = attempts::get_question_attempt_data($qubaid, $slot);
-    //var_dump($qdata);exit;
     $answerdata = new stdClass();
     $answerdata->simplelessonid = $simplelessonid;
     $answerdata->qatid = $qdata->id;
@@ -118,7 +117,6 @@ if (data_submitted() && confirm_sesskey()) {
     $answerdata->timecompleted = $timenow;
     $answerdata->id = $DB->insert_record('simplelesson_answers',
             $answerdata);
-    //var_dump($answerdata);exit;
     redirect($actionurl);
 } else {
     // Log the page viewed event (but not for every
@@ -172,12 +170,13 @@ if ( ($questionentry) && ($mode == 'attempt') ) {
 
 // If this is the last page, add link to the summary page.
 if (pages::is_last_page($data)) {
-        echo $renderer->show_summary_page_link($courseid, $simplelessonid,
-                $mode, $attemptid, $pageid);
+    echo $renderer->show_summary_page_link($courseid, $simplelessonid,
+            $mode, $attemptid, $pageid);
+} else {
+    // Show the navigation links.
+    echo $renderer->show_page_nav_links($data, $courseid, $mode,
+            $attemptid);
 }
-
-// Show the navigation links.
-echo $renderer->show_page_nav_links($data, $courseid, $mode, $attemptid);
 
 if (has_capability('mod/simplelesson:manage', $modulecontext)) {
     echo $renderer->show_page_edit_links($courseid, $data, 'showpage');

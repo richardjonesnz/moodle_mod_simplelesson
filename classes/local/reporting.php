@@ -25,8 +25,6 @@
  */
 
 namespace mod_simplelesson\local;
-require_once($CFG->dirroot.'/config.php');
-require_once($CFG->libdir . '/filelib.php');
 defined('MOODLE_INTERNAL') || die;
 
 class reporting  {
@@ -107,7 +105,7 @@ class reporting  {
 
         return \html_writer::table($table);
     }
-    /*
+    /**
      * User Report - get the user attempt records for a lesson
      *
      * @param $simplelessonid - lesson to get records for
@@ -176,7 +174,7 @@ class reporting  {
         }
         return \html_writer::table($table);
     }
-    /*
+    /**
      * Page export - get the columns for attempts report
      *
      * @param none
@@ -201,7 +199,7 @@ class reporting  {
 
         return $fields;
     }
-    /*
+    /**
      * User Report - get the user answer records for a lesson
      *
      * @param $simplelessonid - lesson to get records for
@@ -245,7 +243,7 @@ class reporting  {
         }
         return $table;
     }
-    /*
+    /**
      * Page export - get the columns for use answer report
      *
      * @param none
@@ -324,6 +322,14 @@ class reporting  {
 
         return $buttons;
     }
+    /**
+     * Create a report button
+     * @param int $courseid relevant course
+     * @param int $simplelessonid relevant lesson
+     * @param string $type report type
+     * @param string $label button label
+     * @return a button object
+     */
     public static function create_button($courseid,
             $simplelessonid, $type, $label) {
         $pageurl = new \moodle_url('reports.php',
@@ -380,7 +386,8 @@ class reporting  {
     /**
      * Returns HTML to course report of lesson attempts
      *
-     * @param $records - an array of attempt records
+     * @param array $records attempt records
+     * @param int $courseid relevant course id
      * @return string, html table
      */
     public static function show_course_attempt_report($records,
@@ -418,7 +425,7 @@ class reporting  {
         }
         return \html_writer::table($table);
     }
-    /*
+    /**
      * Attempts export - get the column names
      *
      * @param none
@@ -439,77 +446,5 @@ class reporting  {
         'action' => get_string('action', 'mod_simplelesson'));
 
         return $fields;
-    }
-    /*
-     * Page export - get the column names
-     *
-     * @param none
-     * @return array of column names from simplelesson_pages
-     */
-    public static function fetch_page_headers() {
-        return array('id' =>'id',
-                'simplelessonid' => 'simplelessonid',
-                'sequence' => 'sequence',
-                'prevpageid' => 'prevpageid',
-                'nextpageid' => 'nextpageid',
-                'pagetitle' => 'pagetitle',
-                'pagecontents' => 'pagecontents',
-                'pagecontentsformat' => 'pagecontentsformat',
-                'showindex' => 'showindex',
-                'timecreated' => 'timecreated',
-                'timemodified' => 'timemodified',
-                'qid' => 'qid');
-    }
-    /*
-     * Page export - get the page records, ordered by sequence
-     *
-     * @param $simplelessonid, the simplelesson
-     * @return array of records from simplelesson_pages
-     */
-    public static function fetch_page_data($simplelessonid, $context) {
-        global $DB;
-        $records = $DB->get_records('simplelesson_pages',
-                array('simplelessonid' => $simplelessonid));
-
-        foreach($records as $record) {
-            $record->qid = $DB->get_field('simplelesson_questions',
-                    'qid', array('simplelessonid' => $simplelessonid,
-                    'pageid' => $record->id));
-            // Replace image files with hashed data in content
-            $record->pagecontents = self::get_file_data($record->pagecontents,
-                    $context->id, $record->id);
-        }
-        //var_dump($records);exit;
-        return $records;
-    }
-    /*
-     * Locate any pluginfiles in the page content
-     *
-     * @param $content, the pagecontent
-     * @return array of filedata
-     */
-    public static function get_file_data($content, $contextid, $pageid) {
-        //var_dump($content);exit;
-        // Quick check.
-        $find = '@@PLUGINFILE@@/';
-        $pos = strpos($content, $find);
-        if ($pos === false) {
-            return $content;
-        }
-         $fs = get_file_storage();
-         $files = $fs->get_area_files($contextid, 'mod_simplelesson', 'pagecontents',
-             $content);
-         var_dump($files);exit;
-
-/*
-        $fs = get_file_storage();
-        $fullpath = "/$contextid/mod_simplelesson/pagecontents/$pageid/mb_quizzes.png";
-        $file = $fs->get_file_by_hash(sha1($fullpath));
-        $filename = $file->get_filename();
-        $filetype = pathinfo($filename, PATHINFO_EXTENSION);
-        $base_64 = 'data:image/' . $filetype . ';base64,' .
-                base64_encode($file->get_content());
-        var_dump($base_64);exit;
-*/
     }
 }

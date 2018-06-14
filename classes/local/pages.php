@@ -202,7 +202,8 @@ class pages  {
      * @return boolean true if this is the last page
      */
     public static function is_last_page($data) {
-        return ($data->sequence == self::count_pages($data->simplelessonid));
+        return ($data->sequence ==
+                self::count_pages($data->simplelessonid));
     }
     /**
      * Given a simplelesson and sequence number

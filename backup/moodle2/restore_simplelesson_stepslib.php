@@ -50,7 +50,7 @@ class restore_simplelesson_activity_structure_step extends restore_activity_stru
 
         $paths[] = new restore_path_element('simplelesson_page',
                 '/activity/simplelesson/pages/page');
-        // Backup if user info available/selected
+        // Backup if user info available/selected.
         if ($userinfo) {
             $paths[] = new restore_path_element(
                     'simplelesson_attempt',
@@ -140,7 +140,7 @@ class restore_simplelesson_activity_structure_step extends restore_activity_stru
         // Fix up page id's using the sequence number.
         $simplelessonid = $this->get_new_parentid('simplelesson');
 
-        // How many pages to fix:
+        // How many pages to fix?
         $pagecount = pages::count_pages($simplelessonid);
 
         for ($p = 1; $p <= $pagecount; $p++) {
