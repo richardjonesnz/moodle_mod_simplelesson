@@ -50,7 +50,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $capabilities = array(
     'mod/simplelesson:addinstance' => array(
-        'riskbitmask' => RISK_XSS,
+        'riskbitmask' => RISK_SPAM | RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array(
@@ -70,7 +70,7 @@ $capabilities = array(
         ),
     ),
     'mod/simplelesson:manage' => array (
-        'riskbitmask' => RISK_XSS,
+        'riskbitmask' => RISK_SPAM | RISK_XSS | RISK_DATALOSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => array (
@@ -80,7 +80,7 @@ $capabilities = array(
         'clonepermissionsfrom' => 'moodle/course:manageactivities'
     ),
     'mod/simplelesson:manageattempts' => array (
-        'riskbitmask' => RISK_XSS,
+        'riskbitmask' => RISK_PERSONAL | RISK_DATALOSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array (
@@ -89,38 +89,9 @@ $capabilities = array(
         ),
         'clonepermissionsfrom' => 'moodle/course:manageactivities'
     ),
-    'mod/simplelesson:exportpages' => array (
-        'riskbitmask' => RISK_XSS,
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array (
-            'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        ),
-        'clonepermissionsfrom' => 'moodle/course:manageactivities'
-    ),
+
     'mod/simplelesson:viewreportstab' => array (
-        'riskbitmask' => RISK_XSS,
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array (
-            'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        ),
-        'clonepermissionsfrom' => 'moodle/course:manageactivities'
-    ),
-    'mod/simplelesson:exportpages' => array (
-        'riskbitmask' => RISK_XSS,
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array (
-            'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        ),
-        'clonepermissionsfrom' => 'moodle/course:manageactivities'
-    ),
-    'mod/simplelesson:importpages' => array (
-        'riskbitmask' => RISK_XSS,
+        'riskbitmask' => RISK_PERSONAL,
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => array (

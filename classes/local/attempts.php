@@ -90,6 +90,19 @@ class attempts  {
                 'qubaid', array('id' => $attemptid));
     }
     /**
+     * Remove all usage data for all simplelesson instances
+     */
+    public static function remove_all_usage_data() {
+        global $DB;
+
+        $usages = $DB->get_records('question_usages',
+                array('component' => 'mod_simplelesson'));
+        foreach ($usages as $usage) {
+            self::remove_usage_data($usage->id);
+        }
+        return true;
+    }
+    /**
      * Remove the usage id for a simplelesson instance
      * Also clean up Moodle's attempt data as this doesn't
      * seem to get done by question engine.

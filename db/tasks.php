@@ -15,21 +15,24 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines the version and other meta-info about the plugin
+ * Timing for the scheduled_clean cron task
  *
  * @package    mod_simplelesson
- * @copyright  2018 Richard Jones <richardnz@outlook.com>
+ * @copyright  2018 Richard Jones (https://richardnz.net)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @see https://github.com/moodlehq/moodle-mod_newmodule
- * @see https://github.com/justinhunt/moodle-mod_pairwork
+ *
  */
-
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'mod_simplelesson';
-$plugin->version = 2018061504;
-$plugin->release = 'v1.0';
-$plugin->requires = 2017051506; // Designed for Moodle 3.5.
-$plugin->maturity = MATURITY_BETA;
-$plugin->cron = 0;
-$plugin->dependencies = array();
+$tasks = array(
+    // The cron will delete all simplequestion usage records.
+    // Run every week - normally won't have much to do.
+    array('classname' => 'mod_simplelesson\task\scheduled_clean',
+            'blocking' => 0,
+            'minute' => '*',
+            'hour' => '*',
+            'day' => '*',
+            'dayofweek' => '0',
+            'month' => '*'
+    )
+);

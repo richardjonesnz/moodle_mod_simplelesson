@@ -15,21 +15,32 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines the version and other meta-info about the plugin
+ * A scheduled task to clean unwanted question usages.  These
+ * remain when a lesson is aborted unexpectedly by the user.
  *
  * @package    mod_simplelesson
  * @copyright  2018 Richard Jones <richardnz@outlook.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @see https://github.com/moodlehq/moodle-mod_newmodule
  * @see https://github.com/justinhunt/moodle-mod_pairwork
  */
-
+namespace mod_simplelesson\task;
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'mod_simplelesson';
-$plugin->version = 2018061504;
-$plugin->release = 'v1.0';
-$plugin->requires = 2017051506; // Designed for Moodle 3.5.
-$plugin->maturity = MATURITY_BETA;
-$plugin->cron = 0;
-$plugin->dependencies = array();
+/**
+ * The scheduled task.
+ *
+ */
+ class scheduled_clean extends \core\task\scheduled_task {
+    public function get_name() {
+        // Shown in admin screens
+        return get_string('clean_up_usages', 'mod_simplelesson');
+    }
+
+     /**
+     *  Run the cleanup task
+     */
+     public function execute() {
+        return \mod_simplelesson\local\attempts::
+                remove_all_usage_data();
+    }
+}

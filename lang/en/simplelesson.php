@@ -202,3 +202,6 @@ $string['privacy:metadata:simplelesson_attempts:timetaken'] = 'The timetaken to 
 $string['privacy:metadata:simplelesson_answers'] = 'Information about users simplelesson attempts at individual questions including their response and a score.';
 $string['privacy:metadata:simplelesson_answers:mark'] = 'The score of the user answering the question.';
 $string['privacy:metadata:simplelesson_answers:youranswer'] = 'The response of the user to the question.';
+
+// Task.
+$string['clean_up_usages'] = 'Clean old question usages for Simple lesson';
