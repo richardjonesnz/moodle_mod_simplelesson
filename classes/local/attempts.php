@@ -187,6 +187,35 @@ class attempts  {
         return $answerdata;
     }
     /**
+     * Update answer data - or insert new answer record
+     * We need to do this in case an essay question is
+     * saved more than once or in case, in the future, other
+     * behaviours are implemented.
+     *
+     * @param int $attemptid attempt id
+     * @param object $answerdata
+     * @return int id of inserted or updated record
+     */
+    public static function update_answer($answerdata) {
+        global $DB;
+        // Check if answerdata already recorded.
+        $answerrecord = $DB->get_record('simplelesson_answers',
+                array('attemptid' => $answerdata->attemptid),
+                'id', IGNORE_MISSING);
+
+        if ($answerrecord) {
+            // Update the record.
+            $answerdata->id = $answerrecord->id;
+            $DB->update_record('simplelesson_answers',
+                    $answerdata);
+        } else {
+            $answerdata->id = $DB->insert_record(
+                    'simplelesson_answers', $answerdata);
+        }
+        return $answerdata->id;
+    }
+
+    /**
      * Make an entry in the attempts table
      *
      * @param $data data to insert (from start_attempt.php)

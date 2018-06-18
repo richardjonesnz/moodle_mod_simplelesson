@@ -108,6 +108,7 @@ if (data_submitted() && confirm_sesskey()) {
     $slot = questions::get_slot($simplelessonid, $pageid);
     $qdata = attempts::get_question_attempt_data($qubaid, $slot);
     $answerdata = new stdClass();
+    $answerdata->id = 0;
     $answerdata->simplelessonid = $simplelessonid;
     $answerdata->qatid = $qdata->id;
     $answerdata->attemptid = $attemptid;
@@ -125,8 +126,7 @@ if (data_submitted() && confirm_sesskey()) {
     $answerdata->timetaken = 0;
     $answerdata->timestarted = $starttime;
     $answerdata->timecompleted = $timenow;
-    $answerdata->id = $DB->insert_record('simplelesson_answers',
-            $answerdata);
+    $answerdata->id = attempts::update_answer($answerdata);
     redirect($actionurl);
 } else {
     // Log the page viewed event (but not for every

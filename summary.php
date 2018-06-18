@@ -64,6 +64,7 @@ if ($mode == 'attempt') {
     $answerdata = attempts::get_lesson_answer_data($attemptid);
     $questionentries = questions::fetch_attempt_questions(
             $simplelesson->id);
+    echo 'answers: ' . count($answerdata) . ' entries: ' . count($questionentries);
     $completed = ( count($questionentries) == count($answerdata) );
     // Is it complete?
     if (!$completed) {

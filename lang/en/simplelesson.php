@@ -185,6 +185,7 @@ $string['unlimited_attempts'] = 'Unlimited attempts';
 $string['no_questions'] = 'There are no questions to attempt (use preview)';
 $string['finishreview'] = 'Finish review';
 $string['answerquestions'] = 'Please answer all the questions';
+$string['saveanswer'] = 'Save essay';
 
 // Attempts management.
 $string['manage_attempts'] = 'Manage attempts';
