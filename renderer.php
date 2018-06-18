@@ -669,12 +669,12 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      * @return string, html representation of the question
      */
     public function render_question_form(
-            $actionurl, $options, $slot, $quba, $starttime) {
+            $actionurl, $options, $slot, $quba,
+            $starttime, $qtype) {
 
         $html = html_writer::start_div('mod_simplelesson_question');
         $headtags = '';
         $headtags .= $quba->render_question_head_html($slot);
-        $headtags .= question_engine::initialise_js();
 
         // Start the question form.
         $html .= html_writer::start_tag('form',
@@ -697,13 +697,19 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         // Output the question. slot = display number.
         $html .= $quba->render_question($slot, $options);
 
+        // If it's an essay question, output a save button.
+        if ($qtype == 'essay') {
+            $html .= $this->output->single_button($actionurl,
+                    get_string('saveanswer','mod_simplelesson'));
+        }
+
         // Finish the question form.
         $html .= html_writer::start_tag(
                 'mod_simplelesson_action_buttons');
         $html .= html_writer::end_tag('div');
         $html .= html_writer::end_tag('form');
-        $html .= html_writer::end_div('div');
 
+        $html .= html_writer::end_div('div');
         return $html;
     }
     /**

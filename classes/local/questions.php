@@ -167,6 +167,22 @@ class questions  {
                 'pageid' => $pageid));
     }
     /**
+     * Given a simplelessonid and pageid
+     * return the question number
+     *
+     * @param int $simplelesson the module instance
+     * @param int $pageid the page
+     * @return int question id from the table
+     */
+    public static function get_questionid($simplelessonid,
+            $pageid) {
+        global $DB;
+        return $DB->get_field('simplelesson_questions',
+                'qid', array(
+                'simplelessonid' => $simplelessonid,
+                'pageid' => $pageid));
+    }
+    /**
      * Given a question id find the name
      *
      * @param int $qid - the question id
@@ -178,5 +194,18 @@ class questions  {
                   array('id' => $qid),
                   'name', MUST_EXIST);
         return $data->name;
+    }
+    /**
+     * Given a question id find the type
+     *
+     * @param int $qid - the question id
+     * @return string $type the type of question
+     */
+    public static function fetch_question_type($qid) {
+        global $DB;
+        $data = $DB->get_record('question',
+                  array('id' => $qid),
+                  'qtype', MUST_EXIST);
+        return $data->qtype;
     }
 }

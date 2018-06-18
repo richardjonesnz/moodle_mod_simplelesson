@@ -74,6 +74,10 @@ if ( ($questionentry) && ($mode == 'attempt') ) {
 
     // Display and feedback options.
     $options = display_options::get_options($feedback);
+
+    // Question type (for essay questions).
+    $qid = questions::get_questionid($simplelessonid, $pageid);
+    $qtype = questions::fetch_question_type($qid);
 }
 $actionurl = new moodle_url ('/mod/simplelesson/showpage.php',
         array('courseid' => $courseid,
@@ -84,6 +88,7 @@ $actionurl = new moodle_url ('/mod/simplelesson/showpage.php',
 
 // Check if data submitted.
 if (data_submitted() && confirm_sesskey()) {
+
     $timenow = time();
     $transaction = $DB->start_delegated_transaction();
     $quba = \question_engine::load_questions_usage_by_activity($qubaid);
@@ -111,7 +116,12 @@ if (data_submitted() && confirm_sesskey()) {
     $answerdata->mark = 0;
     $answerdata->questionsummary = $qdata->questionsummary;
     $answerdata->rightanswer = $qdata->rightanswer;
-    $answerdata->youranswer = $qdata->responsesummary;
+    if ($qtype == 'essay') {
+        $submitteddata = $quba->extract_responses($slot);
+        $answerdata->youranswer = $submitteddata['answer'];
+    } else {
+        $answerdata->youranswer = $qdata->responsesummary;
+    }
     $answerdata->timetaken = 0;
     $answerdata->timestarted = $starttime;
     $answerdata->timecompleted = $timenow;
@@ -164,19 +174,20 @@ echo $renderer->show_page($data);
 
 if ( ($questionentry) && ($mode == 'attempt') ) {
     $slot = questions::get_slot($simplelessonid, $pageid);
+
     echo $renderer->render_question_form($actionurl, $options,
-            $slot, $quba, time());
+            $slot, $quba, time(), $qtype);
 }
 
 // If this is the last page, add link to the summary page.
 if (pages::is_last_page($data)) {
     echo $renderer->show_summary_page_link($courseid, $simplelessonid,
             $mode, $attemptid, $pageid);
-} else {
-    // Show the navigation links.
-    echo $renderer->show_page_nav_links($data, $courseid, $mode,
-            $attemptid);
 }
+
+// Show the navigation links.
+echo $renderer->show_page_nav_links($data, $courseid, $mode,
+        $attemptid);
 
 if (has_capability('mod/simplelesson:manage', $modulecontext)) {
     echo $renderer->show_page_edit_links($courseid, $data, 'showpage');
