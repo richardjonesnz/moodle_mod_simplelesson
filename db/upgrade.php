@@ -39,9 +39,27 @@ defined('MOODLE_INTERNAL') || die();
  * @param int $oldversion
  * @return bool
  */
+
 function xmldb_simplelesson_upgrade($oldversion) {
     global $DB;
 
     $dbman = $DB->get_manager();
+
+    if ($oldversion < 2018061902) {
+
+    // Define field allowincomplete to be added.
+    // Used to check if incomplete attempts.
+        $table = new xmldb_table('simplelesson');
+        $field = new xmldb_field('allowincomplete',
+                XMLDB_TYPE_INTEGER, '4',
+                XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0',
+                'showindex');
+        // Add field course.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2018061902, 'simplelesson');
+    }
     return true;
 }

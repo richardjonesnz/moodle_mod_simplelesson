@@ -39,3 +39,6 @@
 .mod_simplelesson_question .info {
     display:none;
 }
+.mod_simplelesson_save_button {
+    padding-left:140px;
+}

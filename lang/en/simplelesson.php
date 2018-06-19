@@ -51,6 +51,8 @@ $string['simplelesson_settings'] = 'Simplelesson settings';
 $string['simplelesson_title'] = 'Title of this resource';
 $string['showindex'] = 'Show the page index';
 $string['showindex_help'] = 'The page index is optional and will show on the top right of every content page by default. This can be overriden by themes.';
+$string['allowincomplete'] = 'Allow incomplete attempts';
+$string['allowincomplete_help'] = 'Check to allow students to quit to the review page without being forced to respond to all questions.';
 $string['immediatefeedback'] = 'Immediate feedback';
 $string['immediatecbm'] = 'Immediate feedback with CBM';
 $string['adaptive'] = 'Adaptive feedback';
@@ -157,8 +159,6 @@ $string['action'] = 'Action';
 // Admin settings.
 $string['enablereports'] = 'Show reports tab';
 $string['enablereports_desc'] = 'Check to allow teachers to see reports';
-$string['enableindex'] = 'Show page index';
-$string['enableindex_desc'] = 'Check to show page index';
 
 // Attempts.
 $string['maxattempts'] = "Max attempts";

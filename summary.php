@@ -58,15 +58,20 @@ $renderer = $PAGE->get_renderer('mod_simplelesson');
     Mode is either preview or attempt.
 */
 if ($mode == 'attempt') {
-
+    $answerdata = attempts::get_lesson_answer_data(
+            $attemptid);
     // Summary data for this attempt by this user.
     // If all questions answered, these should be the same.
-    $answerdata = attempts::get_lesson_answer_data($attemptid);
-    $questionentries = questions::fetch_attempt_questions(
-            $simplelesson->id);
-    echo 'answers: ' . count($answerdata) . ' entries: ' . count($questionentries);
-    $completed = ( count($questionentries) == count($answerdata) );
-    // Is it complete?
+    if (!$moduleinstance->allowincomplete) {
+        // If not allowed to be incomplete, we check.
+        $questionentries = questions::fetch_attempt_questions(
+                $simplelesson->id);
+        $completed = ( count($questionentries) ==
+                count($answerdata) );
+    } else {
+        $completed = true;
+    }
+    // Is it complete, do we care?
     if (!$completed) {
         $firstpage =
                 pages::get_page_id_from_sequence($simplelessonid, 1);

@@ -699,8 +699,11 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
 
         // If it's an essay question, output a save button.
         if ($qtype == 'essay') {
+            $html .= html_writer::start_div(
+                    'mod_simplelesson_save_button');
             $html .= $this->output->single_button($actionurl,
                     get_string('saveanswer','mod_simplelesson'));
+            $html .= html_writer::end_div();
         }
 
         // Finish the question form.
