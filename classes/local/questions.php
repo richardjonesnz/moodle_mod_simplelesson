@@ -71,7 +71,8 @@ class questions  {
      */
     public static function fetch_questions($simplelessonid) {
         global $DB;
-        $sql = "SELECT s.id, s.qid, s.pageid, q.name, q.questiontext, q.defaultmark
+        $sql = "SELECT s.id, s.qid, s.pageid, s.score,
+                       q.name, q.questiontext
                   FROM {simplelesson_questions} s
                   JOIN {question} q ON s.qid = q.id
                  WHERE s.simplelessonid = :slid";
@@ -131,6 +132,9 @@ class questions  {
         global $DB;
         $DB->set_field('simplelesson_questions',
                 'pageid', $data->pagetitle,
+                array('id' => $data->id));
+        $DB->set_field('simplelesson_questions',
+                'score', $data->score,
                 array('id' => $data->id));
         // Remove the slot number too.
         $DB->set_field('simplelesson_questions',
@@ -207,5 +211,20 @@ class questions  {
                   array('id' => $qid),
                   'qtype', MUST_EXIST);
         return $data->qtype;
+    }
+    /**
+     * Given a question id find the score assigned
+     *
+     * @param int $qid - the question id
+     * @return int $score the score allocated by the teacher
+     */
+    public static function fetch_question_score($simplelessonid,
+            $pageid) {
+        global $DB;
+        $data = $DB->get_record('simplelesson_questions',
+                  array('simplelessonid' => $simplelessonid,
+                  'pageid' => $pageid),
+                  'score', MUST_EXIST);
+        return $data->score;
     }
 }

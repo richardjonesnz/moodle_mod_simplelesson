@@ -582,11 +582,13 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         get_string('qnumber', 'mod_simplelesson'),
         get_string('question_name', 'mod_simplelesson'),
         get_string('question_text', 'mod_simplelesson'),
+        get_string('questionscore', 'mod_simplelesson'),
         get_string('pagetitle', 'mod_simplelesson'),
         get_string('setpage', 'mod_simplelesson'));
         $table->align =
-                array('left', 'left', 'left', 'left', 'left');
-        $table->wrap = array('nowrap', '', '', 'nowrap', 'nowrap');
+                array('left', 'left', 'left', 'right', 'left', 'left');
+        $table->wrap = array('nowrap', '', '', 'nowrap', 'nowrap',
+                    'nowrap');
         $table->tablealign = 'center';
         $table->cellspacing = 0;
         $table->cellpadding = '2px';
@@ -603,6 +605,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
             } else {
                 $data[] = $question->questiontext;
             }
+            $data[] = $question->score;
             if ($question->pageid == 0) {
                 $data[] = '-';
             } else {

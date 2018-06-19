@@ -117,16 +117,20 @@ if (data_submitted() && confirm_sesskey()) {
     $answerdata->mark = 0;
     $answerdata->questionsummary = $qdata->questionsummary;
     $answerdata->rightanswer = $qdata->rightanswer;
-    if ($qtype == 'essay') {
-        $submitteddata = $quba->extract_responses($slot);
-        $answerdata->youranswer = $submitteddata['answer'];
-    } else {
-        $answerdata->youranswer = $qdata->responsesummary;
-    }
     $answerdata->timetaken = 0;
     $answerdata->timestarted = $starttime;
     $answerdata->timecompleted = $timenow;
-    $answerdata->id = attempts::update_answer($answerdata);
+    if ($qtype == 'essay') {
+        // Special case, has additional save option.
+        $submitteddata = $quba->extract_responses($slot);
+        $answerdata->youranswer = $submitteddata['answer'];
+        // Save might be done several times.
+        $answerdata->id = attempts::update_answer($answerdata);
+    } else {
+        $answerdata->youranswer = $qdata->responsesummary;
+        $answerdata->id = $DB->insert_record(
+                'simplelesson_answers', $answerdata);
+    }
     redirect($actionurl);
 } else {
     // Log the page viewed event (but not for every

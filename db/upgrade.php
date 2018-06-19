@@ -61,5 +61,20 @@ function xmldb_simplelesson_upgrade($oldversion) {
 
         upgrade_mod_savepoint(true, 2018061902, 'simplelesson');
     }
+    if ($oldversion < 2018061903) {
+
+        // Define field score for a question.
+        $table = new xmldb_table('simplelesson_questions');
+        $field = new xmldb_field('score',
+                XMLDB_TYPE_INTEGER, '10',
+                XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0',
+                'slot');
+        // Add field course.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2018061903, 'simplelesson');
+    }
     return true;
 }

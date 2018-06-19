@@ -34,17 +34,24 @@ class simplelesson_pagechanger_form extends moodleform {
     public function definition() {
         global $CFG;
         $mform = $this->_form;
-        // Just the one field - select a page title.
+        // Select a page title.
         $mform->addElement('select', 'pagetitle',
                 get_string('pagetitle', 'mod_simplelesson'),
                 $this->_customdata['page_titles']);
+
+        $mform->addElement('text', 'score',
+                get_string('questionscore', 'mod_simplelesson'));
+        $mform->setType('score', PARAM_INT);
 
         $mform->addElement('hidden', 'courseid',
                 $this->_customdata['courseid']);
         $mform->addElement('hidden', 'simplelessonid',
                 $this->_customdata['simplelessonid']);
+        $mform->addElement('hidden', 'actionitem',
+                $this->_customdata['actionitem']);
         $mform->setType('courseid', PARAM_INT);
         $mform->setType('simplelessonid', PARAM_INT);
+        $mform->setType('actionitem', PARAM_INT);
 
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
@@ -92,7 +99,8 @@ $pagetitles = questions::fetch_all_page_titles($simplelessonid);
 $mform = new simplelesson_pagechanger_form(null,
         array('courseid' => $courseid,
         'simplelessonid' => $simplelessonid,
-        'page_titles' => $pagetitles));
+        'page_titles' => $pagetitles,
+        'actionitem' => $actionitem));
 
 if ($mform->is_cancelled()) {
     redirect($pageurl, get_string('cancelled'), 2);
@@ -101,8 +109,8 @@ if ($mform->is_cancelled()) {
 
 /* If we have data, save it (if it isn't there already)
  * We only allow one question per page.
- * However, we still want to update the table if the question is de-selected
- * using the "none" option.
+ * However, we still want to update the table if the question
+ * is de-selected using the "none" option.
 */
 if ($data = $mform->get_data()) {
     if (!questions::page_has_question($simplelessonid, $data->pagetitle)
@@ -112,9 +120,18 @@ if ($data = $mform->get_data()) {
                 get_string('updated', 'core', $data->name), 2,
                 notification::NOTIFY_SUCCESS);
     } else {
-        redirect($PAGE->url,
-                get_string('question_exists', 'mod_simplelesson'), 2,
-                notification::NOTIFY_ERROR);
+        // If there's a question we can update the existing.
+        if ($data->qid == $actionitem) {
+            questions::update_question_table($data);
+            redirect($PAGE->url,
+                    get_string('updated', 'core', $data->name), 2,
+                    notification::NOTIFY_SUCCESS);
+        } else {
+            redirect($PAGE->url,
+                    //get_string('question_exists', 'mod_simplelesson'),
+                    $data->qid . ' : ' . $actionitem,
+                    2, notification::NOTIFY_ERROR);
+        }
     }
 }
 

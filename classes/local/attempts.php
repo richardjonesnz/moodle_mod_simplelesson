@@ -91,10 +91,13 @@ class attempts  {
     }
     /**
      * Remove all usage data for all simplelesson instances
+     * This is a scheduled task under admin control.
      */
     public static function remove_all_usage_data() {
         global $DB;
-
+        // Data is removed from Moodle tables, not from
+        // our plugin's tables.  The data can be left
+        // when the user aborts an attempt improperly.
         $usages = $DB->get_records('question_usages',
                 array('component' => 'mod_simplelesson'));
         foreach ($usages as $usage) {
@@ -105,7 +108,7 @@ class attempts  {
     /**
      * Remove the usage id for a simplelesson instance
      * Also clean up Moodle's attempt data as this doesn't
-     * seem to get done by question engine.
+     * always seem to get done by question engine.
      *
      * Will also make it easier when dealing with GDPR.
      *
@@ -174,8 +177,16 @@ class attempts  {
             $data->pagename = pages::get_page_title($data->pageid);
 
             // If correct, maxmarks (may need to do more later).
+
+            // Get the score associated with this question.
+            $qscore = questions::fetch_question_score(
+                    $data->simplelessonid, $data->pageid);
+            // Check if the user has allocated a specific mark
+            // from the question management page.
+            $qscore = ($qscore == 0) ? $data->maxmark : $qscore;
+            // We may want to deal with partial answers later.
             if ($data->youranswer == $data->rightanswer) {
-                $data->mark = (int) $data->maxmark;
+                $data->mark = (int) $data->maxmark * $qscore;
             } else {
                 $data->mark = 0;
             }

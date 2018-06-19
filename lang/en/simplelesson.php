@@ -106,6 +106,7 @@ $string['select_questions'] = 'Select questions';
 $string['selecting_page'] = 'Select the page for this question.';
 $string['editing_question_page'] = 'Select the page';
 $string['question_exists'] = 'That page has a question already';
+$string['questionscore'] = "Score for this question (integer)";
 
 // Page editing.
 $string['edit_page'] = 'Edit page';

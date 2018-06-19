@@ -60,12 +60,15 @@ $renderer = $PAGE->get_renderer('mod_simplelesson');
 if ($mode == 'attempt') {
     $answerdata = attempts::get_lesson_answer_data(
             $attemptid);
-    // Summary data for this attempt by this user.
-    // If all questions answered, these should be the same.
+
+    // If not allowed to be incomplete, we check.
     if (!$moduleinstance->allowincomplete) {
-        // If not allowed to be incomplete, we check.
+
+        // This should give us the questions.
         $questionentries = questions::fetch_attempt_questions(
                 $simplelesson->id);
+
+        // If all questions answered, these should be the same.
         $completed = ( count($questionentries) ==
                 count($answerdata) );
     } else {
@@ -93,7 +96,7 @@ if ($mode == 'attempt') {
     echo get_string('summary_user', 'mod_simplelesson', $name);
     echo $renderer->lesson_summary($answerdata);
 
-    // Log the event.
+    // Log the completion event.
     $event = attempt_completed::create(array(
         'objectid' => $attemptid,
         'context' => $modulecontext,
