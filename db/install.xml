@@ -55,7 +55,7 @@
         <FIELD NAME="pageid" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="simplelesson page this question belongs to (if any)"/>
         <FIELD NAME="simplelessonid" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="simplelesson this question belongs to (if any)"/>
         <FIELD NAME="slot" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="question usage attempt slot"/>
-        <FIELD NAME="score" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="question score (user defined)"/>
+        <FIELD NAME="score" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="question score (user defined)"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

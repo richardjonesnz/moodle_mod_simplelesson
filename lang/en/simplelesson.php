@@ -98,18 +98,20 @@ $string['question_editing'] = 'Editing questions';
 $string['qnumber'] = 'Question number';
 $string['question_name'] = 'Question name';
 $string['question_text'] = 'Question text';
-$string['setpage'] = 'Page for question';
+$string['setpage'] = 'Allocate';
 $string['add_question'] = 'Add question';
 $string['question_adding'] = 'Adding questions to Simple lesson';
 $string['questions_added'] = 'Added questions';
+$string['add_question_page'] = 'Check the boxes to add selected questions to this Simple lesson.  You can change the category in settings to add questions from multiple categories.';
 $string['select_questions'] = 'Select questions';
-$string['selecting_page'] = 'Select the page for this question.';
-$string['editing_question_page'] = 'Select the page';
+$string['selecting_page'] = 'Select the page for question: ';
 $string['question_exists'] = 'That page has a question already';
 $string['questionscore'] = "Score for this question (integer)";
+$string['edit_question_page'] = 'Click the Allocate link in the last column to allocate questions to pages (only one question per page is permitted.  You can also set the score for a question.';
 
 // Page editing.
 $string['edit_page'] = 'Edit page';
+$string['page_editing'] = 'Use this page to organize your Simple lesson.  You can edit, view, delete and move pages from here (use the icons under Actions).  Autosequencing will put the sequence numbers into a logical order. ';
 $string['add_page'] = 'Add page';
 $string['delete_page'] = 'Delete page';
 $string['page_adding'] = 'Add a new page';
@@ -124,7 +126,6 @@ $string['numpages'] = 'Number of pages: {$a}';
 $string['gotoaddpage'] = 'Add page';
 $string['gotoeditpage'] = 'Edit page';
 $string['gotodeletepage'] = 'Delete page';
-$string['page_editing'] = 'Editing page';
 $string['page_updated'] = 'Page updated';
 $string['page_deleted'] = 'Page deleted';
 

@@ -41,6 +41,7 @@ class simplelesson_pagechanger_form extends moodleform {
 
         $mform->addElement('text', 'score',
                 get_string('questionscore', 'mod_simplelesson'));
+        $mform->setDefault('score', 1);
         $mform->setType('score', PARAM_INT);
 
         $mform->addElement('hidden', 'courseid',
@@ -90,8 +91,6 @@ $PAGE->set_pagelayout('course');
 
 $renderer = $PAGE->get_renderer('mod_simplelesson');
 
-echo $OUTPUT->heading(
-        get_string('question_editing', 'mod_simplelesson'), 2);
 $questions = questions::fetch_questions($simplelessonid);
 $pagetitles = questions::fetch_all_page_titles($simplelessonid);
 
@@ -120,16 +119,17 @@ if ($data = $mform->get_data()) {
                 get_string('updated', 'core', $data->name), 2,
                 notification::NOTIFY_SUCCESS);
     } else {
-        // If there's a question we can update the existing.
-        if ($data->qid == $actionitem) {
+        // If this page has this question we can update.
+        if ($data->qid == questions::get_questionid($simplelessonid,
+                $data->pagetitle)) {
             questions::update_question_table($data);
             redirect($PAGE->url,
-                    get_string('updated', 'core', $data->name), 2,
+                    get_string('updated', 'core', $data->pagetitle), 2,
                     notification::NOTIFY_SUCCESS);
         } else {
+            // Otherwise we can't add it.
             redirect($PAGE->url,
-                    //get_string('question_exists', 'mod_simplelesson'),
-                    $data->qid . ' : ' . $actionitem,
+                    get_string('question_exists', 'mod_simplelesson'),
                     2, notification::NOTIFY_ERROR);
         }
     }
@@ -153,15 +153,18 @@ if ($action == "edit") {
     $mform->set_data($data);
     echo $OUTPUT->header();
     echo $OUTPUT->heading(
-        get_string('selecting_page', 'mod_simplelesson'), 4);
-        echo get_string('editing_question_page',
-                'mod_simplelesson', $data->name);
+        get_string('selecting_page', 'mod_simplelesson') .
+        $data->name, 3);
+        echo '<br />';
+        echo 'q: ' . $data->qid;
         $mform->display();
         echo $OUTPUT->footer();
         return;
 }
 echo $OUTPUT->header();
-
+echo $OUTPUT->heading(
+        get_string('question_editing', 'mod_simplelesson'), 2);
+echo get_string('edit_question_page', 'mod_simplelesson');
 // Output list of questions.
 $questions = questions::fetch_questions($simplelessonid);
 echo $renderer->question_management(

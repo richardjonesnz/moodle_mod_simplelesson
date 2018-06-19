@@ -89,5 +89,7 @@ if ($data = $mform->get_data()) {
 }
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('question_adding', 'mod_simplelesson'), 2);
+echo get_string('add_question_page', 'mod_simplelesson');
+echo '<br /><br />';
 $mform->display();
 echo $OUTPUT->footer();

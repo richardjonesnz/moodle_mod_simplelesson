@@ -52,6 +52,8 @@ $renderer = $PAGE->get_renderer('mod_simplelesson');
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('simplelesson_editing',
         'mod_simplelesson'), 2);
+echo get_string('page_editing', 'mod_simplelesson');
+echo '<br />';
 
 /*
  * Check the action:

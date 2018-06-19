@@ -23,6 +23,7 @@
 use \mod_simplelesson\local\pages;
 use \mod_simplelesson\local\questions;
 use \mod_simplelesson\local\reporting;
+use \mod_simplelesson\local\display_options;
 
 namespace mod_simplelesson\local;
 defined('MOODLE_INTERNAL') || die;
@@ -176,29 +177,84 @@ class attempts  {
             // Add the page title.
             $data->pagename = pages::get_page_title($data->pageid);
 
-            // get the question id:
-            $qid = questions::get_questionid(
+            // get the required question data:
+            $data->qid = questions::get_questionid(
                     $data->simplelessonid, $data->pageid);
-            $data->question = questions::fetch_question_name($qid);
+            $data->question = questions::fetch_question_name(
+                    $data->qid);
+            $data->qtype = questions::fetch_question_type(
+                    $data->qid);
 
             // Get the score associated with this question.
             $qscore = questions::fetch_question_score(
                     $data->simplelessonid, $data->pageid);
+
             // Check if the user has allocated a specific mark
             // from the question management page.
             $qscore = ($qscore == 0) ? $data->maxmark : $qscore;
-            // We may want to deal with partial answers later.
-            if ($data->youranswer == $data->rightanswer) {
-                $data->mark = (int) $data->maxmark * $qscore;
-            } else {
-                $data->mark = 0;
-            }
+
+            // Calculate a score for the question.
+            $fraction_right = self::mark_answer($data);
+            $data->mark = round($fraction_right * $qscore, 2);
 
             // Calculate the elapsed time (s).
             $data->timetaken = (int) ($data->timecompleted
                     - $data->timestarted);
         }
         return $answerdata;
+    }
+    /**
+     * Calculate a mark for the question.
+     *
+     * @param object $data - answer data from get_lesson_answer_data
+     * @return real a fractional mark.
+     */
+    public static function mark_answer($data) {
+        global $DB;
+
+        $default = ($data->rightanswer == $data->youranswer) ? 1.0 : 0.0;
+
+        switch ($data->qtype) {
+
+            case 'truefalse' :
+            case 'multichoice' :
+                return $default;
+            break;
+
+            case 'gapselect' :
+                // Don't evaluate unless necessary
+                if ($default == 0.0) {
+                    $answers = explode('{', $data->rightanswer);
+                    $responses = explode('{', $data->youranswer);
+                    $correct = 0.0;
+                    for ($n = 0; $n < count($answers); $n++) {
+                        $correct += ($answers[$n] === $responses[$n]);
+                    }
+                    return 1.0 / $correct;
+                } else {
+                    return $default;
+                }
+
+                case 'match' :
+                if ($default == 0.0) {
+                    $answers = explode('->', $data->rightanswer);
+                    $responses = explode('->', $data->youranswer);
+                    $correct = 0.0;
+                    for ($n = 0; $n < count($answers); $n++) {
+                        $correct += ($answers[$n] === $responses[$n]);
+                    }
+                    return 1.0 / $correct;
+                } else {
+                    return $default;
+                }
+
+
+
+            default :
+                return $default;
+        }
+
+
     }
     /**
      * Update answer data - or insert new answer record
