@@ -739,8 +739,8 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
 
         $table->align =
                 array('left', 'left',
-                'left', 'left', 'left', 'left', 'left');
-        $table->wrap = array('', '', '', '', '', '', '');
+                'left', 'left', 'left', 'left');
+        $table->wrap = array('', '', '', '', '', '');
         $table->tablealign = 'center';
         $table->cellspacing = 0;
         $table->cellpadding = '2px';
@@ -748,7 +748,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $table->data = array();
         foreach ($answerdata as $answer) {
             $data = array();
-            $data[] = $answer->questionsummary;
+            $data[] = $answer->question;
             $data[] = $answer->pagename;
             $data[] = $answer->rightanswer;
             $data[] = $answer->youranswer;

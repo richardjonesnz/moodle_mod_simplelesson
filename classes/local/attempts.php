@@ -176,7 +176,10 @@ class attempts  {
             // Add the page title.
             $data->pagename = pages::get_page_title($data->pageid);
 
-            // If correct, maxmarks (may need to do more later).
+            // get the question id:
+            $qid = questions::get_questionid(
+                    $data->simplelessonid, $data->pageid);
+            $data->question = questions::fetch_question_name($qid);
 
             // Get the score associated with this question.
             $qscore = questions::fetch_question_score(
