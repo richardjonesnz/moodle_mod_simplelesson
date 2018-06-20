@@ -24,6 +24,7 @@ use \mod_simplelesson\local\attempts;
 use \mod_simplelesson\local\questions;
 use \mod_simplelesson\event\attempt_completed;
 use \mod_simplelesson\local\pages;
+use \mod_simplelesson\local\display_options;
 use \question_engine;
 use \core\output\notification;
 require_once('../../config.php');
@@ -47,6 +48,10 @@ $PAGE->set_url('/mod/simplelesson/summary.php',
 require_login($course, true, $cm);
 $coursecontext = context_course::instance($courseid);
 $modulecontext = context_module::instance($cm->id);
+// Get the question feedback type. Get display options.
+$feedback = $moduleinstance->behaviour;
+$options = display_options::get_options($feedback);
+
 $lessontitle = $moduleinstance->name;
 $PAGE->set_context($modulecontext);
 $PAGE->set_pagelayout('course');
@@ -59,7 +64,7 @@ $renderer = $PAGE->get_renderer('mod_simplelesson');
 */
 if ($mode == 'attempt') {
     $answerdata = attempts::get_lesson_answer_data(
-            $attemptid);
+            $attemptid, $options);
 
     // If not allowed to be incomplete, we check.
     if (!$moduleinstance->allowincomplete) {

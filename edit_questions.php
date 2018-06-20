@@ -50,6 +50,7 @@ class simplelesson_pagechanger_form extends moodleform {
                 $this->_customdata['simplelessonid']);
         $mform->addElement('hidden', 'actionitem',
                 $this->_customdata['actionitem']);
+
         $mform->setType('courseid', PARAM_INT);
         $mform->setType('simplelessonid', PARAM_INT);
         $mform->setType('actionitem', PARAM_INT);
@@ -112,6 +113,7 @@ if ($mform->is_cancelled()) {
  * is de-selected using the "none" option.
 */
 if ($data = $mform->get_data()) {
+    //var_dump($data);exit;
     if (!questions::page_has_question($simplelessonid, $data->pagetitle)
             || ($data->pagetitle == 0) ) {
         questions::update_question_table($data);

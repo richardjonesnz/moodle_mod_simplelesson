@@ -53,9 +53,10 @@ require_login($course, true, $cm);
 $coursecontext = context_course::instance($courseid);
 $modulecontext = context_module::instance($cm->id);
 
-// Get the question feedback type.
+// Get the question feedback type. Get display options.
 $feedback = $moduleinstance->behaviour;
 $maxattempts = $moduleinstance->maxattempts;
+$options = display_options::get_options($feedback);
 
 // Question usage id.
 $qubaid = attempts::get_usageid($attemptid);
@@ -71,9 +72,6 @@ $questionentry = questions::page_has_question($simplelessonid, $pageid);
 if ( ($questionentry) && ($mode == 'attempt') ) {
 
     $quba = \question_engine::load_questions_usage_by_activity($qubaid);
-
-    // Display and feedback options.
-    $options = display_options::get_options($feedback);
 
     // Question type (for essay questions).
     $qid = questions::get_questionid($simplelessonid, $pageid);
@@ -97,7 +95,7 @@ if (data_submitted() && confirm_sesskey()) {
     $transaction->allow_commit();
 
     /* Record results here for each answer.
-       qatid id is entry in question_attempts table
+       qatid is entry in question_attempts table
        attemptid is from start_attempt (includes user id),
        that's our own question_attempts table.
        pageid gives us also the question info, such as slot
@@ -106,20 +104,21 @@ if (data_submitted() && confirm_sesskey()) {
        We will keep this data because we will remove the attempt data from the question_attempts table during cleanup.
     */
     $slot = questions::get_slot($simplelessonid, $pageid);
-    $qdata = attempts::get_question_attempt_data($qubaid, $slot);
+    $qid = attempts::get_question_attempt_id($qubaid, $slot);
     $answerdata = new stdClass();
     $answerdata->id = 0;
     $answerdata->simplelessonid = $simplelessonid;
-    $answerdata->qatid = $qdata->id;
+    $answerdata->qatid = $qid;
     $answerdata->attemptid = $attemptid;
     $answerdata->pageid = $pageid;
-    $answerdata->maxmark = 1;
-    $answerdata->mark = 0;
-    $answerdata->questionsummary = $qdata->questionsummary;
-    $answerdata->rightanswer = $qdata->rightanswer;
+    $answerdata->maxmark = $quba->get_question_max_mark($slot);
+    $answerdata->mark = (float) $quba->get_question_fraction($slot);
+    $answerdata->questionsummary = $quba->get_question_summary($slot);
+    $answerdata->rightanswer = $quba->get_right_answer_summary($slot);
     $answerdata->timetaken = 0;
     $answerdata->timestarted = $starttime;
     $answerdata->timecompleted = $timenow;
+    // var_dump($answerdata);exit;
     if ($qtype == 'essay') {
         // Special case, has additional save option.
         $submitteddata = $quba->extract_responses($slot);
@@ -127,7 +126,7 @@ if (data_submitted() && confirm_sesskey()) {
         // Save might be done several times.
         $answerdata->id = attempts::update_answer($answerdata);
     } else {
-        $answerdata->youranswer = $qdata->responsesummary;
+        $answerdata->youranswer = $quba->get_response_summary($slot);
         $answerdata->id = $DB->insert_record(
                 'simplelesson_answers', $answerdata);
     }

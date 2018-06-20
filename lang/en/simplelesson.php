@@ -29,9 +29,9 @@ defined('MOODLE_INTERNAL') || die();
 // General module strings.
 $string['modulename'] = 'Simple lesson';
 $string['modulenameplural'] = 'Simple lessons';
-$string['modulename_help'] = 'Use the Simple lesson module for a simple sequential display of pages with an optional index.
- The simplelesson module allows the creation and addition of multiple pages of content.
-It allows the use of questions from a selected question bank.  User attempt data is recorded.';
+$string['modulename_help'] = 'Use the Simple lesson module for a simple sequential display of pages with an optional index. The simplelesson module allows the creation and addition of multiple pages of content.
+
+It allows the use of questions from a selected question bank.  User attempt data is recorded and marked. Valid question types that have been tested are true/false, multiple choice (one answer), match, gapselect and short answer.  Essay questions are allowed but not marked.';
 $string['simplelessonfieldset'] = 'Custom example fieldset';
 $string['simplelessonname'] = 'Simple lesson name';
 $string['simplelessonname_help'] = 'Choose a suitable name for your Simple lesson.';
