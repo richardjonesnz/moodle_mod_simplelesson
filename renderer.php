@@ -831,4 +831,50 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         return  html_writer::link($url,
                 get_string('finishreview', 'mod_simplelesson'));
     }
+   /**
+    * Returns the html which heads up the manual grading page
+    *
+    * @param $object $answerdata, the relevant users answer data
+    * @return string $html
+    */
+    public function grading_header($answerdata) {
+
+        $html = html_writer::
+                start_div('mod_simplelesson_grading_header');
+
+        $html .= $this->output->heading(get_string('essay_grading',
+                'mod_simplelesson'), 2);
+        $html .= get_string('essay_grading_page', 'mod_simplelesson')
+                . '<br /><br />';
+
+        $html .= '<p>'. get_string('userdetail', 'mod_simplelesson',
+                $answerdata->firstname . ' ' . $answerdata->lastname)
+                . '</p>';
+        $html .= '<p>'. get_string('essaydate', 'mod_simplelesson',
+                date("Y-m-d H:i:s", $answerdata->timecompleted))
+                . '</p>';
+        $html .= '<p>'. get_string('maxmark', 'mod_simplelesson',
+                (int) $answerdata->maxmark) . '</p>';
+
+        $html .= html_writer::end_div();
+
+    return $html;
+
+   }
+   /**
+    * Return the html for the essay text
+    *
+    * @param $object $text, the relevant users answer
+    * @return string $html
+    */
+    public function essay_text($text) {
+
+        $html = html_writer::
+                start_div('mod_simplelesson_essay_text');
+        $html .= $text;
+        $html .= html_writer::end_div();
+
+        return $html;
+    }
+
 }

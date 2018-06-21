@@ -114,15 +114,18 @@ if (data_submitted() && confirm_sesskey()) {
     $answerdata->maxmark = $quba->get_question_max_mark($slot);
     $answerdata->mark = (float) $quba->get_question_fraction($slot);
     $answerdata->questionsummary = $quba->get_question_summary($slot);
+    $answerdata->qtype = $qtype; // For manual essay marking.
     $answerdata->rightanswer = $quba->get_right_answer_summary($slot);
     $answerdata->timetaken = 0;
     $answerdata->timestarted = $starttime;
     $answerdata->timecompleted = $timenow;
-    // var_dump($answerdata);exit;
+
     if ($qtype == 'essay') {
         // Special case, has additional save option.
         $submitteddata = $quba->extract_responses($slot);
         $answerdata->youranswer = $submitteddata['answer'];
+        // Set mark negative (indicate needs grading).
+        $answerdata->mark = -1;
         // Save might be done several times.
         $answerdata->id = attempts::update_answer($answerdata);
     } else {

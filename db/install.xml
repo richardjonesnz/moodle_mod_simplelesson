@@ -94,6 +94,7 @@
         <FIELD NAME="maxmark" TYPE="number" LENGTH="12" NOTNULL="true" DEFAULT="0" SEQUENCE="false" DECIMALS="7" COMMENT="The grade this question is marked out of in this attempt."/>
         <FIELD NAME="mark" TYPE="number" LENGTH="12" NOTNULL="true" DEFAULT="0" SEQUENCE="false" DECIMALS="7" COMMENT="grade for this answer."/>
         <FIELD NAME="questionsummary" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="This is a summary of the question"/>
+        <FIELD NAME="qtype" TYPE="char" LENGTH = "20" NOTNULL="true" DEFAULT = 'none' SEQUENCE="false" COMMENT="This is the question type"/>
         <FIELD NAME="rightanswer" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="This is a summary of the right answer to this question."/>
         <FIELD NAME="youranswer" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="This is a summary of the student's response."/>
         <FIELD NAME="timetaken" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>

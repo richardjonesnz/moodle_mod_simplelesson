@@ -173,7 +173,6 @@ class attempts  {
 
         // Add the data for the summary table.
         foreach ($answerdata as $data) {
-
             // Add the page title.
             $data->pagename = pages::get_page_title($data->pageid);
 
@@ -191,8 +190,11 @@ class attempts  {
 
             // Check if the user has allocated a specific mark
             // from the question management page.
-            $qscore = ($qscore == 0) ? $data->maxmark : $qscore;
-
+            if ($qscore == 0) {
+                $qscore = $data->maxmark;
+            } else {
+                $data->maxmark = $qscore;
+            }
             // Calculate a score for the question.
             $data->mark = round($data->mark * $qscore,
                     $options->markdp);
@@ -200,7 +202,11 @@ class attempts  {
             // Calculate the elapsed time (s).
             $data->timetaken = (int) ($data->timecompleted
                     - $data->timestarted);
+
+            // Record this data in the table
+            self::update_answer($data);
         }
+
         return $answerdata;
     }
 

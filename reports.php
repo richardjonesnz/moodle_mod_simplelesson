@@ -74,6 +74,13 @@ switch ($report) {
         echo html_writer::link($exporturl,
                 get_string('userreportdownload', 'mod_simplelesson'));
         break;
+    case 'manualgrade':
+        $data = reporting::fetch_essay_answer_data($simplelessonid);
+        echo $OUTPUT->heading($cm->name, 2);
+        $records = reporting::get_essay_report_data($simplelessonid,
+                $data);
+        echo reporting::show_essay_answer_report($records);
+        break;
     default:
         // Developer debugging called.
         debugging('Internal error: missing or invalid report type',

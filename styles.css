@@ -42,3 +42,11 @@
 .mod_simplelesson_save_button {
     padding-left:140px;
 }
+.mod_simplelesson_grading_header {
+    padding-left:100px;
+}
+.mod_simplelesson_essay_text {
+    margin:0 100px 20px 100px;
+    padding: 10px;
+    border: 1px solid #999;
+}

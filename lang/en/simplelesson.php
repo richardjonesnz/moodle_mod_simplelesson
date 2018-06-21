@@ -107,7 +107,7 @@ $string['select_questions'] = 'Select questions';
 $string['selecting_page'] = 'Select the page for question: ';
 $string['question_exists'] = 'That page has a question already';
 $string['questionscore'] = "Score for this question (integer)";
-$string['edit_question_page'] = 'Click the Allocate link in the last column to allocate questions to pages (only one question per page is permitted.  You can also set the score for a question.';
+$string['edit_question_page'] = 'Click the Allocate link in the last column to allocate questions to pages (only one question per page is permitted).  You can also set the score for a question.';
 
 // Page editing.
 $string['edit_page'] = 'Edit page';
@@ -194,6 +194,18 @@ $string['manage_attempts'] = 'Manage attempts';
 $string['delete'] = 'delete ';
 $string['attempt_deleted'] = 'Attempt deleted';
 $string['attempt_not_deleted'] = 'Attempt to delete record failed';
+
+// Grading
+$string['manual_grade'] = 'Manual grading';
+$string['gradelink'] = 'Grade essay';
+$string['gradelinkheader'] = 'Action';
+$string['requires_grading'] = 'Requires grading';
+$string['essay_grading'] = 'Grade an essay';
+$string['essay_grading_page'] = 'Use this page to manually grade an essay submission.';
+$string['userdetail'] = 'User: {$a}';
+$string['essaydate'] = 'Date submitted: {$a}';
+$string['maxmark'] = 'Marks available: {$a}';
+$string['allocate_mark'] = 'Allocate a mark for the essay:';
 
 // Privacy.
 $string['privacy:metadata:simplelesson_attempts'] = 'Information about users simplelesson attempts including completion status, the number of correct responses (a score) and the time taken (seconds) for the attempt.';

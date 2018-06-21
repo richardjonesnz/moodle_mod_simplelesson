@@ -105,6 +105,137 @@ class reporting  {
 
         return \html_writer::table($table);
     }
+
+    /**
+     * Get the user attempt records for essay questions in a lesson
+     *
+     * @param $simplelessonid - lesson to get records for
+     * @return array of objects
+     */
+    public static function fetch_essay_answer_data($simplelessonid) {
+        global $DB;
+        $sql = "SELECT a.id, a.simplelessonid, a.attemptid,
+                       a.questionsummary, a.youranswer, a.qtype,
+                       a.maxmark, a.mark, a.timecompleted, t.userid,
+                       u.firstname, u.lastname, u.deleted
+                  FROM {simplelesson_answers} a
+                  JOIN {simplelesson_attempts} t
+                    ON t.id = a.attemptid
+                  JOIN {user} u
+                    ON u.id = t.userid
+                 WHERE a.simplelessonid = :slid
+                   AND a.qtype LIKE :qtype
+                   AND u.deleted <> 1
+                   AND a.mark < 0"; // Negative mark = ungraded.
+
+        $records = $DB->get_records_sql($sql,
+                array('slid' => $simplelessonid,
+                'qtype' => 'essay'));
+
+        return $records;
+    }
+    /**
+     * Return a table of essay report data
+     *
+     * @param int $simplelessonid - lesson to get records for
+     * @param array of objects $records - answer records
+     * @return array $table records formatted for report
+     */
+    public static function get_essay_report_data($simplelessonid,
+            $records) {
+        global $DB;
+
+        $courseid = $DB->get_field('simplelesson', 'course',
+            array('id' => $simplelessonid), MUST_EXIST);
+
+        // Select and arrange records for grading report.
+        $table = array();
+        foreach ($records as $record) {
+            $data = new \stdClass();
+            $data->id = $record->id;
+            $data->firstname = $record->firstname;
+            $data->lastname = $record->lastname;
+            $data->datetaken = date("Y-m-d H:i:s",
+                    $record->timecompleted);
+            $data->status = get_string('requires_grading',
+                    'mod_simplelesson');
+            $gradeurl = new \moodle_url(
+                    'manual_grading.php',
+                    array('courseid' => $courseid,
+                    'simplelessonid' => $simplelessonid,
+                    'answerid' => $data->id));
+            $data->gradelink = \html_writer::link($gradeurl,
+                    get_string('gradelink', 'mod_simplelesson'));
+            $table[] = $data;
+        }
+        return $table;
+    }
+        /**
+     * Returns HTML to a user report of lesson essay attempts
+     *
+     * @param $records - an array of attempt records
+     * @return string, html table
+     */
+    public static function show_essay_answer_report($records) {
+
+        $table = new \html_table();
+        $table->head = self::fetch_essay_answer_report_headers();
+        $table->align = array('left', 'left', 'left', 'left',
+                'left');
+        $table->wrap = array('nowrap', '', 'nowrap', '', '');
+        $table->tablealign = 'left';
+        $table->cellspacing = 0;
+        $table->cellpadding = '2px';
+        $table->width = '80%';
+        foreach ($records as $record) {
+            $data = array();
+            $data[] = $record->firstname;
+            $data[] = $record->lastname;
+            $data[] = $record->datetaken;
+            $data[] = $record->status;
+            $data[] = $record->gradelink;
+            $table->data[] = $data;
+        }
+        return \html_writer::table($table);
+    }
+    /**
+     * Page export - get the columns for essay grading report
+     *
+     * @param none
+     * @return array of column names
+     */
+    public static function fetch_essay_answer_report_headers() {
+        $fields = array(
+                'firstname' =>
+                get_string('firstname', 'mod_simplelesson'),
+                'lastname' =>
+                get_string('lastname', 'mod_simplelesson'),
+                'date' =>
+                get_string('date', 'mod_simplelesson'),
+                'status' =>
+                get_string('status', 'mod_simplelesson'),
+                'gradelink' =>
+                get_string('gradelinkheader', 'mod_simplelesson'));
+
+        return $fields;
+    }
+    /**
+     * Fetch the data for a particular essay from an array
+     *
+     * @param object array $records - the array of records
+     * @param int $answerid - the id of the wanted record
+     * @return object the wanted record
+     */
+    public static function fetch_essay_answer_record($records,
+            $answerid) {
+
+        foreach ($records as $record) {
+            if ($record->id = $answerid) {
+                return $record;
+            }
+        }
+        return false;
+    }
     /**
      * User Report - get the user attempt records for a lesson
      *
@@ -195,10 +326,11 @@ class reporting  {
                 'maxscore' =>
                 get_string('maxscore', 'mod_simplelesson'),
                 'timetaken' =>
-                get_string('timetaken', 'mod_simplelesson'));
+                get_string('mark', 'mod_simplelesson'));
 
         return $fields;
     }
+
     /**
      * User Report - get the user answer records for a lesson
      *
@@ -293,7 +425,13 @@ class reporting  {
             $data[] = $record->datetaken;
             $data[] = $record->questionsummary;
             $data[] = $record->rightanswer;
-            $data[] = $record->youranswer;
+            if (strlen($record->youranswer) > 100) {
+                $shortanswer = substr($record->youranswer,
+                        0, 95) . '...';
+            } else {
+                $shortanswer = $record->youranswer;
+            }
+            $data[] = strip_tags(format_string($shortanswer));
             $data[] = $record->timetaken;
             $table->data[] = $data;
         }
@@ -320,6 +458,10 @@ class reporting  {
         $buttons[] = self::create_button($courseid,
             $simplelessonid, $type, $label);
 
+        $type = 'manualgrade';
+        $label = get_string('manual_grade', 'mod_simplelesson');
+        $buttons[] = self::create_button($courseid,
+            $simplelessonid, $type, $label);
         return $buttons;
     }
     /**

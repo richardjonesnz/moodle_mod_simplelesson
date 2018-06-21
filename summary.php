@@ -66,6 +66,7 @@ if ($mode == 'attempt') {
     $answerdata = attempts::get_lesson_answer_data(
             $attemptid, $options);
 
+
     // If not allowed to be incomplete, we check.
     if (!$moduleinstance->allowincomplete) {
 

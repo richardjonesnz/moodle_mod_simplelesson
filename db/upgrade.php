@@ -76,5 +76,20 @@ function xmldb_simplelesson_upgrade($oldversion) {
 
         upgrade_mod_savepoint(true, 2018061903, 'simplelesson');
     }
+    if ($oldversion < 2018062100) {
+
+        // Define field qtype for a answers table.
+        $table = new xmldb_table('simplelesson_answers');
+        $field = new xmldb_field('qtype',
+                XMLDB_TYPE_CHAR, '20',
+                null, XMLDB_NOTNULL, null, 'none',
+                'questionsummary');
+        // Add field.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2018062100, 'simplelesson');
+    }
     return true;
 }

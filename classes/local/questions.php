@@ -227,4 +227,27 @@ class questions  {
                   'score', MUST_EXIST);
         return $data->score;
     }
+    /**
+     * Add up the questions scores for the lesson
+     *
+     * @param int $simplelessonid - id of the lesson
+     * @return int the maximum possible score for questions in this lesson
+     */
+    public static function get_maxscore($simplelessonid) {
+        global $DB;
+
+        $sql = "SELECT s.id, s.simplelessonid, s.score, s.slot
+                  FROM {simplelesson_questions} s
+                 WHERE s.simplelessonid = :slid
+                   AND s.slot <> 0";
+        $entries = $DB->get_records_sql($sql,
+              array('slid' => $simplelessonid));
+
+        $maxscore = 0;
+        foreach ($entries as $entry) {
+            $maxscore += $entry->score;
+        }
+        return $maxscore;
+    }
+
 }
