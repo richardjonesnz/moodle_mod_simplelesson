@@ -40,11 +40,11 @@ class attempts  {
     /**
      * Handles data relating to attempts, including question usages
      *
-     * @param $context - module context
-     * @param $behaviour - question behaviour
-     * @param $entries - questions selected by user (edit.php)
-     * @param $simplelessonid - module instance id
-     * @return $qubaid - the id of the question engine usage.
+     * @param object $context - module context
+     * @param string $behaviour - question behaviour
+     * @param object array $entries - questions selected by user (edit.php)
+     * @param int $simplelessonid - module instance id
+     * @return int the id of the question engine usage.
      */
     public static function create_usage($context,
             $behaviour, $entries, $simplelessonid) {
@@ -68,9 +68,9 @@ class attempts  {
     /**
      * Set the slot number in the questions table
      *
-     * @param $simplelessonid - module instance id
-     * @param $pageid - id of page to set slot
-     * @param $slot - question slot number
+     * @param int $simplelessonid - module instance id
+     * @param int $pageid - id of page to set slot
+     * @param int $slot - question slot number
      */
     public static function set_slot($simplelessonid, $pageid, $slot) {
         global $DB;
@@ -82,8 +82,8 @@ class attempts  {
     /**
      * Get the usage id for a simplelesson attempt
      *
-     * @param $attemptid - module instance id
-     * @return $qubaid - the question usage id associated with this lesson
+     * @param int $attemptid - module instance id
+     * @return int $qubaid - the question usage id associated with this lesson
      */
     public static function get_usageid($attemptid) {
         global $DB;
@@ -96,9 +96,11 @@ class attempts  {
      */
     public static function remove_all_usage_data() {
         global $DB;
-        // Data is removed from Moodle tables, not from
-        // our plugin's tables.  The data can be left
-        // when the user aborts an attempt improperly.
+        /*
+          Data is removed from Moodle tables, not from
+          our plugin's tables.  The data can be left
+          when the user aborts an attempt improperly.
+        */
         $usages = $DB->get_records('question_usages',
                 array('component' => 'mod_simplelesson'));
         foreach ($usages as $usage) {
@@ -113,7 +115,7 @@ class attempts  {
      *
      * Will also make it easier when dealing with GDPR.
      *
-     * @param $simplelessonid - module instance id
+     * @param $qubaid - question usage id
      */
     public static function remove_usage_data($qubaid) {
         global $DB;
@@ -162,10 +164,10 @@ class attempts  {
     /**
      * Return an array of updated lesson answers and associated data
      *
-     * @param int $attemptid int id of attempt (simplelesson_attempts)
+     * @param int $attemptid int id of simplelesson_attempts
      * @return object array with one or more rows of answer data
      */
-    public static function get_lesson_answer_data($attemptid, $options) {
+    public static function get_lesson_answer_data($attemptid) {
         global $DB;
 
         $answerdata = $DB->get_records('simplelesson_answers',
@@ -197,8 +199,7 @@ class attempts  {
      * saved more than once or in case, in the future, other
      * behaviours are implemented.
      *
-     * @param int $attemptid attempt id
-     * @param object $answerdata
+     * @param object $answerdata data to update with
      * @return int id of inserted or updated record
      */
     public static function update_answer($answerdata) {
@@ -225,8 +226,8 @@ class attempts  {
     /**
      * Make an entry in the attempts table
      *
-     * @param $data data to insert (from start_attempt.php)
-     * @return int record->id
+     * @param object $data data to insert (from start_attempt.php)
+     * @return int record id
      */
     public static function set_attempt_start($data) {
         global $DB;
@@ -269,7 +270,7 @@ class attempts  {
     /**
      * Add up the marks and times in the answer data
      *
-     * @param $answerdata - array of objects
+     * @param object array $answerdata - array of question answers
      * @return object overall mark and time for the attempt
      */
     public static function get_sessiondata($answerdata) {
@@ -304,7 +305,7 @@ class attempts  {
     /**
      * save answer data
      *
-     * @param $answerdata - array of objects
+     * @param object array $answerdata answers to save
      * @return none
      */
     public static function save_lesson_answerdata($answerdata) {
@@ -331,7 +332,8 @@ class attempts  {
     /**
      * Delete the record for an attempt and the associated answers
      *
-     * @param $attemptid the attempt record id
+     * @param int $attemptid the attempt record id
+     * @return bool true if succeeds.
      */
     public static function delete_attempt($attemptid) {
         global $DB;

@@ -13,6 +13,11 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+use \mod_simplelesson\local\questions;
+use \mod_simplelesson\local\pages;
+use \core\output\notification;
+
 /**
  * Edit a lesson and its questions
  *
@@ -20,9 +25,7 @@
  * @copyright 2018 Richard Jones https://richardnz.net
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-use \mod_simplelesson\local\questions;
-use \mod_simplelesson\local\pages;
-use \core\output\notification;
+
 require_once('../../config.php');
 require_once($CFG->libdir . '/formslib.php');
 /**
@@ -116,7 +119,7 @@ if ($mform->is_cancelled()) {
  * is de-selected using the "none" option.
 */
 if ($data = $mform->get_data()) {
-    //var_dump($data);exit;
+
     if (!questions::page_has_question($simplelessonid, $data->pagetitle)
             || ($data->pagetitle == 0) ) {
         questions::update_question_table($simplelessonid, $data);

@@ -13,6 +13,12 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+use \mod_simplelesson\local\reporting;
+use \core\output\notification;
+require_once('../../config.php');
+require_once($CFG->libdir . '/formslib.php');
+
 /**
  * Manual grading for essay questions
  *
@@ -20,10 +26,7 @@
  * @copyright 2018 Richard Jones https://richardnz.net
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-use \mod_simplelesson\local\reporting;
-use \core\output\notification;
-require_once('../../config.php');
-require_once($CFG->libdir . '/formslib.php');
+
 /**
  * Define a form for grading essay questions
  */

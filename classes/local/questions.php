@@ -131,23 +131,23 @@ class questions  {
      */
     public static function update_question_table($simplelessonid, $data) {
         global $DB;
-        
+
         // The pagetitle is the sequence from the drop-down list.
         $pageid = pages::get_page_id_from_sequence($simplelessonid,
                     $data->pagetitle);
-    
+
         // Put the pageid into the questions table.
         $DB->set_field('simplelesson_questions',
                 'pageid', $pageid,
                 array('id' => $data->id,
                 'simplelessonid' => $simplelessonid));
-        
+
         // Save the user score.
         $DB->set_field('simplelesson_questions',
                 'score', $data->score,
                 array('id' => $data->id,
                 'simplelessonid' => $simplelessonid));
-        
+
         // Remove any slot number too.
         $DB->set_field('simplelesson_questions',
                 'slot', 0,

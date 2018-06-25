@@ -485,7 +485,8 @@ function simplelesson_pluginfile($course, $cm, $context, $filearea, array $args,
 }
 /**
  *
- * @package    mod_qpractice
+ * @package    mod_simplelesson
+ * @see package mod_qpractice
  * @copyright  2013 Jayesh Anandani
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
@@ -493,7 +494,7 @@ function simplelesson_pluginfile($course, $cm, $context, $filearea, array $args,
  * This is used for images within pages that are in questions.
  * Apparently it will be magically called by simplelesson_pluginfile above.
  *
- * @package  filter_simplequestion
+ * @package  mod_simplelesson
  * @category files
  * @param stdClass $course course settings object
  * @param stdClass $context context object

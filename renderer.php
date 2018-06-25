@@ -28,6 +28,9 @@ use mod_simplelesson\local\pages;
 use mod_simplelesson\local\questions;
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Renderer for Simple lesson mod.
+ */
 class mod_simplelesson_renderer extends plugin_renderer_base {
 
     /**
@@ -65,7 +68,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
     }
     /**
      * Returns the editing links for the intro (home) page
-     * @param string $simplelesson the module name.
+     * @param string $courseid the course id.
      * @param int $simplelessonid the module instance id.
      * @param bool $lastpage true if this is the last page.
      * @return string html for editing links
@@ -330,9 +333,8 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      * Returns a list of pages and editing actions
      *
      * @param string $courseid - current course
-     * @param object $simplelessonid - current instance id
-     * @param object $context  - module context
-     * @param $returnurl - page originating an edit request
+     * @param object $simplelesson - current instance
+     * @param object $context - module context
      * @return string html link
      */
     public function page_management($courseid, $simplelesson,
@@ -397,13 +399,13 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
     /**
      * Returns HTML to display action links for a page
      *
-     * @param $courseid - current course
-     * @param $simplelessonid - current module instance id
-     * @param $data - a simplelesson page record
+     * @param int $courseid - current course
+     * @param int $simplelessonid - current module instance id
+     * @param object $data - a simplelesson page record
      * @return string, a set of page action links
      */
-    public function page_action_links(
-            $courseid, $simplelessonid, $data) {
+    public function page_action_links($courseid, $simplelessonid,
+            $data) {
         global $CFG;
         $actions = array();
 
@@ -465,8 +467,8 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
     /**
      * Returns HTML to display a report tab
      *
-     * @param $context - module contex
-     * @param $simplelessonid - course module id
+     * @param int $courseid - course id
+     * @param int $simplelessonid - course module id
      * @return string, a set of tabs
      */
     public function show_reports_tab($courseid, $simplelessonid) {
@@ -492,7 +494,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      * Returns HTML to a basic report
      *
      * @param array $records - a set of module fields
-     * @return string, html table
+     * @return string html table
      */
     public function show_basic_report($records) {
 
@@ -523,8 +525,8 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
     /**
      * Returns the html for the page index
      * module's instance settings page
-     * @param array $page_links for the lesson page index
-     * @return string
+     * @param string array $pagelinks for the lesson page index
+     * @return string html to display the links.
      */
     public function fetch_index($pagelinks) {
 
@@ -570,9 +572,9 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
     /**
      * Returns a list of questions and editing actions
      *
-     * @param string $courseid
-     * @param int $simplelessonid
-     * @param object array questions
+     * @param int $courseid - the course id
+     * @param int $simplelessonid - the simplelessonid
+     * @param object array $questions - questions to be shown
      * @return string html link
      */
     public function question_management($courseid,
@@ -627,8 +629,8 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
     }
     /**
      * Returns the html for question management page
-     * @param int $simplelessonid
-     * @param int $courseid
+     * @param int $courseid - the course id
+     * @param int $simplelessonid - the module insatnce id
      * @return string, html list of links
      */
     public function fetch_question_page_links($courseid,
@@ -664,11 +666,12 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      *
      * Render the question form on a page
      *
-     * @param moodle_url $actionurlform action url
+     * @param moodle_url $actionurl - form action url
      * @param array mixed $options - question display options
      * @param int $slot - slot number for question usage
      * @param object $quba - question usage object
      * @param int $starttime, time question was first presented to user
+     * @param string $qtype, the question type - to identify an essay
      * @return string, html representation of the question
      */
     public function render_question_form(
@@ -723,7 +726,8 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      *
      * Output the details of the attempt
      *
-     * @param $answerdata an array of objects
+     * @param object array $answerdata an array of data
+     *        relating to user responses to questions.
      * @param int $markdp - numer of decimal places in mark
      * @return $html table with summary data on user's attempt
      */
@@ -813,7 +817,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
     }
     /**
      * Returns the html for attempt summary page
-     * @param object $sessiondata - score and time
+     * @param object $sessiondata - score, maxscore and time
      * @return string, html to show summary
      */
     public function get_summary_data($sessiondata) {
@@ -884,5 +888,4 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
 
         return $html;
     }
-
 }

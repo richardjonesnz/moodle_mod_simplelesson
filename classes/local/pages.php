@@ -74,8 +74,8 @@ class pages  {
      * @param int $pageid, page index is on
      * @return array of links to pages in the simplelesson
      */
-    public static function fetch_page_links($courseid, $simplelessonid,
-            $pageid) {
+    public static function fetch_page_links($courseid, 
+            $simplelessonid, $pageid) {
         global $CFG;
         require_once($CFG->libdir . '/weblib.php');
         require_once($CFG->libdir . '/outputcomponents.php');
@@ -108,9 +108,9 @@ class pages  {
     /**
      * Add a page record to the pages table.
      *
-     * @param $data object - the data to add
-     * @param $context object - our module context
-     * @return $id - the id of the inserted record
+     * @param object $data - the data to add
+     * @param object $context - our module context
+     * @return int $id - the id of the inserted record
      */
     public static function add_page_record($data, $context) {
         global $DB;
@@ -158,9 +158,8 @@ class pages  {
      *
      * @param int $simplelessonid the instance id
      * @param int $sequence, where the page is in the lesson sequence
-     * @return int pageid, the id of the page in the pages table
+     * @return int the id of the page in the pages table
      */
-
     public static function get_page_id_from_sequence($simplelessonid,
             $sequence) {
         global $DB;
@@ -175,7 +174,6 @@ class pages  {
      * @param int $pageid the
      * @return int $sequence, where the page is in the lesson sequence
      */
-
     public static function get_page_sequence_from_id($pageid) {
         global $DB;
 
@@ -290,9 +288,9 @@ class pages  {
      * Given two page record id's
      * Exchange their question slot numbers (if any)
      *
-     * @param simplelessonid - make sure it is just this lesson
-     * @param $p1 int $pageid
-     * @param $p2 int $pageid
+     * @param int $simplelessonid - make sure it is just this lesson
+     * @param int $p1 page id to be exchanged with
+     * @param int $p2 this page
      * @return none
      */
     public static function exchange_question_slots($simplelessonid,
@@ -381,7 +379,7 @@ class pages  {
      * Fix the pages so that next and previous match page order
      * as it is on the page management screen
      *
-     * @param int $simplelessonid
+     * @param int $simplelessonid id of the simplelesson to fix
      * @return none
      */
     public static function fix_page_sequence($simplelessonid) {
