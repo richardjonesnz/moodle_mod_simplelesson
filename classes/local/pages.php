@@ -167,7 +167,7 @@ class pages  {
         $data = $DB->get_record('simplelesson_pages',
                 array('simplelessonid' => $simplelessonid,
                 'sequence' => $sequence));
-        return $data->id;
+        return ($data) ? $data->id : 0;
     }
     /**
      * Given a pageid return its sequence number

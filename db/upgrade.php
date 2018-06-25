@@ -47,8 +47,8 @@ function xmldb_simplelesson_upgrade($oldversion) {
 
     if ($oldversion < 2018061902) {
 
-    // Define field allowincomplete to be added.
-    // Used to check if incomplete attempts.
+        // Define field allowincomplete to be added.
+        // Used to check if incomplete attempts.
         $table = new xmldb_table('simplelesson');
         $field = new xmldb_field('allowincomplete',
                 XMLDB_TYPE_INTEGER, '4',

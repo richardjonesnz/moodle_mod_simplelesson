@@ -56,8 +56,9 @@ $string['allowincomplete_help'] = 'Check to allow students to quit to the review
 $string['immediatefeedback'] = 'Immediate feedback';
 $string['immediatecbm'] = 'Immediate feedback with CBM';
 $string['adaptive'] = 'Adaptive feedback';
+$string['adaptivenopenalty'] = 'Adaptive (no penalty)';
 $string['behaviour'] = 'Question behaviour';
-$string['behaviour_help'] = 'Immediate feedback has one attempt available and with CBM a certainty must be implemented as well.  With Adaptive feedback the user has multiple tries at each question.  This can only be set on a lesson basis, not per question';
+$string['behaviour_help'] = 'Immediate feedback has one attempt available and with CBM a certainty must be implemented as well.  With Adaptive feedback the user has multiple tries at each question - a penalty can be applied unless adaptive no penalty is used.  This can only be set on a lesson basis, not per question';
 $string['category_select'] = 'Select category';
 $string['categoryid'] = 'Category';
 $string['categoryid_help'] = 'Choose one category for the questions that can be added to this simplelesson.  You can return here later and add other categories from module settings.';
@@ -157,6 +158,7 @@ $string['userreportdownload'] = 'Download user report (csv)';
 $string['attemptid'] = "Attempt";
 $string['questionsummary'] = 'Question';
 $string['action'] = 'Action';
+$string['ungraded'] = 'Not graded';
 
 // Admin settings.
 $string['enablereports'] = 'Show reports tab';
@@ -180,6 +182,7 @@ $string['question'] = "Question";
 $string['rightanswer'] = "Right answer";
 $string['youranswer'] = "Your answer";
 $string['mark'] = "Mark";
+$string['outof'] = "Out of";
 $string['timetaken'] = "Time (s)";
 $string['max_attempts_exceeded'] = "No more attempts allowed";
 $string['numattempts'] = 'Attempts made: {$a} of';
@@ -195,7 +198,7 @@ $string['delete'] = 'delete ';
 $string['attempt_deleted'] = 'Attempt deleted';
 $string['attempt_not_deleted'] = 'Attempt to delete record failed';
 
-// Grading
+// Grading.
 $string['manual_grade'] = 'Manual grading';
 $string['gradelink'] = 'Grade essay';
 $string['gradelinkheader'] = 'Action';
@@ -206,6 +209,8 @@ $string['userdetail'] = 'User: {$a}';
 $string['essaydate'] = 'Date submitted: {$a}';
 $string['maxmark'] = 'Marks available: {$a}';
 $string['allocate_mark'] = 'Allocate a mark for the essay:';
+$string['grade_saved'] = 'Grade saved';
+$string['no_manual_grades'] = 'Nothing to grade';
 
 // Privacy.
 $string['privacy:metadata:simplelesson_attempts'] = 'Information about users simplelesson attempts including completion status, the number of correct responses (a score) and the time taken (seconds) for the attempt.';

@@ -160,7 +160,7 @@ class attempts  {
         return $data->id;
     }
     /**
-     * Return an array of lesson answers and associated data
+     * Return an array of updated lesson answers and associated data
      *
      * @param int $attemptid int id of attempt (simplelesson_attempts)
      * @return object array with one or more rows of answer data
@@ -176,7 +176,7 @@ class attempts  {
             // Add the page title.
             $data->pagename = pages::get_page_title($data->pageid);
 
-            // get the required question data:
+            // Get the required question data.
             $data->qid = questions::get_questionid(
                     $data->simplelessonid, $data->pageid);
             $data->question = questions::fetch_question_name(
@@ -184,29 +184,10 @@ class attempts  {
             $data->qtype = questions::fetch_question_type(
                     $data->qid);
 
-            // Get the score associated with this question.
-            $qscore = questions::fetch_question_score(
-                    $data->simplelessonid, $data->pageid);
-
-            // Check if the user has allocated a specific mark
-            // from the question management page.
-            if ($qscore == 0) {
-                $qscore = $data->maxmark;
-            } else {
-                $data->maxmark = $qscore;
-            }
-            // Calculate a score for the question.
-            $data->mark = round($data->mark * $qscore,
-                    $options->markdp);
-
-            // Calculate the elapsed time (s).
-            $data->timetaken = (int) ($data->timecompleted
-                    - $data->timestarted);
-
-            // Record this data in the table
-            self::update_answer($data);
+            // Record this data in the table.
+            $DB->update_record('simplelesson_answers',
+                    $data);
         }
-
         return $answerdata;
     }
 
@@ -224,7 +205,8 @@ class attempts  {
         global $DB;
         // Check if answerdata already recorded.
         $answerrecord = $DB->get_record('simplelesson_answers',
-                array('attemptid' => $answerdata->attemptid),
+                array('attemptid' => $answerdata->attemptid,
+                'id' => $answerdata->id),
                 'id', IGNORE_MISSING);
 
         if ($answerrecord) {
@@ -233,6 +215,7 @@ class attempts  {
             $DB->update_record('simplelesson_answers',
                     $answerdata);
         } else {
+            // Create a new record.
             $answerdata->id = $DB->insert_record(
                     'simplelesson_answers', $answerdata);
         }
@@ -248,6 +231,7 @@ class attempts  {
     public static function set_attempt_start($data) {
         global $DB;
         return $DB->insert_record('simplelesson_attempts', $data);
+
     }
     /**
      * Get the user record for an attempt
@@ -290,13 +274,16 @@ class attempts  {
      */
     public static function get_sessiondata($answerdata) {
         $score = 0.0;
+        $maxscore = 0.0;
         $stime = 0;
         foreach ($answerdata as $data) {
             $score += $data->mark;
+            $maxscore += $data->maxmark;
             $stime += $data->timetaken;
         }
         $returndata = new \stdClass();
         $returndata->score = $score;
+        $returndata->maxscore = $maxscore;
         $returndata->stime = $stime;
         return $returndata;
     }

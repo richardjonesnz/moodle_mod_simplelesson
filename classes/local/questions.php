@@ -101,7 +101,8 @@ class questions  {
     }
     /**
      * Get the page titles for the question manager
-     * keys are the page values, text is the page title
+     * keys are the page sequence values,
+     * text is the page title
      *
      * @param int $simplelessonid the id of a simplelesson
      * @return array of titles of pages in the simplelesson
@@ -115,7 +116,7 @@ class questions  {
             for ($p = 1; $p <= $pagecount; $p++) {
                 $pid = pages::get_page_id_from_sequence(
                         $simplelessonid, $p);
-                $pagetitles[$pid] = pages::get_page_title($pid);
+                $pagetitles[$p] = pages::get_page_title($pid);
             }
         }
         $pagetitles[0] = 'none';
@@ -128,18 +129,30 @@ class questions  {
      * @param object $data the question data
      * @return none
      */
-    public static function update_question_table($data) {
+    public static function update_question_table($simplelessonid, $data) {
         global $DB;
+        
+        // The pagetitle is the sequence from the drop-down list.
+        $pageid = pages::get_page_id_from_sequence($simplelessonid,
+                    $data->pagetitle);
+    
+        // Put the pageid into the questions table.
         $DB->set_field('simplelesson_questions',
-                'pageid', $data->pagetitle,
-                array('id' => $data->id));
+                'pageid', $pageid,
+                array('id' => $data->id,
+                'simplelessonid' => $simplelessonid));
+        
+        // Save the user score.
         $DB->set_field('simplelesson_questions',
                 'score', $data->score,
-                array('id' => $data->id));
-        // Remove the slot number too.
+                array('id' => $data->id,
+                'simplelessonid' => $simplelessonid));
+        
+        // Remove any slot number too.
         $DB->set_field('simplelesson_questions',
                 'slot', 0,
-                array('id' => $data->id));
+                array('id' => $data->id,
+                'simplelessonid' => $simplelessonid));
     }
     /**
      * Given a simplelesson id and a page id
@@ -249,5 +262,36 @@ class questions  {
         }
         return $maxscore;
     }
+    /**
+     * Given a simplelessonid and question id, find out the
+     * page sequence number for the select list.
+     *
+     * @param int $qid, the question id in the questions table
+     * @param simplelessonid - the simplelesson instance id.
+     * @return int the page sequence number
+     */
+    public static function get_page_sequence($qid, $simplelessonid) {
+        global $DB;
+           $pageid = $DB->get_field('simplelesson_questions',
+                   'pageid', array('qid' => $qid,
+                   'simplelessonid' => $simplelessonid));
+           return pages::get_page_sequence_from_id($pageid);
+    }
+    /**
+     * Given a simplelessonid and attemptid,
+     * check all questions answered.
+     *
+     * @param int $simplelessonid - the simplelesson to be checked
+     * @param int $attemptid - the attempt to be checked
+     * @return bool true if all questions answered.
+     */
+    public static function attempt_completed($simplelessonid,
+            $attemptid) {
+        global $DB;
 
+        $questions = $DB->count_records('simplelesson_questions',
+                array('simplelessonid' => $simplelessonid));
+
+        return $questions == $answered;
+    }
 }

@@ -21,6 +21,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 use \mod_simplelesson\local\questions;
+use \mod_simplelesson\local\pages;
 use \core\output\notification;
 require_once('../../config.php');
 require_once($CFG->libdir . '/formslib.php');
@@ -34,10 +35,12 @@ class simplelesson_pagechanger_form extends moodleform {
     public function definition() {
         global $CFG;
         $mform = $this->_form;
+        $pagetitles = $this->_customdata['page_titles'];
+
         // Select a page title.
         $mform->addElement('select', 'pagetitle',
                 get_string('pagetitle', 'mod_simplelesson'),
-                $this->_customdata['page_titles']);
+                $pagetitles);
 
         $mform->addElement('text', 'score',
                 get_string('questionscore', 'mod_simplelesson'));
@@ -116,7 +119,7 @@ if ($data = $mform->get_data()) {
     //var_dump($data);exit;
     if (!questions::page_has_question($simplelessonid, $data->pagetitle)
             || ($data->pagetitle == 0) ) {
-        questions::update_question_table($data);
+        questions::update_question_table($simplelessonid, $data);
         redirect($PAGE->url,
                 get_string('updated', 'core', $data->name), 2,
                 notification::NOTIFY_SUCCESS);
@@ -124,7 +127,7 @@ if ($data = $mform->get_data()) {
         // If this page has this question we can update.
         if ($data->qid == questions::get_questionid($simplelessonid,
                 $data->pagetitle)) {
-            questions::update_question_table($data);
+            questions::update_question_table($simplelessonid, $data);
             redirect($PAGE->url,
                     get_string('updated', 'core', $data->pagetitle), 2,
                     notification::NOTIFY_SUCCESS);
@@ -142,6 +145,7 @@ if ($action == "edit") {
     // Create data for the form
     // Which is the corresponding question.
     $data = new stdClass();
+
     foreach ($questions as $question) {
         if ($question->qid == $actionitem) {
             $data = $question;
@@ -151,14 +155,16 @@ if ($action == "edit") {
     if (!$data) {
         redirect($pageurl, 'nodata', 2);
     }
-
+    // Which page is the currently selected question on
+    // if any?  Set the form select to the page sequence value.
+    $data->pagetitle = questions::get_page_sequence(
+            $actionitem, $simplelessonid);
     $mform->set_data($data);
     echo $OUTPUT->header();
     echo $OUTPUT->heading(
         get_string('selecting_page', 'mod_simplelesson') .
         $data->name, 3);
         echo '<br />';
-        echo 'q: ' . $data->qid;
         $mform->display();
         echo $OUTPUT->footer();
         return;

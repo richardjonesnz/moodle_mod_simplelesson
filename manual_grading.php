@@ -35,7 +35,7 @@ class simplelesson_essaygrading_form extends moodleform {
         global $CFG;
         $mform = $this->_form;
 
-        // Marks avaiable
+        // Marks available.
         $marks = array();
         for ($m = 0; $m <= $this->_customdata['maxmark']; $m++) {
             $marks[$m] = '' . $m;
@@ -70,12 +70,17 @@ $cm = get_coursemodule_from_instance('simplelesson',
         $simplelessonid, $courseid, false, MUST_EXIST);
 
 $pageurl = new moodle_url(
-        '/mod/simplelesson/edit_questions.php',
+        '/mod/simplelesson/manage_grading.php',
         array('courseid' => $courseid,
         'simplelessonid' => $simplelessonid,
         'answerid' => $answerid));
 $PAGE->set_url($pageurl);
 require_login($course, true, $cm);
+
+$reportsurl = new moodle_url('/mod/simplelesson/reports.php',
+        array('courseid' => $courseid,
+        'simplelessonid' => $simplelessonid,
+        'report' => 'menu'));
 
 $coursecontext = context_course::instance($courseid);
 $modulecontext = context_module::instance($cm->id);
@@ -84,48 +89,33 @@ $PAGE->set_context($modulecontext);
 $PAGE->set_pagelayout('course');
 $renderer = $PAGE->get_renderer('mod_simplelesson');
 
-$answerrecords = reporting::fetch_essay_answer_data($simplelessonid);
-$answerdata = reporting::fetch_essay_answer_record($answerrecords,
-        $answerid);
+$answerdata = reporting::fetch_essay_answer_record($answerid);
 
 // Process the form.
 $mform = new simplelesson_essaygrading_form(null,
         array('maxmark' => $answerdata->maxmark,
         'courseid' => $courseid,
         'simplelessonid' => $simplelessonid,
-        'answerid' => $answerid));
+        'answerid' => $answerid,
+        'action' => 'edit'));
 
 if ($mform->is_cancelled()) {
-    redirect($pageurl, get_string('cancelled'), 2);
-    exit;
+    redirect($reportsurl, get_string('cancelled'), 2,
+            notification::NOTIFY_INFO);
 }
 
-/* If we have data, save it (if it isn't there already)
- * We only allow one question per page.
- * However, we still want to update the table if the question
- * is de-selected using the "none" option.
-*/
 if ($data = $mform->get_data()) {
-
+    // Save the mark in the answers table.
+    $DB->set_field('simplelesson_answers', 'mark',
+            $data->mark, array('id' => $answerid));
+    redirect($reportsurl,
+            get_string('grade_saved', 'mod_simplelesson'), 2,
+            notification::NOTIFY_SUCCESS);
 }
-$mform->set_data($data);
+
 echo $OUTPUT->header();
 echo $renderer->grading_header($answerdata);
 echo $renderer->essay_text($answerdata->youranswer);
-
 $mform->display();
 echo $OUTPUT->footer();
 return;
-
-
-// Output list of questions.
-$questions = questions::fetch_questions($simplelessonid);
-echo $renderer->question_management(
-        $courseid, $simplelessonid, $questions);
-
-// Add page links.
-if (has_capability('mod/simplelesson:manage', $modulecontext)) {
-    echo $renderer->fetch_question_page_links($courseid,
-            $simplelessonid);
-}
-echo $OUTPUT->footer();

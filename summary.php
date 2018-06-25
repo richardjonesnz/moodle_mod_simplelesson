@@ -49,8 +49,7 @@ require_login($course, true, $cm);
 $coursecontext = context_course::instance($courseid);
 $modulecontext = context_module::instance($cm->id);
 // Get the question feedback type. Get display options.
-$feedback = $moduleinstance->behaviour;
-$options = display_options::get_options($feedback);
+$options = new display_options();
 
 $lessontitle = $moduleinstance->name;
 $PAGE->set_context($modulecontext);
@@ -66,41 +65,13 @@ if ($mode == 'attempt') {
     $answerdata = attempts::get_lesson_answer_data(
             $attemptid, $options);
 
-
-    // If not allowed to be incomplete, we check.
-    if (!$moduleinstance->allowincomplete) {
-
-        // This should give us the questions.
-        $questionentries = questions::fetch_attempt_questions(
-                $simplelesson->id);
-
-        // If all questions answered, these should be the same.
-        $completed = ( count($questionentries) ==
-                count($answerdata) );
-    } else {
-        $completed = true;
-    }
-    // Is it complete, do we care?
-    if (!$completed) {
-        $firstpage =
-                pages::get_page_id_from_sequence($simplelessonid, 1);
-        $returnfirst = new moodle_url('/mod/simplelesson/showpage.php',
-                array('courseid' => $courseid,
-                'simplelessonid' => $simplelessonid,
-                'pageid' => $firstpage,
-                'mode' => 'attempt',
-                'attemptid' => $attemptid ));
-        redirect($returnfirst,
-                get_string('answerquestions', 'mod_simplelesson'), 2,
-                notification::NOTIFY_ERROR);
-    }
     echo $OUTPUT->header();
     attempts::save_lesson_answerdata($answerdata);
     echo $OUTPUT->heading(get_string('summary_header', 'mod_simplelesson'), 2);
     $user = attempts::get_attempt_user($attemptid);
     $name = $user->firstname . ' ' . $user->lastname;
     echo get_string('summary_user', 'mod_simplelesson', $name);
-    echo $renderer->lesson_summary($answerdata);
+    echo $renderer->lesson_summary($answerdata, $options->markdp);
 
     // Log the completion event.
     $event = attempt_completed::create(array(

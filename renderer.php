@@ -701,11 +701,12 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $html .= $quba->render_question($slot, $options);
 
         // If it's an essay question, output a save button.
+        // If it's deferred feedback add a save button.
         if ($qtype == 'essay') {
             $html .= html_writer::start_div(
                     'mod_simplelesson_save_button');
             $html .= $this->output->single_button($actionurl,
-                    get_string('saveanswer','mod_simplelesson'));
+                    get_string('saveanswer', 'mod_simplelesson'));
             $html .= html_writer::end_div();
         }
 
@@ -723,9 +724,10 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      * Output the details of the attempt
      *
      * @param $answerdata an array of objects
+     * @param int $markdp - numer of decimal places in mark
      * @return $html table with summary data on user's attempt
      */
-    public function lesson_summary($answerdata) {
+    public function lesson_summary($answerdata, $markdp) {
 
         $table = new html_table();
 
@@ -735,12 +737,13 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         get_string('rightanswer', 'mod_simplelesson'),
         get_string('youranswer', 'mod_simplelesson'),
         get_string('mark', 'mod_simplelesson'),
+        get_string('outof', 'mod_simplelesson'),
         get_string('timetaken', 'mod_simplelesson'));
 
         $table->align =
-                array('left', 'left',
-                'left', 'left', 'left', 'left');
-        $table->wrap = array('', '', '', '', '', '');
+                array('left', 'left', 'left',
+                'left', 'right', 'right', 'left');
+        $table->wrap = array('', '', '', '', '', '', '');
         $table->tablealign = 'center';
         $table->cellspacing = 0;
         $table->cellpadding = '2px';
@@ -752,7 +755,14 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
             $data[] = $answer->pagename;
             $data[] = $answer->rightanswer;
             $data[] = $answer->youranswer;
-            $data[] = $answer->mark;
+            $mark = round($answer->mark, $markdp);
+            if ($mark < 0) {
+                // Question not yet graded (eg essay).
+                $data[] = get_string('ungraded', 'mod_simplelesson');
+            } else {
+                $data[] = $mark;
+            }
+            $data[] = round($answer->maxmark, $markdp);
             $data[] = $answer->timetaken;
             $table->data[] = $data;
         }
@@ -810,7 +820,8 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
 
         $html = '<p>';
         $html .= get_string('summary_score', 'mod_simplelesson',
-            $sessiondata->score) . ' | ';
+            $sessiondata->score) . ' ('
+            . $sessiondata->maxscore . ') | ';
         $html .= get_string('summary_time', 'mod_simplelesson',
             $sessiondata->stime) . '</p>';
         return $html;
@@ -831,16 +842,15 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         return  html_writer::link($url,
                 get_string('finishreview', 'mod_simplelesson'));
     }
-   /**
-    * Returns the html which heads up the manual grading page
-    *
-    * @param $object $answerdata, the relevant users answer data
-    * @return string $html
-    */
+    /**
+     * Returns the html which heads up the manual grading page
+     *
+     * @param $object $answerdata, the relevant users answer data
+     * @return string $html
+     */
     public function grading_header($answerdata) {
 
-        $html = html_writer::
-                start_div('mod_simplelesson_grading_header');
+        $html = html_writer::start_div('mod_simplelesson_grading_header');
 
         $html .= $this->output->heading(get_string('essay_grading',
                 'mod_simplelesson'), 2);
@@ -858,19 +868,17 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
 
         $html .= html_writer::end_div();
 
-    return $html;
-
-   }
-   /**
-    * Return the html for the essay text
-    *
-    * @param $object $text, the relevant users answer
-    * @return string $html
-    */
+        return $html;
+    }
+    /**
+     * Return the html for the essay text
+     *
+     * @param $object $text, the relevant users answer
+     * @return string $html
+     */
     public function essay_text($text) {
 
-        $html = html_writer::
-                start_div('mod_simplelesson_essay_text');
+        $html = html_writer::start_div('mod_simplelesson_essay_text');
         $html .= $text;
         $html .= html_writer::end_div();
 

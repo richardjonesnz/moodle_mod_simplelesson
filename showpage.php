@@ -56,7 +56,7 @@ $modulecontext = context_module::instance($cm->id);
 // Get the question feedback type. Get display options.
 $feedback = $moduleinstance->behaviour;
 $maxattempts = $moduleinstance->maxattempts;
-$options = display_options::get_options($feedback);
+$options = new display_options();
 
 // Question usage id.
 $qubaid = attempts::get_usageid($attemptid);
@@ -112,14 +112,28 @@ if (data_submitted() && confirm_sesskey()) {
     $answerdata->attemptid = $attemptid;
     $answerdata->pageid = $pageid;
     $answerdata->maxmark = $quba->get_question_max_mark($slot);
-    $answerdata->mark = (float) $quba->get_question_fraction($slot);
+    // Get the score associated with this question (if any).
+    $qscore = questions::fetch_question_score(
+                    $simplelessonid, $pageid);
+    // Check if the user has allocated a specific mark
+    // from the question management page.
+    if ($qscore == 0) {
+        $qscore = $answerdata->maxmark;
+    } else {
+        $answerdata->maxmark = round($qscore, $options->markdp);
+    }
+    // Calculate a score for the question.
+    $mark = (float) $quba->get_question_fraction($slot);
+    $answerdata->mark = round($mark * $qscore, $options->markdp);
     $answerdata->questionsummary = $quba->get_question_summary($slot);
     $answerdata->qtype = $qtype; // For manual essay marking.
     $answerdata->rightanswer = $quba->get_right_answer_summary($slot);
     $answerdata->timetaken = 0;
     $answerdata->timestarted = $starttime;
     $answerdata->timecompleted = $timenow;
-
+    // Calculate the elapsed time (s).
+    $answerdata->timetaken = ($answerdata->timecompleted
+                    - $answerdata->timestarted);
     if ($qtype == 'essay') {
         // Special case, has additional save option.
         $submitteddata = $quba->extract_responses($slot);

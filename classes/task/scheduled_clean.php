@@ -30,17 +30,16 @@ defined('MOODLE_INTERNAL') || die();
  * The scheduled task.
  *
  */
- class scheduled_clean extends \core\task\scheduled_task {
+class scheduled_clean extends \core\task\scheduled_task {
     public function get_name() {
-        // Shown in admin screens
+        // Shown in admin screens.
         return get_string('clean_up_usages', 'mod_simplelesson');
     }
 
-     /**
+    /**
      *  Run the cleanup task
      */
-     public function execute() {
-        return \mod_simplelesson\local\attempts::
-                remove_all_usage_data();
+    public function execute() {
+        return \mod_simplelesson\local\attempts::remove_all_usage_data();
     }
 }

@@ -25,28 +25,28 @@
 namespace mod_simplelesson\local;
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/questionlib.php');
-require_once('../../question/previewlib.php');
-require_once('../../question/engine/lib.php');
 
 /**
  * Control question display options
  */
-class display_options  {
+class display_options extends \question_display_options{
     /**
      * Set the display options for a question
-     * @param int $maxvariant The maximum number of variants previewable.
+     * @param string $feedback feedback set in instance config
      * @return array $options the display options
      */
-    public static function get_options($feedback) {
-        $options = array();
-        // Question options - note just 1 question in the attempt.
-        $options = new \question_display_options();
+    public function set_options($feedback) {
         $options->marks = \question_display_options::MAX_ONLY;
         $options->markdp = 2; // Mark display.
         $options->feedback = $feedback;
         $options->generalfeedback = \question_display_options::HIDDEN;
         $options->variant = 100;
-
-        return $options;
+    }
+    /**
+     * Get the display options for a question
+     * @return array $options the display options
+     */
+    public function get_options() {
+        return $this;
     }
 }

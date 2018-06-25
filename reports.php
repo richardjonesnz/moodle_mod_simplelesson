@@ -47,8 +47,6 @@ $PAGE->set_context($modulecontext);
 $PAGE->set_pagelayout('course');
 $PAGE->set_heading(format_string($course->fullname));
 
-echo $OUTPUT->header();
-echo reporting::show_reports_tab($courseid, $simplelessonid);
 $exporturl = new moodle_url('/mod/simplelesson/export.php',
                 array('courseid' => $courseid,
                 'simplelessonid' => $simplelessonid,
@@ -56,18 +54,24 @@ $exporturl = new moodle_url('/mod/simplelesson/export.php',
 switch ($report) {
 
     case 'menu':
+        echo $OUTPUT->header();
+        echo reporting::show_reports_tab($courseid, $simplelessonid);
         $buttons = reporting::show_menu($courseid, $simplelessonid);
         foreach ($buttons as $button) {
             echo $OUTPUT->render($button);
         }
         break;
     case 'answers':
+        echo $OUTPUT->header();
+        echo reporting::show_reports_tab($courseid, $simplelessonid);
         $data = reporting::fetch_answer_data($simplelessonid);
         echo reporting::show_answer_report($data);
         echo html_writer::link($exporturl,
                 get_string('userreportdownload', 'mod_simplelesson'));
         break;
     case 'attempts':
+        echo $OUTPUT->header();
+        echo reporting::show_reports_tab($courseid, $simplelessonid);
         $data = reporting::fetch_attempt_data($simplelessonid);
         echo $OUTPUT->heading($cm->name, 2);
         echo reporting::show_attempt_report($data);
@@ -75,10 +79,22 @@ switch ($report) {
                 get_string('userreportdownload', 'mod_simplelesson'));
         break;
     case 'manualgrade':
+        // Show records requiring manual grading.
         $data = reporting::fetch_essay_answer_data($simplelessonid);
-        echo $OUTPUT->heading($cm->name, 2);
         $records = reporting::get_essay_report_data($simplelessonid,
                 $data);
+        if (empty($records)) {
+            // Nothing to grade.
+            redirect(new moodle_url('/mod/simplelesson/reports.php',
+                    array('courseid' => $courseid,
+                    'simplelessonid' => $simplelessonid,
+                    'report' => 'menu')),
+                    get_string('no_manual_grades',
+                    'mod_simplelesson'), 2);
+        }
+        echo $OUTPUT->header();
+        echo reporting::show_reports_tab($courseid, $simplelessonid);
+        echo $OUTPUT->heading($cm->name, 2);
         echo reporting::show_essay_answer_report($records);
         break;
     default:

@@ -23,7 +23,7 @@
  * @see https://github.com/moodlehq/moodle-mod_newmodule
  * @see https://github.com/justinhunt/moodle-mod_pairwork
  */
-
+use \mod_simplelesson\local\display_options;
 namespace mod_simplelesson\local;
 defined('MOODLE_INTERNAL') || die;
 
@@ -170,7 +170,7 @@ class reporting  {
         }
         return $table;
     }
-        /**
+    /**
      * Returns HTML to a user report of lesson essay attempts
      *
      * @param $records - an array of attempt records
@@ -220,21 +220,27 @@ class reporting  {
         return $fields;
     }
     /**
-     * Fetch the data for a particular essay from an array
+     * Fetch the data for a particular essay
      *
-     * @param object array $records - the array of records
      * @param int $answerid - the id of the wanted record
      * @return object the wanted record
      */
-    public static function fetch_essay_answer_record($records,
-            $answerid) {
+    public static function fetch_essay_answer_record($answerid) {
+        global $DB;
 
-        foreach ($records as $record) {
-            if ($record->id = $answerid) {
-                return $record;
-            }
-        }
-        return false;
+        $sql = "SELECT a.id, a.youranswer, a.maxmark, a.mark,
+                       a.youranswer, a.timecompleted, t.userid,
+                       u.firstname, u.lastname, u.deleted
+                  FROM {simplelesson_answers} a
+                  JOIN {simplelesson_attempts} t
+                    ON t.id = a.attemptid
+                  JOIN {user} u
+                    ON u.id = t.userid
+                 WHERE a.id = :aid
+                   AND u.deleted <> 1";
+
+        return $DB->get_record_sql($sql,
+                array('aid' => $answerid), MUST_EXIST);
     }
     /**
      * User Report - get the user attempt records for a lesson
@@ -326,7 +332,7 @@ class reporting  {
                 'maxscore' =>
                 get_string('maxscore', 'mod_simplelesson'),
                 'timetaken' =>
-                get_string('mark', 'mod_simplelesson'));
+                get_string('timetaken', 'mod_simplelesson'));
 
         return $fields;
     }
@@ -339,9 +345,9 @@ class reporting  {
      */
     public static function fetch_answer_data($simplelessonid) {
         global $DB;
-        $sql = "SELECT a.id, a.attemptid,
+        $sql = "SELECT a.id, a.attemptid, a.maxmark,
                        a.mark, a.questionsummary, a.rightanswer,
-                       a.youranswer,
+                       a.youranswer, a.mark, a.maxmark,
                        a.timestarted, a.timecompleted,
                        t.userid, t.timecreated,
                        u.firstname, u.lastname, u.deleted
@@ -355,7 +361,8 @@ class reporting  {
 
         $records = $DB->get_records_sql($sql,
                 array('slid' => $simplelessonid));
-
+        $options = new display_options();
+        $markdp = $options->markdp;
         // Select and order these for the csv export process.
         $table = array();
         foreach ($records as $record) {
@@ -369,6 +376,8 @@ class reporting  {
             $data->questionsummary = $record->questionsummary;
             $data->rightanswer = $record->rightanswer;
             $data->youranswer = $record->youranswer;
+            $data->mark = round($record->mark, $markdp);
+            $data->maxmark = round($record->maxmark, $markdp);
             $data->timetaken = (int) ($record->timecompleted
                     - $record->timestarted);
             $table[] = $data;
@@ -392,6 +401,8 @@ class reporting  {
         'rightanswer' => get_string('rightanswer',
                 'mod_simplelesson'),
         'youranswer' => get_string('youranswer', 'mod_simplelesson'),
+        'mark' => get_string('mark', 'mod_simplelesson'),
+        'maxmark' => get_string('outof', 'mod_simplelesson'),
         'timetaken' => get_string('timetaken', 'mod_simplelesson'));
 
         return $fields;
@@ -409,7 +420,8 @@ class reporting  {
         $table->align = array(
                 'left', 'left', 'left',
                 'left', 'left', 'left',
-                'left', 'left', 'left');
+                'left', 'left', 'left',
+                'left', 'left');
         $table->wrap = array('nowrap', '', 'nowrap',
                 '', '', '', '', '', '');
         $table->tablealign = 'left';
@@ -432,6 +444,13 @@ class reporting  {
                 $shortanswer = $record->youranswer;
             }
             $data[] = strip_tags(format_string($shortanswer));
+            $mark = $record->mark;
+            if ($mark < 0) {
+                $data[] = get_string('ungraded', 'mod_simplelesson');
+            } else {
+                $data[] = $record->mark;
+            }
+            $data[] = $record->maxmark;
             $data[] = $record->timetaken;
             $table->data[] = $data;
         }
