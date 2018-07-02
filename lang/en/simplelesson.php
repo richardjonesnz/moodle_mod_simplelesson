@@ -56,6 +56,7 @@ $string['allowincomplete_help'] = 'Check to allow students to quit to the review
 $string['immediatefeedback'] = 'Immediate feedback';
 $string['immediatecbm'] = 'Immediate feedback with CBM';
 $string['adaptive'] = 'Adaptive feedback';
+$string['deferredfeedback'] = 'Deferred feedback';
 $string['adaptivenopenalty'] = 'Adaptive (no penalty)';
 $string['behaviour'] = 'Question behaviour';
 $string['behaviour_help'] = 'Immediate feedback has one attempt available and with CBM a certainty must be implemented as well.  With Adaptive feedback the user has multiple tries at each question - a penalty can be applied unless adaptive no penalty is used.  This can only be set on a lesson basis, not per question';
