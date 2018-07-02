@@ -27,7 +27,7 @@ use \mod_simplelesson\local\pages;
 use \mod_simplelesson\local\display_options;
 use \question_engine;
 use \core\output\notification;
-require_once('../../config.php');
+//require_once('../../config.php');
 global $DB;
 $courseid = required_param('courseid', PARAM_INT);
 $simplelessonid = required_param('simplelessonid', PARAM_INT);
