@@ -43,7 +43,7 @@ $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 $cm = get_coursemodule_from_instance('simplelesson', $simplelessonid,
         $courseid, false, MUST_EXIST);
 $moduleinstance  = $DB->get_record('simplelesson', array('id' => $simplelessonid), '*', MUST_EXIST);
-
+$behaviour = $moduleinstance->behaviour;
 $PAGE->set_url('/mod/simplelesson/showpage.php',
         array('courseid' => $courseid,
         'simplelessonid' => $simplelessonid,
@@ -77,10 +77,27 @@ if ( ($questionentry) && ($mode == 'attempt') ) {
     $qid = questions::get_questionid($simplelessonid, $pageid);
     $qtype = questions::fetch_question_type($qid);
 }
+
+// Get the page data.
+$data = pages::get_page_record($pageid);
+
 $actionurl = new moodle_url ('/mod/simplelesson/showpage.php',
         array('courseid' => $courseid,
         'simplelessonid' => $simplelessonid,
         'pageid' => $pageid,
+        'mode' => $mode,
+        'attemptid' => $attemptid));
+
+if (!pages::is_last_page($data)) {
+    $sequence = pages::get_page_sequence_from_id($pageid);
+    $nextpageid = pages::get_page_id_from_sequence($simplelessonid, $sequence + 1);
+} else {
+    $nextpageid = $pageid;
+}
+$nextpageurl = new moodle_url ('/mod/simplelesson/showpage.php',
+        array('courseid' => $courseid,
+        'simplelessonid' => $simplelessonid,
+        'pageid' => $nextpageid,
         'mode' => $mode,
         'attemptid' => $attemptid));
 
@@ -123,7 +140,7 @@ if (data_submitted() && confirm_sesskey()) {
         $answerdata->maxmark = round($qscore, $options->markdp);
     }
     // Calculate a score for the question.
-    $mark = (float) $quba->get_question_fraction($slot);
+    $mark = $quba->get_question_mark($slot);
     $answerdata->mark = round($mark * $qscore, $options->markdp);
     $answerdata->questionsummary = $quba->get_question_summary($slot);
     $answerdata->qtype = $qtype; // For manual essay marking.
@@ -147,7 +164,13 @@ if (data_submitted() && confirm_sesskey()) {
         $answerdata->id = $DB->insert_record(
                 'simplelesson_answers', $answerdata);
     }
-    redirect($actionurl);
+    if ($behaviour == 'deferredfeedback') {
+        // Advance to next question.
+        redirect($nextpageurl);
+    } else {
+        // let the user see the feedback on this page, as required.
+        redirect($actionurl);
+    }
 } else {
     // Log the page viewed event (but not for every
     // question attempt).
@@ -164,9 +187,6 @@ if (data_submitted() && confirm_sesskey()) {
 }
 
 echo $OUTPUT->header();
-
-// Now get this page record.
-$data = pages::get_page_record($pageid);
 
 // Prepare page text, re-write urls.
 $contextid = $modulecontext->id;
@@ -196,7 +216,7 @@ if ( ($questionentry) && ($mode == 'attempt') ) {
     $slot = questions::get_slot($simplelessonid, $pageid);
 
     echo $renderer->render_question_form($actionurl, $options,
-            $slot, $quba, time(), $qtype);
+            $slot, $quba, time(), $qtype, $behaviour);
 }
 
 // If this is the last page, add link to the summary page.

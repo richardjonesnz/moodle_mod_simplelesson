@@ -676,7 +676,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      */
     public function render_question_form(
             $actionurl, $options, $slot, $quba,
-            $starttime, $qtype) {
+            $starttime, $qtype, $behaviour) {
 
         $html = html_writer::start_div('mod_simplelesson_question');
         $headtags = '';
@@ -688,6 +688,9 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
                 'enctype' => 'multipart/form-data',
                 'accept-charset' => 'utf-8',
                 'id' => 'responseform'));
+        $this->page->requires->js_init_call('M.core_question_engine.init_form',
+        array('#responseform'), false, null);
+
         $html .= html_writer::start_tag('div');
         $html .= html_writer::empty_tag('input',
                 array('type' => 'hidden',
@@ -695,6 +698,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $html .= html_writer::empty_tag('input',
                 array('type' => 'hidden',
                 'name' => 'slots', 'value' => $slot));
+        $html .= '<input type="hidden" name="scrollpos" value="" />';
         $html .= html_writer::empty_tag('input',
                 array('type' => 'hidden',
                 'name' => 'starttime', 'value' => $starttime));
@@ -705,7 +709,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
 
         // If it's an essay question, output a save button.
         // If it's deferred feedback add a save button.
-        if ($qtype == 'essay') {
+        if ( ($qtype == 'essay') || ($behaviour == 'deferredfeedback') ) {
             $html .= html_writer::start_div(
                     'mod_simplelesson_save_button');
             $html .= $this->output->single_button($actionurl,
@@ -722,6 +726,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $html .= html_writer::end_div('div');
         return $html;
     }
+
     /**
      *
      * Output the details of the attempt
