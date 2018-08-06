@@ -99,5 +99,15 @@ $capabilities = array(
             'manager' => CAP_ALLOW
         ),
         'clonepermissionsfrom' => 'moodle/course:manageactivities'
+    ),
+    'mod/simplelesson:exportreportpages' => array (
+        'riskbitmask' => RISK_PERSONAL,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => array (
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
+        ),
+        'clonepermissionsfrom' => 'moodle/course:manageactivities'
     )
 );

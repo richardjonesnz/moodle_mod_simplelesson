@@ -116,8 +116,6 @@ class mod_simplelesson_mod_form extends moodleform_mod {
                 'adaptivenopenalty' => get_string('adaptivenopenalty',
                 'mod_simplelesson'),
                 'immediatefeedback' => get_string('immediatefeedback',
-                'mod_simplelesson'),
-                'immediatefeedbackcbm' => get_string('immediatecbm',
                 'mod_simplelesson'));
 
         $mform->addElement('select', 'behaviour',

@@ -30,11 +30,6 @@
  * @see https://github.com/moodlehq/moodle-mod_newmodule
  * @see https://github.com/justinhunt/moodle-mod_pairwork
  */
-
-defined('MOODLE_INTERNAL') || die();
-define('MOD_SIMPLELESSON_ATTEMPT_STARTED', 1);
-define('MOD_SIMPLELESSON_ATTEMPT_COMPLETE', 2);
-
 /* Moodle core API */
 
 /**

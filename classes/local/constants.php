@@ -13,23 +13,21 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * Defines the version and other meta-info about the plugin
+ * Constants.
  *
  * @package    mod_simplelesson
- * @copyright  2018 Richard Jones <richardnz@outlook.com>
+ * @copyright  2018 Richard Jones http://richardnz/net
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @see https://github.com/moodlehq/moodle-mod_newmodule
- * @see https://github.com/justinhunt/moodle-mod_pairwork
  */
-
+namespace mod_simplelesson\local;
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'mod_simplelesson';
-$plugin->version = 2018080615;
-$plugin->release = 'v1.21'; // Implemented scoring & reporting.
-$plugin->requires = 2017051506; // Designed for Moodle 3.5.
-$plugin->maturity = MATURITY_BETA;
-$plugin->cron = 0;
-$plugin->dependencies = array();
+/**
+ * Control question display options
+ */
+class constants {
+    // Attempt status constants
+    const MOD_SIMPLELESSON_ATTEMPT_STARTED = 1;
+    const MOD_SIMPLELESSON_ATTEMPT_COMPLETE = 2;
+}

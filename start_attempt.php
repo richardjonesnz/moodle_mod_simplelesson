@@ -23,6 +23,7 @@
 use \mod_simplelesson\local\questions;
 use \mod_simplelesson\local\attempts;
 use \mod_simplelesson\local\pages;
+use \mod_simplelesson\local\constants;
 use \mod_simplelesson\event\attempt_started;
 use \core\output\notification;
 require_once('../../config.php');
@@ -86,7 +87,7 @@ $attemptdata->courseid = $courseid;
 $attemptdata->simplelessonid = $simplelessonid;
 $attemptdata->pageid = 0;  // Set this later, per page.
 $attemptdata->userid = $USER->id;
-$attemptdata->status = MOD_SIMPLELESSON_ATTEMPT_STARTED;
+$attemptdata->status = constants::MOD_SIMPLELESSON_ATTEMPT_STARTED;
 $attemptdata->sessionscore = 0;
 $attemptdata->maxscore = questions::get_maxscore($simplelessonid);
 $attemptdata->timetaken = 0;

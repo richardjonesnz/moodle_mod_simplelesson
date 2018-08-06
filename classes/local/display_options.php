@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * Set of display options for simplelesson question
- * From previewlib.php and re-written for this filter
+ * Set of display options for simple lesson
+ * From previewlib.php and re-written for this plugin
  *
  * @package    mod_simplelesson
  * @copyright  2010 The Open University

@@ -24,7 +24,7 @@ use \mod_simplelesson\local\pages;
 use \mod_simplelesson\local\questions;
 use \mod_simplelesson\local\reporting;
 use \mod_simplelesson\local\display_options;
-
+use \mod_simplelesson\local\constants;
 namespace mod_simplelesson\local;
 defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/questionlib.php');
@@ -207,14 +207,14 @@ class attempts  {
         // Check if answerdata already recorded.
         $answerrecord = $DB->get_record('simplelesson_answers',
                 array('attemptid' => $answerdata->attemptid,
-                'id' => $answerdata->id),
-                'id', IGNORE_MISSING);
-
+                'simplelessonid' => $answerdata->simplelessonid,
+                'pageid' => $answerdata->pageid),
+                '*', IGNORE_MISSING);
         if ($answerrecord) {
             // Update the record.
-            $answerdata->id = $answerrecord->id;
-            $DB->update_record('simplelesson_answers',
-                    $answerdata);
+            $DB->set_field('simplelesson_answers', 'youranswer',
+                    $answerdata->youranswer,
+                    array('id' => $answerrecord->id));
         } else {
             // Create a new record.
             $answerdata->id = $DB->insert_record(
@@ -258,7 +258,8 @@ class attempts  {
             $sessiondata) {
         global $DB;
         $DB->set_field('simplelesson_attempts',
-                'status', MOD_SIMPLELESSON_ATTEMPT_COMPLETE,
+                'status',
+                constants::MOD_SIMPLELESSON_ATTEMPT_COMPLETE,
                 array('id' => $attemptid));
         $DB->set_field('simplelesson_attempts',
                 'sessionscore', $sessiondata->score,
@@ -343,5 +344,28 @@ class attempts  {
 
         return $DB->delete_records('simplelesson_attempts',
             array('id' => $attemptid));
+    }
+    /**
+     * Upate attempt sessions core and the associated answer
+     * after grading an essay attempt.
+     *
+     * @param int $answerid the answer record id
+     * @param int $mark the mark awarded in manual grading
+     */
+    public static function update_attempt_score($answerid, $mark) {
+        global $DB;
+
+        // Get the session score for the attempt.
+        $attemptid = $DB->get_field('simplelesson_answers',
+                'attemptid', array('id' => $answerid));
+        $sessionscore = $DB->get_field('simplelesson_attempts',
+                'sessionscore', array('id' => $attemptid));
+        // Update with mark for essay question.
+        $DB->set_field('simplelesson_attempts', 'sessionscore',
+                ($sessionscore + $mark),
+                array('id' => $attemptid));
+        // Update the answer for this question.
+        $DB->set_field('simplelesson_answers', 'mark',
+                $mark, array('id' => $answerid));
     }
 }

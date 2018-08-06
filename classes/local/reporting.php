@@ -24,6 +24,7 @@
  * @see https://github.com/justinhunt/moodle-mod_pairwork
  */
 use \mod_simplelesson\local\display_options;
+use \mod_simplelesson\local\constants;
 namespace mod_simplelesson\local;
 defined('MOODLE_INTERNAL') || die;
 
@@ -270,7 +271,8 @@ class reporting  {
             $data->firstname = $record->firstname;
             $data->lastname = $record->lastname;
             $data->datetaken = date("Y-m-d H:i:s", $record->timecreated);
-            $status = ($record->status == MOD_SIMPLELESSON_ATTEMPT_STARTED) ?
+            $status = ($record->status ==
+                    constants::MOD_SIMPLELESSON_ATTEMPT_STARTED) ?
                     "Incomplete" : "Complete";
             $data->status = $status;
             $data->sessionscore = (int) $record->sessionscore;
@@ -534,7 +536,8 @@ class reporting  {
             $data->lastname = $record->lastname;
             $data->datetaken = date("Y-m-d H:i:s",
                     $record->timecreated);
-            $status = ($record->status == MOD_SIMPLELESSON_ATTEMPT_STARTED) ?
+            $status = ($record->status ==
+                    constants::MOD_SIMPLELESSON_ATTEMPT_STARTED) ?
                     "Incomplete" : "Complete";
             $data->status = $status;
             $data->sessionscore = (int) $record->sessionscore;

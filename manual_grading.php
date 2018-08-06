@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 use \mod_simplelesson\local\reporting;
+use \mod_simplelesson\local\attempts;
 use \core\output\notification;
 require_once('../../config.php');
 require_once($CFG->libdir . '/formslib.php');
@@ -108,9 +109,8 @@ if ($mform->is_cancelled()) {
 }
 
 if ($data = $mform->get_data()) {
-    // Save the mark in the answers table.
-    $DB->set_field('simplelesson_answers', 'mark',
-            $data->mark, array('id' => $answerid));
+    // Update the attempt and answer data.
+    attempts::update_attempt_score($answerid, $data->mark);
     redirect($reportsurl,
             get_string('grade_saved', 'mod_simplelesson'), 2,
             notification::NOTIFY_SUCCESS);
