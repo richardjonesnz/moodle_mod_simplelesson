@@ -31,7 +31,7 @@
  * @see https://github.com/justinhunt/moodle-mod_pairwork
  */
 /* Moodle core API */
-
+defined('MOODLE_INTERNAL') || die();
 /**
  * Returns the information on whether the module supports a feature
  *

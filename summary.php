@@ -25,7 +25,6 @@ use \mod_simplelesson\local\questions;
 use \mod_simplelesson\event\attempt_completed;
 use \mod_simplelesson\local\pages;
 use \mod_simplelesson\local\display_options;
-//use \question_engine;
 use \core\output\notification;
 require_once('../../config.php');
 global $DB;

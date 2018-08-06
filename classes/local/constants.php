@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
  * Control question display options
  */
 class constants {
-    // Attempt status constants
+    // Attempt status constants.
     const MOD_SIMPLELESSON_ATTEMPT_STARTED = 1;
     const MOD_SIMPLELESSON_ATTEMPT_COMPLETE = 2;
 }

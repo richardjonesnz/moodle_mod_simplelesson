@@ -74,7 +74,7 @@ class pages  {
      * @param int $pageid, page index is on
      * @return array of links to pages in the simplelesson
      */
-    public static function fetch_page_links($courseid, 
+    public static function fetch_page_links($courseid,
             $simplelessonid, $pageid) {
         global $CFG;
         require_once($CFG->libdir . '/weblib.php');
