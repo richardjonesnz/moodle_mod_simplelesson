@@ -91,7 +91,8 @@ $string['sequence_updated'] = 'Page sequences updated';
 $string['hasquestion'] = 'Has question';
 $string['exportpagelink'] = 'Export pages';
 $string['importpagelink'] = 'Import pages';
-
+$string['editing'] = 'Manage lesson:';
+$string['navigation'] = 'Navigation:';
 
 // Question management.
 $string['manage_questions'] = 'Manage questions';

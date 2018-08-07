@@ -2,16 +2,11 @@
 .mod_simplelesson_page_edit {
     padding-top: 20px;
 }
-.mod_simplelesson_page_links ul {
+.mod_simplelesson_page_links {
     padding-right: 10px;
     list-style: none;
     padding: 0px;
     margin: 0px;
-}
-
-.mod_simplelesson_page_links li {
-    display: inline;
-    padding:20px;
 }
 .mod_simplelesson_edit_links {
     margin: 20px 0 20px 0 ;

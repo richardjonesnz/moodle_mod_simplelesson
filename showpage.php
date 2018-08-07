@@ -27,6 +27,7 @@ use \mod_simplelesson\local\pages;
 use \mod_simplelesson\local\questions;
 use \mod_simplelesson\local\attempts;
 use \mod_simplelesson\local\display_options;
+use \mod_simplelesson\output\link_data;
 use \mod_simplelesson\event\page_viewed;
 require_once('../../config.php');
 require_once(dirname(__FILE__).'/lib.php');
@@ -199,15 +200,12 @@ if ( ($questionentry) && ($mode == 'attempt') ) {
             $slot, $quba, time(), $qtype);
 }
 
-// If this is the last page, add link to the summary page.
-if (pages::is_last_page($data)) {
-    echo $renderer->show_summary_page_link($courseid, $simplelessonid,
-            $mode, $attemptid, $pageid);
-}
-
 // Show the navigation links.
-echo $renderer->show_page_nav_links($data, $courseid, $mode,
-        $attemptid);
+$lastpage = pages::is_last_page($data);
+$linkdata = link_data::get_nav_links($data, $cm, $mode, $attemptid,
+        $lastpage);
+echo $OUTPUT->render_from_template('mod_simplelesson/buttonlinks',
+        $linkdata);
 
 if (has_capability('mod/simplelesson:manage', $modulecontext)) {
     echo $renderer->show_page_edit_links($courseid, $data, 'showpage');

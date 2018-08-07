@@ -68,89 +68,33 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
     }
     /**
      * Returns the editing links for the intro (home) page
-     * @param string $courseid the course id.
-     * @param int $simplelessonid the module instance id.
-     * @param bool $lastpage true if this is the last page.
-     * @return string html for editing links
+     * @param object $module the moduleinstance
+     * @return string html
      */
-    public function fetch_editing_links($courseid, $simplelessonid,
-          $lastpage) {
+    public function fetch_nopage_links($module) {
 
-        $html = html_writer::start_div(
-                'mod_simplelesson_edit_links');
-        $links = array();
-
-        // Add page, if required.
-        if ($lastpage == 0) {
-            // Add message and lastpage link.
-            $html .= '<p>' . get_string('no_pages',
-                'mod_simplelesson') . '</p>';
-            $url = new moodle_url('/mod/simplelesson/add_page.php',
-                    array('courseid' => $courseid,
-                    'simplelessonid' => $simplelessonid,
-                    'sequence' => 0));
-            $links[] = html_writer::link($url,
+        $html = html_writer::start_div('mod_simplelesson_edit_links');
+        // Add message and lastpage link.
+        $html .= '<p>' .
+                get_string('no_pages','mod_simplelesson') . '</p>';
+        $url = new moodle_url('/mod/simplelesson/add_page.php',
+                array('courseid' => $module->course,
+                      'simplelessonid' => $module->instance,
+                      'sequence' => 0));
+        $html .= html_writer::link($url,
                     get_string('gotoaddpage', 'mod_simplelesson'));
-        } else {
-            // Add page at end.
-            $url = new moodle_url('/mod/simplelesson/add_page.php',
-                    array('courseid' => $courseid,
-                    'simplelessonid' => $simplelessonid,
-                    'sequence' => $lastpage + 1));
-            $links[] = html_writer::link($url,
-                    get_string('gotoaddpage', 'mod_simplelesson'));
-
-        }
-        // Page management.
-        $url = new moodle_url('/mod/simplelesson/edit.php',
-                array('courseid' => $courseid,
-                'simplelessonid' => $simplelessonid));
-        $links[] = html_writer::link($url,
-                get_string('manage_pages', 'mod_simplelesson'));
-
-        // Question management.
-        $url = new moodle_url('/mod/simplelesson/edit_questions.php',
-                array('courseid' => $courseid,
-                      'simplelessonid' => $simplelessonid));
-        $links[] = html_writer::link($url,
-                get_string('manage_questions', 'mod_simplelesson'));
-
-        // Attempts management.
-        $html = $html .= html_writer::alist($links, null, 'ul');
-
         $html .= html_writer::end_div();
 
         return $html;
     }
     /**
-     * Returns the html to show info about the lesson,
-     * such as the number of pages and attempt status.
+     * Returns the html to show info about the lesson.
      *
-     * @param int $numpages the number of pages
-     * @param int $attempts the number of attempts taken
-     * @param int $maxattempts the attempts allowed
-     * @param bool $canmanage true if permission to manage lesson
-     * @return string html
+     * @param string $data the attempts information
+     * @return string html of lesson information
      */
-    public function fetch_lesson_info($numpages, $attempts,
-            $maxattempts, $canmanage) {
-
-        $html = '';
-        $html .= html_writer::start_div('mod_simplelesson_data');
-        $pages = get_string('numpages', 'mod_simplelesson', $numpages);
-        $pages .= ' | ';
-        if ( ($maxattempts == 0) || ($canmanage) ) {
-            $attempts = get_string('unlimited_attempts',
-                   'mod_simplelesson');
-        } else {
-            $attempts = get_string('numattempts', 'mod_simplelesson',
-                    $attempts);
-            $attempts .= ' ' . $maxattempts . ' ';
-        }
-        $html .= $pages . $attempts;
-        $html .= html_writer::end_div();
-
-        return $html;
+    public function fetch_lesson_info($data) {
+        return html_writer::div($data, 'mod_simplelesson_data');
     }
 
     /**
@@ -167,108 +111,6 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $html .= $this->output->heading($data->pagetitle, 4);
         $html .= $data->pagecontents;
         $html .= html_writer::end_div();
-        return $html;
-    }
-
-    /**
-     * Returns links to first page and start attempt page
-     *
-     * @param int $courseid - current course
-     * @param int $simplelessonid - current lesson
-     * @param int $pageid - current page
-     * @param bool $attemptlink - whether to show attempt button
-     * @return string html links on first page
-     */
-    public function fetch_firstpage_links($courseid,
-            $simplelessonid, $pageid, $attemptlink) {
-
-        $html = '';
-        $links = array();
-
-        $html .= html_writer::start_div(
-                'mod_simplelesson_page_links');
-
-        // Link to first page.
-        $url = new moodle_url('/mod/simplelesson/showpage.php',
-                    array('courseid' => $courseid,
-                          'simplelessonid' => $simplelessonid,
-                          'pageid' => $pageid,
-                          'mode' => 'preview'));
-        $links[] = html_writer::link($url,
-                    get_string('preview', 'mod_simplelesson'),
-                    array('class' => 'btn btn-primary'));
-
-        // Link to start attempt page.
-        if ($attemptlink) {
-            $url = new moodle_url('/mod/simplelesson/start_attempt.php',
-                    array('courseid' => $courseid,
-                    'simplelessonid' => $simplelessonid,
-                    'pageid' => $pageid));
-            $links[] = html_writer::link($url,
-                    get_string('attempt', 'mod_simplelesson'),
-                    array('class' => 'btn btn-primary'));
-        }
-
-        $html .= html_writer::alist($links, null, 'ul');
-
-        $html .= html_writer::end_div();
-
-        return $html;
-    }
-
-    /**
-     * Show the home, previous and next links
-     *
-     * @param object $data object instance of current page
-     * @param int $courseid - current course
-     * @param string $mode - previewing or attempting
-     * @param int $attemptid - current attempt
-     * @return string html representation of navigation links
-     */
-    public function show_page_nav_links($data, $courseid,
-            $mode, $attemptid) {
-
-        $links = array();
-        $html = $this->output->box_start();
-        $html .= html_writer::start_div('mod_simplelesson_page_links');
-        // Home link. Not shown during an attempt.
-        if ($mode != 'attempt') {
-            $url = new moodle_url('/mod/simplelesson/view.php',
-                    array('simplelessonid' => $data->simplelessonid));
-            $links[] = html_writer::link($url,
-                    get_string('homelink', 'mod_simplelesson'),
-                    array('class' => 'btn btn-primary'));
-        }
-        if ($data->prevpageid != 0) {
-            $url = new moodle_url('/mod/simplelesson/showpage.php',
-                        array('courseid' => $courseid,
-                        'simplelessonid' => $data->simplelessonid,
-                        'pageid' => $data->prevpageid,
-                        'mode' => $mode,
-                        'attemptid' => $attemptid));
-            $links[] = html_writer::link($url,
-                        get_string('gotoprevpage', 'mod_simplelesson'),
-                        array('class' => 'btn btn-info'));
-
-        }
-        // Check link is valid.
-        if ($data->nextpageid != 0) {
-            $url = new moodle_url('/mod/simplelesson/showpage.php',
-                        array('courseid' => $courseid,
-                        'simplelessonid' => $data->simplelessonid,
-                        'pageid' => $data->nextpageid,
-                        'mode' => $mode,
-                        'attemptid' => $attemptid));
-            $links[] = html_writer::link($url,
-                        get_string('gotonextpage', 'mod_simplelesson'),
-                array('class' => 'btn btn-info'));
-
-        }
-
-        $html .= html_writer::alist($links, null, 'ul');
-        $html .= html_writer::end_div();
-        $html .= $this->output->box_end();
-
         return $html;
     }
 
@@ -541,34 +383,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
 
         return $html;
     }
-     /**
-      * Returns the html for the link from last page
-      * to summary page
-      * @param int $courseid current course
-      * @param int $simplelessonid current lesson
-      * @param string $mode "preview" or "attempt"
-      * @param int $attemptid id from question_attempts
-      * @param int $pageid current page
-      * @return string html for the link
-      */
-    public function show_summary_page_link($courseid, $simplelessonid,
-            $mode, $attemptid, $pageid) {
-        $html = '';
-        $html .= html_writer::start_div(
-                'mod_simplelesson_page');
-        $url = new moodle_url('/mod/simplelesson/summary.php',
-                array('courseid' => $courseid,
-                'simplelessonid' => $simplelessonid,
-                'mode' => $mode,
-                'pageid' => $pageid,
-                'attemptid' => $attemptid));
-        $html .= html_writer::link($url,
-                get_string('end_lesson', 'mod_simplelesson'),
-                array('class' => 'btn btn-primary'));
-        $html .= '</p>';
-        $html .= html_writer::end_div();
-        return $html;
-    }
+
     /**
      * Returns a list of questions and editing actions
      *

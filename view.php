@@ -28,6 +28,7 @@ use mod_simplelesson\local\attempts;
 use mod_simplelesson\event\course_module_viewed;
 use mod_simplelesson\local\reporting;
 use mod_simplelesson\local\questions;
+use mod_simplelesson\output\link_data;
 require_once('../../config.php');
 require_once(dirname(__FILE__).'/lib.php');
 global $DB, $USER;
@@ -99,31 +100,54 @@ if ($simplelesson->intro) {
 // Do we have any pages?
 $numpages = pages::count_pages($simplelesson->id);
 
-// Add a link to the first page.
+// Add link(s) to the intro page.
 if ($numpages > 0) {
+
     // Get the record # for the first page.
     $pageid = pages::get_page_id_from_sequence($simplelesson->id, 1);
-    // Show the attempt link if we have questions.
+
+    // Do we have questions?
     $questionentries = questions::fetch_attempt_questions(
             $simplelesson->id);
     $attemptlink = (count($questionentries) > 0);
-    echo $renderer->fetch_firstpage_links($course->id,
-            $simplelesson->id, $pageid, $attemptlink);
+
+    // Render the buttons.
+    $data = link_data::get_firstpage_links($cm, $pageid, $attemptlink);
+    echo $OUTPUT->render_from_template('mod_simplelesson/buttonlinks',
+            $data);
 }
 
-$canmanage = has_capability('mod/simplelesson:manage', $modulecontext);
+$canmanage = has_capability('mod/simplelesson:manage',
+        $modulecontext);
 
 // First page summary.
 $userattempts = attempts::get_number_of_attempts($USER->id,
         $simplelesson->id);
-echo $renderer->fetch_lesson_info($numpages, $userattempts,
-        $simplelesson->maxattempts, $canmanage);
+// Pages in the lesson.
+$pages = get_string('numpages', 'mod_simplelesson', $numpages);
+$pages .= ' | ';
+// Attempts information.
+if ( ($simplelesson->maxattempts == 0) || ($canmanage) ) {
+    $attempts = get_string('unlimited_attempts','mod_simplelesson');
+} else {
+    $attempts = get_string('numattempts', 'mod_simplelesson',
+            $userattempts);
+    $attempts .= ' ' . $maxattempts . ' ';
+}
+// Output the summary information.
+echo $renderer->fetch_lesson_info($pages . $attempts);
 
 // If we are teacher we see edit links.
 if ($canmanage) {
-    echo $renderer->fetch_editing_links($course->id,
-            $simplelesson->id, $numpages);
-}
 
+    // Are there pages yet?
+    if ($numpages == 0) {
+        echo $renderer->fetch_nopage_links($cm);
+    } else {
+    $data = link_data::get_edit_links($cm);
+    echo $OUTPUT->render_from_template('mod_simplelesson/links',
+        $data);
+    }
+}
 // Finish the page.
 echo $OUTPUT->footer();

@@ -1,0 +1,50 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+
+{{!
+    @template mod_simplelesson/links
+
+    Moodle rendering template for page links
+
+    This template renders a Bootstrap navigation list.
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Example data (json):
+        {
+         "class": "mod_simplelesson_page_links",
+         "name": "Links: "
+         "linkdata": ["link": "#", "text": "click me"],
+        }
+
+}}
+<div class = "{{class}}">
+  <div  class="container">
+      <ul class="list-inline">
+      <li class="list-inline-item"><h4>{{name}}</h4></li>
+        {{#linkdata}}
+          <li class="list-inline-item">
+             <a href="{{{link}}}">{{text}}</a>
+          </li>
+        {{/linkdata}}
+      </ul>
+  </div>
+</div>
