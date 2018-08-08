@@ -24,6 +24,7 @@
  * @see https://github.com/justinhunt/moodle-mod_pairwork
  */
 use mod_simplelesson\local\reporting;
+use mod_simplelesson\output\link_data;
 require_once('../../config.php');
 
 $courseid = required_param('courseid', PARAM_INT);
@@ -102,5 +103,8 @@ switch ($report) {
         debugging('Internal error: missing or invalid report type',
                 DEBUG_DEVELOPER);
 }
-
+$linkdata = link_data::get_home_button($cm, get_string(
+        'homelink', 'mod_simplelesson'));
+echo $OUTPUT->render_from_template('mod_simplelesson/buttonlinks',
+            $linkdata);
 echo $OUTPUT->footer();

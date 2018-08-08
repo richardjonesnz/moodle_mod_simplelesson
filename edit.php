@@ -50,11 +50,9 @@ $modulecontext = context_module::instance($cm->id);
 $PAGE->set_context($modulecontext);
 $PAGE->set_pagelayout('course');
 
-$renderer = $PAGE->get_renderer('mod_simplelesson');
-echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('simplelesson_editing',
-        'mod_simplelesson'), 2);
-
+$returnedit = new moodle_url('/mod/simplelesson/edit.php',
+        array('courseid' => $courseid,
+        'simplelessonid' => $simplelessonid));
 /*
  * Check the action:
  * The up and down arrows are only shown for the relevant
@@ -63,10 +61,15 @@ echo $OUTPUT->heading(get_string('simplelesson_editing',
 if ( ($sequence != 0) && ($action != 'none') ) {
     if ($action == 'move_up') {
         pages::move_page_up($simplelessonid, $sequence);
+        redirect($returnedit);
     } else if ($action == 'move_down') {
         pages::move_page_down($simplelessonid, $sequence);
+        redirect($returnedit);
     }
 }
+echo $OUTPUT->header();
+echo $OUTPUT->heading(get_string('simplelesson_editing',
+        'mod_simplelesson'), 2);
 
 $tabledata = table_data::get_edit_table_data($cm);
 echo $OUTPUT->render_from_template('mod_simplelesson/pages_edit',

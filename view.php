@@ -145,7 +145,7 @@ if ($canmanage) {
         echo $renderer->fetch_nopage_links($cm);
     } else {
     $data = link_data::get_edit_links($cm);
-    echo $OUTPUT->render_from_template('mod_simplelesson/links',
+    echo $OUTPUT->render_from_template('mod_simplelesson/buttonlinks',
         $data);
     }
 }

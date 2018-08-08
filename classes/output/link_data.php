@@ -20,8 +20,8 @@
  * @copyright  Richard Jones https://richardnz.net
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-use \mod_simplelesson\local\pages;
 namespace mod_simplelesson\output;
+use \mod_simplelesson\local\pages;
 defined('MOODLE_INTERNAL') || die;
 
 /**
@@ -83,6 +83,7 @@ class link_data {
         $baseparams = ['courseid' => $cm->course,
                 'simplelessonid' => $cm->instance];
         $ret->class = 'mod_simplelesson_edit_links';
+        $ret->buttonclass = 'btn btn-default';
         $ret->name = get_string('editing', 'mod_simplelesson');
         $ret->linkdata = self::get_managing_links($baseparams);
 
@@ -115,7 +116,8 @@ class link_data {
                 'attemptid' => $attemptid));
 
         // Home link.
-        $ret->linkdata[] = self::get_home_link($cm);
+        $ret->linkdata[] = self::get_home_link($cm,
+                get_string('homelink', 'mod_simplelesson'));
 
         // Link to previous (if exists).
         if ($data->prevpageid != 0) {
@@ -149,9 +151,8 @@ class link_data {
     /**
      * Return data for the manage page links.
      *
-     * @param object $ret the page data
+     * @param object $data the page data
      * @param object $cm the course module instance
-     * @param string $mode the mode param of showpage.php
      * @return $ret object, data for rendering mustache template
      */
     public static function get_manage_links($data, $cm) {
@@ -189,7 +190,7 @@ class link_data {
     /**
      * Return data for the manage page links.
      *
-     * @param string $baseparams link parameters
+     * @param string $baseparams url link parameters
      * @return array of link data for mustache template
      */
     public static function get_managing_links($baseparams) {
@@ -213,19 +214,44 @@ class link_data {
     /**
      * Return data for the home page link.
      *
+     * @param object $cm the course module instance
+     * @param string $label text for the link
      * @return array link data for mustache template
      */
-    public static function get_home_link($cm) {
+    public static function get_home_link($cm, $label) {
 
         $link = new \moodle_url('view.php',
         ['simplelessonid' => $cm->instance]);
 
         return ['link' => $link->out(false),
-               'text' => get_string('homelink', 'mod_simplelesson')];
+               'text' => $label];
     }
+    /**
+     * Return button with home page link.
+     *
+     * @param object $cm the course module instance
+     * @param string $label text for the button
+     * @return array link data for mustache template
+     */
+    public static function get_home_button($cm, $label) {
+
+       $baseparams = ['courseid' => $cm->course,
+                       'simplelessonid' => $cm->instance];
+        $ret = new \stdClass;
+        $ret->class = 'mod_simplelesson_nav_links';
+        $ret->buttonclass = 'btn btn-primary';
+        $ret->linkdata = array();
+
+        $ret->linkdata[] = self::get_home_link($cm, $label);
+
+        return $ret;
+    }
+
+
     /**
      * Return data for the page management link.
      *
+     * @param object $cm the course module instance
      * @return array link data for mustache template
      */
      public static function get_pagemanagement_links($cm) {
@@ -237,13 +263,52 @@ class link_data {
         $ret->buttonclass = 'btn btn-primary';
         $ret->linkdata = array();
 
-        $ret->linkdata[] = self::get_home_link($cm);
+        $ret->linkdata[] = self::get_home_link($cm,
+                get_string('homelink', 'mod_simplelesson'));
+
+        // Link to Add page
+        $numpages = pages::count_pages($cm->instance);
+        $link = new \moodle_url('add_page.php', $baseparams);
+        $ret->linkdata[] = ['link' => $link->out(false,
+                ['sequence' =>$numpages + 1]),
+                'text' => get_string('gotoaddpage', 'mod_simplelesson')];
 
         // Link to auto-sequencing page.
-
         $link = new \moodle_url('autosequence.php', $baseparams);
         $ret->linkdata[] = ['link' =>$link->out(false),
                 'text' => get_string('autosequencelink',
+                'mod_simplelesson')];
+
+        return $ret;
+    }
+    /**
+     * Return data for the question page management link.
+     *
+     * @param object $cm the course module instance
+     * @return array link data for mustache template
+     */
+     public static function get_questionpage_links($cm) {
+
+        $baseparams = ['courseid' => $cm->course,
+                       'simplelessonid' => $cm->instance];
+        $ret = new \stdClass;
+        $ret->class = 'mod_simplelesson_nav_links';
+        $ret->buttonclass = 'btn btn-primary';
+        $ret->linkdata = array();
+
+        $ret->linkdata[] = self::get_home_link($cm,
+                get_string('homelink', 'mod_simplelesson'));
+
+        // Link to Add question page
+        $link = new \moodle_url('add_question.php', $baseparams);
+        $ret->linkdata[] = ['link' => $link->out(false),
+                'text' => get_string('add_question',
+                'mod_simplelesson')];
+
+        // Link Page management.
+        $link = new \moodle_url('edit.php', $baseparams);
+        $ret->linkdata[] = ['link' =>$link->out(false),
+                'text' => get_string('manage_pages',
                 'mod_simplelesson')];
 
         return $ret;

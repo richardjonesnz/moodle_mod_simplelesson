@@ -16,6 +16,7 @@
 
 use \mod_simplelesson\local\questions;
 use \mod_simplelesson\local\pages;
+use \mod_simplelesson\output\link_data;
 use \core\output\notification;
 
 /**
@@ -183,7 +184,8 @@ echo $renderer->question_management(
 
 // Add page links.
 if (has_capability('mod/simplelesson:manage', $modulecontext)) {
-    echo $renderer->fetch_question_page_links($courseid,
-            $simplelessonid);
+    $linkdata = link_data::get_questionpage_links($cm);
+    echo $OUTPUT->render_from_template('mod_simplelesson/buttonlinks',
+            $linkdata);
 }
 echo $OUTPUT->footer();

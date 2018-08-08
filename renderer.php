@@ -68,6 +68,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
     }
     /**
      * Returns the editing links for the intro (home) page
+     * when there are no pages yet.
      * @param object $module the moduleinstance
      * @return string html
      */
@@ -112,75 +113,6 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $html .= $data->pagecontents;
         $html .= html_writer::end_div();
         return $html;
-    }
-
-    /**
-     * Returns HTML to display action links for a page
-     *
-     * @param int $courseid - current course
-     * @param int $simplelessonid - current module instance id
-     * @param object $data - a simplelesson page record
-     * @return string, a set of page action links
-     */
-    public function page_action_links($courseid, $simplelessonid,
-            $data) {
-        global $CFG;
-        $actions = array();
-
-        $url = new moodle_url('/mod/simplelesson/edit_page.php',
-                array('courseid' => $courseid,
-                'simplelessonid' => $simplelessonid,
-                'sequence' => $data->sequence));
-
-        $label = get_string('gotoeditpage', 'mod_simplelesson');
-
-        // Standard Moodle icons used here.
-        $img = $this->output->pix_icon('t/edit', $label);
-        $actions[] = html_writer::link($url, $img, array('title' => $label));
-
-        // Preview page = show page.
-        $url = new moodle_url('/mod/simplelesson/showpage.php',
-                array('courseid' => $courseid,
-                'simplelessonid' => $simplelessonid,
-                'pageid' => $data->id));
-        $label = get_string('showpage', 'mod_simplelesson');
-        $img = $this->output->pix_icon('t/preview', $label);
-        $actions[] = html_writer::link($url, $img, array('title' => $label));
-
-        // Delete page.
-        $url = new moodle_url('/mod/simplelesson/delete_page.php',
-                array('courseid' => $courseid,
-                'simplelessonid' => $simplelessonid,
-                'sequence' => $data->sequence,
-                'returnto' => 'edit'));
-        $label = get_string('gotodeletepage', 'mod_simplelesson');
-        $img = $this->output->pix_icon('t/delete', $label);
-        $actions[] = html_writer::link($url, $img, array('title' => $label));
-
-        // Move page up.
-        if ($data->sequence != 1) {
-            $url = new moodle_url('/mod/simplelesson/edit.php',
-                    array('courseid' => $courseid,
-                    'simplelessonid' => $simplelessonid,
-                    'sequence' => $data->sequence,
-                    'action' => 'move_up'));
-            $label = get_string('move_up', 'mod_simplelesson');
-            $img = $this->output->pix_icon('t/up', $label);
-            $actions[] = html_writer::link($url, $img, array('title' => $label));
-        }
-
-        // Move down.
-        if (!pages::is_last_page($data)) {
-            $url = new moodle_url('/mod/simplelesson/edit.php',
-                    array('courseid' => $courseid,
-                    'simplelessonid' => $simplelessonid,
-                    'sequence' => $data->sequence,
-                    'action' => 'move_down'));
-            $label = get_string('move_down', 'mod_simplelesson');
-            $img = $this->output->pix_icon('t/down', $label);
-            $actions[] = html_writer::link($url, $img, array('title' => $label));
-        }
-        return implode(' ', $actions);
     }
     /**
      * Returns HTML to display a report tab
@@ -465,20 +397,6 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         return html_writer::table($table);
     }
     /**
-     * Returns the html for home page link
-     * @param int $simplelessonid current lesson
-     * @return string, html link
-     */
-    public function show_home_page_link($simplelessonid) {
-
-        $url = new moodle_url('/mod/simplelesson/view.php',
-                array('simplelessonid' => $simplelessonid));
-        return html_writer::link($url,
-                get_string('homelink', 'mod_simplelesson'),
-                array('class' => 'btn btn-primary'));
-
-    }
-    /**
      * Returns the html for attempt summary page
      * @param object $sessiondata - score, maxscore and time
      * @return string, html to show summary
@@ -492,22 +410,6 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $html .= get_string('summary_time', 'mod_simplelesson',
             $sessiondata->stime) . '</p>';
         return $html;
-    }
-    /**
-     * Returns the html for link to view page
-     * @param int $courseid current course id
-     * @param object $simplelessonid - the lesson
-     * @param object $attemptid - the attempt
-     * @return string, html page link
-     */
-    public function show_attempt_completion_link($courseid,
-            $simplelessonid, $attemptid) {
-
-        $url = new moodle_url('/mod/simplelesson/view.php',
-                array('courseid' => $courseid,
-                'simplelessonid' => $simplelessonid));
-        return  html_writer::link($url,
-                get_string('finishreview', 'mod_simplelesson'));
     }
     /**
      * Returns the html which heads up the manual grading page

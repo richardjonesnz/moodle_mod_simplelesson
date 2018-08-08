@@ -25,6 +25,7 @@ use \mod_simplelesson\local\questions;
 use \mod_simplelesson\event\attempt_completed;
 use \mod_simplelesson\local\pages;
 use \mod_simplelesson\local\display_options;
+use \mod_simplelesson\output\link_data;
 use \core\output\notification;
 require_once('../../config.php');
 global $DB;
@@ -96,8 +97,10 @@ if ($mode == 'attempt') {
     $DB->set_field('simplelesson_attempts', 'qubaid', 0,
             array('id' => $attemptid));
 
-    echo $renderer->show_attempt_completion_link($courseid,
-            $simplelessonid, $attemptid);
+    $linkdata = link_data::get_home_button($cm,
+            get_string('finishreview', 'mod_simplelesson'));
+    echo $OUTPUT->render_from_template('mod_simplelesson/buttonlinks',
+            $linkdata);
 } else {
     // It's a preview, go back to the home page.
     $returnview = new moodle_url('/mod/simplelesson/view.php',
