@@ -93,6 +93,7 @@ $string['exportpagelink'] = 'Export pages';
 $string['importpagelink'] = 'Import pages';
 $string['editing'] = 'Manage lesson:';
 $string['navigation'] = 'Navigation:';
+$string['managing'] = 'Manage pages: ';
 
 // Question management.
 $string['manage_questions'] = 'Manage questions';

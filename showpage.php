@@ -208,7 +208,9 @@ echo $OUTPUT->render_from_template('mod_simplelesson/buttonlinks',
         $linkdata);
 
 if (has_capability('mod/simplelesson:manage', $modulecontext)) {
-    echo $renderer->show_page_edit_links($courseid, $data, 'showpage');
+    $linkdata = link_data::get_manage_links($data, $cm);
+    echo $OUTPUT->render_from_template('mod_simplelesson/buttonlinks',
+            $linkdata);
 }
 
 echo $OUTPUT->footer();

@@ -2,18 +2,12 @@
 .mod_simplelesson_page_edit {
     padding-top: 20px;
 }
-.mod_simplelesson_page_links {
-    padding-right: 10px;
-    list-style: none;
-    padding: 0px;
-    margin: 0px;
-}
-.mod_simplelesson_edit_links {
-    margin: 20px 0 20px 0 ;
-}
-.mod_simplelesson_edit_links ul {
-    padding-right: 20px;
-    list-style: none;
+.mod_simplelesson_edit_links,
+.mod_simplelesson_nav_links,
+.mod_simplelesson_page_links,
+.mod_simplelesson_data {
+    margin: 20px 0 20px 0;
+    padding:5px;
 }
 .mod_simplelesson_page_index ul {
     list-style-type: none;
@@ -27,9 +21,6 @@
 .mod_simplelesson_page_index_container {
   float:right;
   padding: 10px;
-}
-.mod_simplelesson_data {
-  padding: 10px 0 0 20px;
 }
 .mod_simplelesson_question .info {
     display:none;

@@ -23,6 +23,8 @@
  */
 
 use \mod_simplelesson\local\pages;
+use \mod_simplelesson\output\link_data;
+use \mod_simplelesson\output\table_data;
 require_once('../../config.php');
 global $DB;
 // Fetch URL parameters.
@@ -52,8 +54,6 @@ $renderer = $PAGE->get_renderer('mod_simplelesson');
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('simplelesson_editing',
         'mod_simplelesson'), 2);
-echo get_string('page_editing', 'mod_simplelesson');
-echo '<br />';
 
 /*
  * Check the action:
@@ -67,8 +67,11 @@ if ( ($sequence != 0) && ($action != 'none') ) {
         pages::move_page_down($simplelessonid, $sequence);
     }
 }
-echo $renderer->page_management($course->id, $moduleinstance,
-        $modulecontext);
 
-echo $renderer->show_page_management_links($courseid, $simplelessonid);
+$tabledata = table_data::get_edit_table_data($cm);
+echo $OUTPUT->render_from_template('mod_simplelesson/pages_edit',
+        $tabledata);
+$linkdata = link_data::get_pagemanagement_links($cm);
+echo $OUTPUT->render_from_template('mod_simplelesson/buttonlinks',
+        $linkdata);
 echo $OUTPUT->footer();

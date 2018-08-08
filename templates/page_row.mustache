@@ -1,0 +1,68 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+
+{{!
+    @template mod_simplelesson/pages_edit
+
+    Moodle table rendering template for lesson page management
+
+    This template renders and html table of page data.
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Example data (json):
+        {
+         "sequence": "1",
+         "title": "column name",
+         "previous": "1",
+         "next": "1",
+         "question": ["icon", "component", "alt"],
+         "action": ["add", ["icon", "component", "core"]]
+        }
+}}
+<tr>
+  <td>{{sequence}}</td>
+  <td>{{title}}</td>
+  <td>{{previous}}</td>
+  <td>{{next}}</td>
+  <td>
+    {{# pix}}
+      {{question.icon}}, {{question.component}}, {{question.alt}}
+    {{/ pix}}
+  </td>
+  <td>
+    {{# action.add}}
+      {{> mod_simplelesson/page_actions}}
+    {{/ action.add}}
+    {{# action.preview}}
+      {{> mod_simplelesson/page_actions}}
+    {{/ action.preview}}
+    {{# action.delete}}
+      {{> mod_simplelesson/page_actions}}
+    {{/ action.delete}}
+    {{# action.moveup}}
+      {{> mod_simplelesson/page_actions}}
+    {{/ action.moveup}}
+    {{# action.movedown}}
+      {{> mod_simplelesson/page_actions}}
+    {{/ action.movedown}}
+  </td>
+</tr>
