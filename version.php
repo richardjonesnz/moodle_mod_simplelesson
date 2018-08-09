@@ -27,8 +27,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'mod_simplelesson';
-$plugin->version = 2018081000;
-$plugin->release = 'v1.23'; // Updated backup db fields.
+$plugin->version = 2018081001;
+$plugin->release = 'v1.24'; // Updated backup db fields.
 $plugin->requires = 2017051506; // Designed for Moodle 3.5.
 $plugin->maturity = MATURITY_BETA;
 $plugin->cron = 0;
