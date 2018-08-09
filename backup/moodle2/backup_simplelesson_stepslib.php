@@ -55,9 +55,9 @@ class backup_simplelesson_activity_structure_step extends backup_activity_struct
         $simplelesson = new backup_nested_element('simplelesson',
                 array('id'),
                 array('course', 'name', 'intro', 'introformat',
-                'title', 'showindex', 'categoryid', 'behaviour',
-                'maxattempts', 'grade', 'timecreated',
-                'timemodified'));
+                'title', 'showindex', 'allowreview', 'allowincomplete',
+                'categoryid', 'behaviour', 'maxattempts', 'grade',
+                'timecreated', 'timemodified'));
 
         // Define the child elements.
         $pages = new backup_nested_element('pages');
@@ -78,9 +78,8 @@ class backup_simplelesson_activity_structure_step extends backup_activity_struct
         $answer = new backup_nested_element('answer',
                 array('id'),
                 array('simplelessonid', 'qatid', 'attemptid', 'pageid',
-                'maxmark', 'mark', 'questionsummary', 'rightanswer',
-                'youranswer', 'timetaken', 'timestarted',
-                'timecompleted'));
+                'maxmark', 'mark', 'questionsummary', 'qtype', 'rightanswer',
+                'youranswer', 'timetaken', 'timestarted', 'timecompleted'));
 
         // Build the tree.
         $simplelesson->add_child($pages);
