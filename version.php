@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'mod_simplelesson';
 $plugin->version = 2018080901;
-$plugin->release = 'v1.22'; // Deferred feedback & bug fixes.
+$plugin->release = 'v1.23'; // Student review check.
 $plugin->requires = 2017051506; // Designed for Moodle 3.5.
 $plugin->maturity = MATURITY_BETA;
 $plugin->cron = 0;
