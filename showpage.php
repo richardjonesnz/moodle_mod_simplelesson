@@ -95,9 +95,11 @@ if (data_submitted() && confirm_sesskey()) {
     question_engine::save_questions_usage_by_activity($quba);
     $transaction->allow_commit();
 
-    // Force finish the deferred question on save.
+    // Force finish the deferred question on save. But not if
+    // it's an essay where we want multiple saves allowed.
     $slot = questions::get_slot($simplelessonid, $pageid);
-    if ($quba->get_preferred_behaviour() == 'deferredfeedback') {
+    if ( ($quba->get_preferred_behaviour() == 'deferredfeedback')
+            && ($qtype != 'essay') ) {
         $quba->finish_question($slot);
     }
     /* Record results here for each answer.
@@ -142,6 +144,7 @@ if (data_submitted() && confirm_sesskey()) {
     if ($qtype == 'essay') {
         // Special case, has additional save option.
         $submitteddata = $quba->extract_responses($slot);
+        var_dump($submitteddata);
         $answerdata->youranswer = $submitteddata['answer'];
         // Set mark negative (indicate needs grading).
         $answerdata->mark = -1;
