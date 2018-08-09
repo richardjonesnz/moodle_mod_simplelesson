@@ -17,6 +17,7 @@
 use \mod_simplelesson\local\questions;
 use \mod_simplelesson\local\pages;
 use \mod_simplelesson\output\link_data;
+use \mod_simplelesson\output\table_data;
 use \core\output\notification;
 
 /**
@@ -178,9 +179,13 @@ echo $OUTPUT->heading(
         get_string('question_editing', 'mod_simplelesson'), 2);
 echo get_string('edit_question_page', 'mod_simplelesson');
 // Output list of questions.
-$questions = questions::fetch_questions($simplelessonid);
-echo $renderer->question_management(
-        $courseid, $simplelessonid, $questions);
+//$questions = questions::fetch_questions($simplelessonid);
+//echo $renderer->question_management(
+//        $courseid, $simplelessonid, $questions);
+
+$tabledata = table_data::get_question_table_data($cm);
+echo $OUTPUT->render_from_template('mod_simplelesson/question_edit',
+            $tabledata);
 
 // Add page links.
 if (has_capability('mod/simplelesson:manage', $modulecontext)) {

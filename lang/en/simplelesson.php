@@ -112,7 +112,7 @@ $string['add_question_page'] = 'Check the boxes to add selected questions to thi
 $string['select_questions'] = 'Select questions';
 $string['selecting_page'] = 'Select the page for question: ';
 $string['question_exists'] = 'That page has a question already';
-$string['questionscore'] = "Score for this question (integer)";
+$string['questionscore'] = "Score";
 $string['edit_question_page'] = 'Click the Allocate link in the last column to allocate questions to pages (only one question per page is permitted).  You can also set the score for a question.';
 
 // Page editing.

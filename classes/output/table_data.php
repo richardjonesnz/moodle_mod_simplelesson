@@ -38,6 +38,7 @@ class table_data {
     /**
      * Return data for the table header row
      *
+     * @return array $headerdata - table column headers
      */
     public static function get_edit_table_headers() {
 
@@ -54,6 +55,8 @@ class table_data {
     /**
      * Return data for the table rows
      *
+     * @param object $cm - module instance
+     * @return object - data for the mustache renderer
      */
     public static function get_edit_table_data($cm) {
 
@@ -120,6 +123,8 @@ class table_data {
     /**
      * Return data for the table action column
      *
+     * @param object $cm - course module instance
+     * @param object $pagedata - current page record
      */
     public static function get_edit_table_actions($cm, $pagedata) {
 
@@ -174,5 +179,68 @@ class table_data {
                      'action' => 'move_down']), 'icon' => $icon];
         }
         return $actions;
+    }
+    /**
+     * Return data for the question management table header row
+     *
+     * @return array strings for the question table column headers
+     */
+    public static function get_question_table_headers() {
+
+        $headerdata = array();
+        $headerdata[] = get_string('qnumber', 'mod_simplelesson');
+        $headerdata[] = get_string('question_name', 'mod_simplelesson');
+        $headerdata[] = get_string('question_text', 'mod_simplelesson');
+        $headerdata[] = get_string('questionscore', 'mod_simplelesson');
+        $headerdata[] = get_string('pagetitle', 'mod_simplelesson');
+        $headerdata[] = get_string('setpage', 'mod_simplelesson');
+
+        return $headerdata;
+    }
+
+    /**
+     * Return data for the question management table rows
+     *
+     * @param object $cm - module instance
+     * @return object - data for the mustache renderer
+     */
+    public static function get_question_table_data($cm) {
+
+        $table = new \stdClass;
+        $table->class = 'mod_simplelesson_question_table';
+        $table->caption =
+            get_string('question_editing', 'mod_simplelesson');
+        $table->tableheaders = self::get_question_table_headers();
+        $table->tabledata = array();
+
+        // Get the questions and process them.
+        $questions = questions::fetch_questions($cm->instance);
+
+        foreach ($questions as $question) {
+
+            $data = array();
+            $data['number'] = $question->qid;
+            $data['name'] = $question->name;
+            $data['text'] = format_string($question->questiontext,
+                    true);
+            $data['score'] = $question->score;
+            if ($question->pageid == 0) {
+                $data['page'] = '-';
+            } else {
+                $data['page'] = pages::get_page_title(
+                        $question->pageid);
+            }
+            $url = new \moodle_url(
+                    '/mod/simplelesson/edit_questions.php',
+                    array('courseid' => $cm->course,
+                    'simplelessonid' => $cm->instance,
+                    'action' => 'edit',
+                    'actionitem' => $question->qid));
+            $data['link'] = ['link' => $url->out(false),
+                    'text' =>
+                    get_string('setpage', 'mod_simplelesson')];
+            $table->tabledata[] = $data;
+        }
+        return $table;
     }
 }
