@@ -50,7 +50,8 @@ $coursecontext = context_course::instance($courseid);
 $modulecontext = context_module::instance($cm->id);
 // Get the question feedback type. Get display options.
 $options = new display_options();
-
+$returnview = new moodle_url('/mod/simplelesson/view.php',
+        array('simplelessonid' => $simplelessonid));
 $lessontitle = $moduleinstance->name;
 $PAGE->set_context($modulecontext);
 $PAGE->set_pagelayout('course');
@@ -64,14 +65,21 @@ $renderer = $PAGE->get_renderer('mod_simplelesson');
 if ($mode == 'attempt') {
     $answerdata = attempts::get_lesson_answer_data(
             $attemptid, $options);
-
-    echo $OUTPUT->header();
     attempts::save_lesson_answerdata($answerdata);
-    echo $OUTPUT->heading(get_string('summary_header', 'mod_simplelesson'), 2);
-    $user = attempts::get_attempt_user($attemptid);
-    $name = $user->firstname . ' ' . $user->lastname;
-    echo get_string('summary_user', 'mod_simplelesson', $name);
-    echo $renderer->lesson_summary($answerdata, $options->markdp);
+
+    // Show review page (if allowed).
+    if (!$simplelesson->allowreview) {
+        redirect($returnview);
+    } else {
+        echo $OUTPUT->header();
+        echo $OUTPUT->heading(get_string('summary_header',
+                'mod_simplelesson'), 2);
+        $user = attempts::get_attempt_user($attemptid);
+        $name = $user->firstname . ' ' . $user->lastname;
+
+        echo get_string('summary_user', 'mod_simplelesson', $name);
+        echo $renderer->lesson_summary($answerdata, $options->markdp);
+    }
 
     // Log the completion event.
     $event = attempt_completed::create(array(

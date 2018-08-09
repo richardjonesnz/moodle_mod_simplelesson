@@ -144,7 +144,6 @@ if (data_submitted() && confirm_sesskey()) {
     if ($qtype == 'essay') {
         // Special case, has additional save option.
         $submitteddata = $quba->extract_responses($slot);
-        var_dump($submitteddata);
         $answerdata->youranswer = $submitteddata['answer'];
         // Set mark negative (indicate needs grading).
         $answerdata->mark = -1;

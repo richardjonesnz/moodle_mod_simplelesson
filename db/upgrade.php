@@ -88,8 +88,21 @@ function xmldb_simplelesson_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         upgrade_mod_savepoint(true, 2018062100, 'simplelesson');
+    }
+    if ($oldversion < 2018080901) {
+
+        // Define field allow review for a mod table.
+        $table = new xmldb_table('simplelesson');
+        $field = new xmldb_field('allowreview',
+                XMLDB_TYPE_INTEGER, '4',
+                XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '1',
+                'showindex');
+        // Add field.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2018080901, 'simplelesson');
     }
     return true;
 }

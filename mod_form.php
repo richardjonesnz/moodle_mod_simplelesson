@@ -85,6 +85,13 @@ class mod_simplelesson_mod_form extends moodleform_mod {
         $mform->addHelpButton('showindex', 'showindex',
                 'simplelesson');
 
+        // Allow student review.
+        $mform->addElement('advcheckbox', 'allowreview',
+                get_string('allowreview', 'mod_simplelesson'));
+        $mform->setDefault('allowreview', 1);
+        $mform->addHelpButton('allowreview', 'allowreview',
+                'simplelesson');
+
         // Select the category for the questions that can be added.
         $categories = array();
         $cats = $DB->get_records('question_categories',
