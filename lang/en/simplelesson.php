@@ -57,8 +57,9 @@ $string['immediatefeedback'] = 'Immediate feedback';
 $string['immediatecbm'] = 'Immediate feedback with CBM';
 $string['adaptive'] = 'Adaptive feedback';
 $string['adaptivenopenalty'] = 'Adaptive (no penalty)';
+$string['deferredfeedback'] = 'Deferred feedback';
 $string['behaviour'] = 'Question behaviour';
-$string['behaviour_help'] = 'With Adaptive feedback the user has multiple tries at each question - a penalty can be applied unless adaptive no penalty is used.  This can only be set on a lesson basis, not per question. Immediate feedback has one attempt available.';
+$string['behaviour_help'] = 'With Adaptive feedback the user has multiple tries at each question - a penalty can be applied unless adaptive no penalty is used.  This can only be set on a lesson basis, not per question. Immediate feedback has one attempt available. For Deferred feedback the answer must be explicitly saved but multiple saves are permitted, the student only sees the score when reviewing the lesson.';
 $string['category_select'] = 'Select category';
 $string['categoryid'] = 'Category';
 $string['categoryid_help'] = 'Choose one category for the questions that can be added to this simplelesson.  You can return here later and add other categories from module settings.';
@@ -193,6 +194,7 @@ $string['no_questions'] = 'There are no questions to attempt (use preview)';
 $string['finishreview'] = 'Finish review';
 $string['answerquestions'] = 'Please answer all the questions';
 $string['saveanswer'] = 'Save essay';
+$string['save'] = 'Save';
 
 // Attempts management.
 $string['manage_attempts'] = 'Manage attempts';

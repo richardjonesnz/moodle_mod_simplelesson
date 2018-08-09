@@ -212,9 +212,8 @@ class attempts  {
                 '*', IGNORE_MISSING);
         if ($answerrecord) {
             // Update the record.
-            $DB->set_field('simplelesson_answers', 'youranswer',
-                    $answerdata->youranswer,
-                    array('id' => $answerrecord->id));
+            $answerdata->id = $answerrecord->id;
+            $DB->update_record('simplelesson_answers', $answerdata);
         } else {
             // Create a new record.
             $answerdata->id = $DB->insert_record(

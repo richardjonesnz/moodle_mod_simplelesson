@@ -251,41 +251,6 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         return html_writer::table($table);
     }
     /**
-     * Returns the html for question management page
-     * @param int $courseid - the course id
-     * @param int $simplelessonid - the module insatnce id
-     * @return string, html list of links
-     */
-    public function fetch_question_page_links($courseid,
-        $simplelessonid) {
-
-        $html = '';
-        $links = array();
-
-        $html .= html_writer::start_div('mod_simplelesson_edit_links');
-
-        // Home link.
-        $url = new moodle_url('/mod/simplelesson/view.php',
-                array('simplelessonid' => $simplelessonid));
-        $links[] = html_writer::link($url, get_string('homelink', 'mod_simplelesson'));
-
-        // Add link.
-        $url = new moodle_url('/mod/simplelesson/add_question.php',
-                array('courseid' => $courseid,
-                'simplelessonid' => $simplelessonid));
-        $links[] = html_writer::link($url, get_string('add_question', 'mod_simplelesson'));
-
-        // Page management.
-        $url = new moodle_url('/mod/simplelesson/edit.php',
-                array('courseid' => $courseid,
-                'simplelessonid' => $simplelessonid));
-        $links[] = html_writer::link($url,
-                get_string('manage_pages', 'mod_simplelesson'));
-        $html .= html_writer::alist($links, null, 'ul');
-        $html .= html_writer::end_div();
-        return $html;
-    }
-    /**
      *
      * Render the question form on a page
      *
@@ -328,11 +293,16 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
 
         // If it's an essay question, output a save button.
         // If it's deferred feedback add a save button.
-        if ($qtype == 'essay') {
+
+        if ( ($qtype == 'essay') || ($quba->get_preferred_behaviour()
+                == 'deferredfeedback') ){
             $html .= html_writer::start_div(
                     'mod_simplelesson_save_button');
+            $label = ($qtype == 'essay') ?
+                    get_string('saveanswer', 'mod_simplelesson') :
+                    get_string('save', 'mod_simplelesson');
             $html .= $this->output->single_button($actionurl,
-                    get_string('saveanswer', 'mod_simplelesson'));
+                    $label);
             $html .= html_writer::end_div();
         }
 

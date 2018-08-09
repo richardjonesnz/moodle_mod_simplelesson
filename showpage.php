@@ -95,6 +95,11 @@ if (data_submitted() && confirm_sesskey()) {
     question_engine::save_questions_usage_by_activity($quba);
     $transaction->allow_commit();
 
+    // Force finish the deferred question on save.
+    $slot = questions::get_slot($simplelessonid, $pageid);
+    if ($quba->get_preferred_behaviour() == 'deferredfeedback') {
+        $quba->finish_question($slot);
+    }
     /* Record results here for each answer.
        qatid is entry in question_attempts table
        attemptid is from start_attempt (includes user id),
@@ -104,7 +109,6 @@ if (data_submitted() && confirm_sesskey()) {
 
        We will keep this data because we will remove the attempt data from the question_attempts table during cleanup.
     */
-    $slot = questions::get_slot($simplelessonid, $pageid);
     $qid = attempts::get_question_attempt_id($qubaid, $slot);
     $answerdata = new stdClass();
     $answerdata->id = 0;
@@ -141,13 +145,15 @@ if (data_submitted() && confirm_sesskey()) {
         $answerdata->youranswer = $submitteddata['answer'];
         // Set mark negative (indicate needs grading).
         $answerdata->mark = -1;
-        // Save might be done several times.
-        $answerdata->id = attempts::update_answer($answerdata);
+
     } else {
         $answerdata->youranswer = $quba->get_response_summary($slot);
-        $answerdata->id = $DB->insert_record(
-                'simplelesson_answers', $answerdata);
+        //$answerdata->id = $DB->insert_record(
+          //      'simplelesson_answers', $answerdata);
     }
+    // Save might be done several times. Check if exists.
+    $answerdata->id = attempts::update_answer($answerdata);
+
     redirect($actionurl);
 } else {
     // Log the page viewed event (but not for every
@@ -192,7 +198,6 @@ echo $renderer->show_page($data);
 
 // If there is a question and this is an attempt, show
 // the question.
-
 if ( ($questionentry) && ($mode == 'attempt') ) {
     $slot = questions::get_slot($simplelessonid, $pageid);
 
