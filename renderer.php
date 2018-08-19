@@ -191,65 +191,6 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
 
         return $html;
     }
-
-    /**
-     * Returns a list of questions and editing actions
-     *
-     * @param int $courseid - the course id
-     * @param int $simplelessonid - the simplelessonid
-     * @param object array $questions - questions to be shown
-     * @return string html link
-     */
-    public function question_management($courseid,
-            $simplelessonid, $questions) {
-        $table = new html_table();
-        $table->head = array(
-        get_string('qnumber', 'mod_simplelesson'),
-        get_string('question_name', 'mod_simplelesson'),
-        get_string('question_text', 'mod_simplelesson'),
-        get_string('questionscore', 'mod_simplelesson'),
-        get_string('pagetitle', 'mod_simplelesson'),
-        get_string('setpage', 'mod_simplelesson'));
-        $table->align =
-                array('left', 'left', 'left', 'right', 'left', 'left');
-        $table->wrap = array('nowrap', '', '', 'nowrap', 'nowrap',
-                    'nowrap');
-        $table->tablealign = 'center';
-        $table->cellspacing = 0;
-        $table->cellpadding = '2px';
-        $table->width = '80%';
-        $table->data = array();
-        foreach ($questions as $question) {
-            $data = array();
-            $data[] = $question->qid;
-            $data[] = $question->name;
-            if (strlen($question->questiontext) > 100) {
-                $rawtext = substr($question->questiontext,
-                        0, 95) . '...';
-                $data[] = strip_tags(format_string($rawtext));
-            } else {
-                $data[] = $question->questiontext;
-            }
-            $data[] = $question->score;
-            if ($question->pageid == 0) {
-                $data[] = '-';
-            } else {
-                $data[] = pages::get_page_title($question->pageid);
-            }
-            $url = new moodle_url(
-                    '/mod/simplelesson/edit_questions.php',
-                    array('courseid' => $courseid,
-                    'simplelessonid' => $simplelessonid,
-                    'action' => 'edit',
-                    'actionitem' => $question->qid));
-            $data[] = html_writer::link($url,
-                    get_string('setpage',
-                    'mod_simplelesson'));
-            $table->data[] = $data;
-        }
-
-        return html_writer::table($table);
-    }
     /**
      *
      * Render the question form on a page
@@ -307,11 +248,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         }
 
         // Finish the question form.
-        $html .= html_writer::start_tag(
-                'mod_simplelesson_action_buttons');
-        $html .= html_writer::end_tag('div');
         $html .= html_writer::end_tag('form');
-
         $html .= html_writer::end_div('div');
         return $html;
     }
