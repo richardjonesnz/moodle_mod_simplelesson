@@ -57,10 +57,9 @@ switch ($report) {
     case 'menu':
         echo $OUTPUT->header();
         echo reporting::show_reports_tab($courseid, $simplelessonid);
-        $buttons = reporting::show_menu($courseid, $simplelessonid);
-        foreach ($buttons as $button) {
-            echo $OUTPUT->render($button);
-        }
+        $data = reporting::show_menu($courseid, $simplelessonid);
+        echo $OUTPUT->render_from_template(
+                'mod_simplelesson/buttonlinks', $data);
         break;
     case 'answers':
         echo $OUTPUT->header();

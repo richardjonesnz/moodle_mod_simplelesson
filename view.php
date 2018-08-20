@@ -64,7 +64,7 @@ $modulecontext = context_module::instance($cm->id);
 
 $PAGE->set_url('/mod/simplelesson/view.php', array('id' => $cm->id));
 require_login($course, true, $cm);
-
+require_capability('mod/simplelesson:view', $modulecontext);
 // Log the module viewed event.
 $event = course_module_viewed::create(array(
         'objectid' => $cm->id,

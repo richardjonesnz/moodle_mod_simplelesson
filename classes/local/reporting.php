@@ -459,7 +459,7 @@ class reporting  {
         return \html_writer::table($table);
     }
     /**
-     * return the div showing the report menu buttons
+     * return the data for the report buttons
      *
      * @param $courseid - current course id
      * @param $simplelessonid - current instance id
@@ -467,40 +467,35 @@ class reporting  {
      */
     public static function show_menu($courseid, $simplelessonid) {
         // Buttons on reports tab.
-        $buttons = array();
 
-        $type = 'answers';
-        $label = get_string('answer_report', 'mod_simplelesson');
-        $buttons[] = self::create_button($courseid,
-            $simplelessonid, $type, $label);
+        $data = new \stdClass;
 
-        $type = 'attempts';
-        $label = get_string('attempt_report', 'mod_simplelesson');
-        $buttons[] = self::create_button($courseid,
-            $simplelessonid, $type, $label);
+        $data->class = 'mod_simplelesson_page_links';
+        $data->buttonclass = 'btn btn-default';
 
-        $type = 'manualgrade';
-        $label = get_string('manual_grade', 'mod_simplelesson');
-        $buttons[] = self::create_button($courseid,
-            $simplelessonid, $type, $label);
-        return $buttons;
-    }
-    /**
-     * Create a report button
-     * @param int $courseid relevant course
-     * @param int $simplelessonid relevant lesson
-     * @param string $type report type
-     * @param string $label button label
-     * @return a button object
-     */
-    public static function create_button($courseid,
-            $simplelessonid, $type, $label) {
-        $pageurl = new \moodle_url('reports.php',
-                array('courseid' => $courseid,
-                'simplelessonid' => $simplelessonid,
-                'report' => $type));
+        $data->linkdata = array();
+        $baseparams = ['courseid' => $courseid,
+                'simplelessonid' => $simplelessonid];
 
-        return new \single_button($pageurl, $label);
+        $link = new \moodle_url('reports.php', $baseparams);
+        $data->linkdata[] = ['link' => $link->out(false,
+                ['report' => 'answers']),
+                'text' => get_string('answer_report',
+                'mod_simplelesson')];
+
+        $link = new \moodle_url('reports.php', $baseparams);
+        $data->linkdata[] = ['link' => $link->out(false,
+                ['report' => 'attempts']),
+                'text' => get_string('attempt_report',
+                'mod_simplelesson')];
+
+        $link = new \moodle_url('reports.php', $baseparams);
+        $data->linkdata[] = ['link' => $link->out(false,
+                ['report' => 'manualgrade']),
+                'text' => get_string('manual_grade',
+                'mod_simplelesson')];
+
+        return $data;
     }
     /*
      * Attempts management- get all user attempt records

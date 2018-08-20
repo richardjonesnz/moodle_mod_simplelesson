@@ -42,8 +42,8 @@ class simplelesson_add_question_form extends moodleform {
             $n++;
             $checkname = 'q' . $question->id;
             $mform->addElement('advcheckbox', $checkname,
-                $question->name,
-                null, array('group' => 1), array(0, (int) $question->id));
+                '', $question->name,
+                array('group' => 1), array(0, (int) $question->id));
             $mform->setType($checkname, PARAM_TEXT);
         }
 

@@ -53,7 +53,7 @@ $PAGE->set_url('/mod/simplelesson/showpage.php',
 require_login($course, true, $cm);
 $coursecontext = context_course::instance($courseid);
 $modulecontext = context_module::instance($cm->id);
-
+require_capability('mod/simplelesson:view', $modulecontext);
 // Get the question feedback type. Get display options.
 $feedback = $moduleinstance->behaviour;
 $maxattempts = $moduleinstance->maxattempts;

@@ -43,7 +43,8 @@ $cm = get_coursemodule_from_instance('simplelesson',
 // Set up the page.
 $thisurl = new moodle_url('/mod/simplelesson/add_question.php',
         array('courseid' => $courseid,
-        'simplelessonid' => $simplelessonid));
+        'simplelessonid' => $simplelessonid,
+        'sesskey' => sesskey()));
 $PAGE->set_url($thisurl);
 require_login($course, true, $cm);
 require_sesskey();
@@ -91,7 +92,6 @@ if ($data = $mform->get_data()) {
 }
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('question_adding', 'mod_simplelesson'), 2);
-echo get_string('add_question_page', 'mod_simplelesson');
-echo get_string('select_questions', 'mod_simplelesson');
+echo '<p>' . get_string('add_question_page', 'mod_simplelesson') . '</p>';
 $mform->display();
 echo $OUTPUT->footer();
