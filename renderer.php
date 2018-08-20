@@ -309,7 +309,7 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
      * @param object $sessiondata - score, maxscore and time
      * @return string, html to show summary
      */
-    public function get_summary_data($sessiondata) {
+    public function show_summary_data($sessiondata) {
 
         $html = '<p>';
         $html .= get_string('summary_score', 'mod_simplelesson',

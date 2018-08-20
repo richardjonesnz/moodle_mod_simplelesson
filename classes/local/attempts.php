@@ -274,18 +274,17 @@ class attempts  {
      * @return object overall mark and time for the attempt
      */
     public static function get_sessiondata($answerdata) {
-        $score = 0.0;
-        $maxscore = 0.0;
-        $stime = 0;
-        foreach ($answerdata as $data) {
-            $score += $data->mark;
-            $maxscore += $data->maxmark;
-            $stime += $data->timetaken;
-        }
         $returndata = new \stdClass();
-        $returndata->score = $score;
-        $returndata->maxscore = $maxscore;
-        $returndata->stime = $stime;
+        $returndata->score = 0.0;
+        $returndata->maxscore = 0.0;
+        $returndata->stime = 0;
+        foreach ($answerdata as $data) {
+            // An essay question has a score of -1, don't count it.
+            $data->mark = ($data->mark < 0) ? 0 : $data->mark;
+            $returndata->score += $data->mark;
+            $returndata->maxscore += $data->maxmark;
+            $returndata->stime += $data->timetaken;
+        }
         return $returndata;
     }
     /**
@@ -354,16 +353,23 @@ class attempts  {
     public static function update_attempt_score($answerid, $mark) {
         global $DB;
 
-        // Get the session score for the attempt.
-        $attemptid = $DB->get_field('simplelesson_answers',
-                'attemptid', array('id' => $answerid));
+        // Get the relevant answer record and current session score.
+        $answer = $DB->get_record('simplelesson_answers',
+                array('id' => $answerid), '*', MUST_EXIST);
         $sessionscore = $DB->get_field('simplelesson_attempts',
-                'sessionscore', array('id' => $attemptid));
-        // Update with mark for essay question.
+                'sessionscore', array('id' => $answer->attemptid));
+
+        // Update with mark for essay question. Might be a re-grade.
+        if ($answer->mark == -1) {
+            // Not graded yet.
+            $update = $sessionscore + $mark;
+        } else {
+            // Adjust the session score.
+            $update = $sessionscore - $answer->mark + $mark;
+        }
+        // Update the attempt, answer tables for this question.
         $DB->set_field('simplelesson_attempts', 'sessionscore',
-                ($sessionscore + $mark),
-                array('id' => $attemptid));
-        // Update the answer for this question.
+                ($update), array('id' => $answer->attemptid));
         $DB->set_field('simplelesson_answers', 'mark',
                 $mark, array('id' => $answerid));
     }

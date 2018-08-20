@@ -126,8 +126,7 @@ class reporting  {
                     ON u.id = t.userid
                  WHERE a.simplelessonid = :slid
                    AND a.qtype LIKE :qtype
-                   AND u.deleted <> 1
-                   AND a.mark < 0"; // Negative mark = ungraded.
+                   AND u.deleted <> 1";
 
         $records = $DB->get_records_sql($sql,
                 array('slid' => $simplelessonid,
@@ -145,7 +144,7 @@ class reporting  {
     public static function get_essay_report_data($simplelessonid,
             $records) {
         global $DB;
-
+        $options = new display_options();
         $courseid = $DB->get_field('simplelesson', 'course',
             array('id' => $simplelessonid), MUST_EXIST);
 
@@ -158,8 +157,14 @@ class reporting  {
             $data->lastname = $record->lastname;
             $data->datetaken = date("Y-m-d H:i:s",
                     $record->timecompleted);
-            $data->status = get_string('requires_grading',
+            $data->mark = round($record->mark, $options->markdp);
+            if ($data->mark < 0 ) {
+                $data->status = get_string('requires_grading',
                     'mod_simplelesson');
+                $data->mark = 0;
+            } else {
+                $data->status = '';
+            }
             $gradeurl = new \moodle_url(
                     'manual_grading.php',
                     array('courseid' => $courseid,
@@ -193,6 +198,7 @@ class reporting  {
             $data[] = $record->firstname;
             $data[] = $record->lastname;
             $data[] = $record->datetaken;
+            $data[] = $record->mark;
             $data[] = $record->status;
             $data[] = $record->gradelink;
             $table->data[] = $data;
@@ -213,6 +219,8 @@ class reporting  {
                 get_string('lastname', 'mod_simplelesson'),
                 'date' =>
                 get_string('date', 'mod_simplelesson'),
+                'mark' =>
+                get_string('mark', 'mod_simplelesson'),
                 'status' =>
                 get_string('status', 'mod_simplelesson'),
                 'gradelink' =>
@@ -251,6 +259,7 @@ class reporting  {
      */
     public static function fetch_attempt_data($simplelessonid) {
         global $DB;
+        $options = new display_options();
         $sql = "SELECT a.id, a.simplelessonid,
                        a.userid, a.status, a.sessionscore,
                        a.maxscore, a.timetaken, a.timecreated,
@@ -275,8 +284,10 @@ class reporting  {
                     constants::MOD_SIMPLELESSON_ATTEMPT_STARTED) ?
                     "Incomplete" : "Complete";
             $data->status = $status;
-            $data->sessionscore = (int) $record->sessionscore;
-            $data->maxscore = (int) $record->maxscore;
+            $data->sessionscore = round($record->sessionscore,
+                    $options->markdp);
+            $data->maxscore = round($record->maxscore,
+                    $options->markdp);
             $data->timetaken = $record->timetaken;
             $table[] = $data;
         }

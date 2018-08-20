@@ -132,7 +132,7 @@ if ( ($simplelesson->maxattempts == 0) || ($canmanage) ) {
 } else {
     $attempts = get_string('numattempts', 'mod_simplelesson',
             $userattempts);
-    $attempts .= ' ' . $maxattempts . ' ';
+    $attempts .= ' ' . $simplelesson->maxattempts . ' ';
 }
 // Output the summary information.
 echo $renderer->fetch_lesson_info($pages . $attempts);

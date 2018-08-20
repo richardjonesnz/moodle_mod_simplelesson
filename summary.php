@@ -79,6 +79,10 @@ if ($mode == 'attempt') {
 
         echo get_string('summary_user', 'mod_simplelesson', $name);
         echo $renderer->lesson_summary($answerdata, $options->markdp);
+        // Display summary.
+        $sessiondata = attempts::get_sessiondata($answerdata);
+        echo $renderer->show_summary_data($sessiondata);
+
     }
 
     // Log the completion event.
@@ -90,10 +94,6 @@ if ($mode == 'attempt') {
     $event->add_record_snapshot('course', $course);
     $event->add_record_snapshot($cm->modname, $simplelesson);
     $event->trigger();
-
-    // Record attempt completion data.
-    $sessiondata = attempts::get_sessiondata($answerdata);
-    echo $renderer->get_summary_data($sessiondata);
 
     // Clean up our attempt data.
     attempts::set_attempt_completed($attemptid,
