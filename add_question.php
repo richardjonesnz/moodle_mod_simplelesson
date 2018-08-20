@@ -46,7 +46,7 @@ $thisurl = new moodle_url('/mod/simplelesson/add_question.php',
         'simplelessonid' => $simplelessonid));
 $PAGE->set_url($thisurl);
 require_login($course, true, $cm);
-
+require_sesskey();
 $coursecontext = context_course::instance($courseid);
 $modulecontext = context_module::instance($cm->id);
 $PAGE->set_context($modulecontext);
@@ -56,12 +56,14 @@ $returnview = new moodle_url('/mod/simplelesson/view.php',
         array('simplelessonid' => $simplelessonid));
 $returnmanage = new moodle_url('/mod/simplelesson/edit_questions.php',
         array('courseid' => $courseid,
-        'simplelessonid' => $simplelessonid));
+        'simplelessonid' => $simplelessonid,
+        'sesskey' => sesskey()));
 
 $mform = new simplelesson_add_question_form(null,
         array('courseid' => $courseid,
         'simplelessonid' => $simplelessonid,
-        'categoryid' => $moduleinstance->categoryid));
+        'categoryid' => $moduleinstance->categoryid,
+        'sesskey' => sesskey()));
 
 // Cancelled.
 if ($mform->is_cancelled()) {
@@ -90,6 +92,6 @@ if ($data = $mform->get_data()) {
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('question_adding', 'mod_simplelesson'), 2);
 echo get_string('add_question_page', 'mod_simplelesson');
-echo '<br /><br />';
+echo get_string('select_questions', 'mod_simplelesson');
 $mform->display();
 echo $OUTPUT->footer();

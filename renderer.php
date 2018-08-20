@@ -81,7 +81,8 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
         $url = new moodle_url('/mod/simplelesson/add_page.php',
                 array('courseid' => $module->course,
                       'simplelessonid' => $module->instance,
-                      'sequence' => 0));
+                      'sequence' => 0,
+                      'sesskey' => sesskey()));
         $html .= html_writer::link($url,
                     get_string('gotoaddpage', 'mod_simplelesson'));
         $html .= html_writer::end_div();

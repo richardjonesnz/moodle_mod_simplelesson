@@ -34,9 +34,6 @@ class simplelesson_add_question_form extends moodleform {
     public function definition() {
         global $DB;
         $mform = $this->_form;
-        $mform->addElement('static', 'label1', 'select_questions',
-                get_string('select_questions', 'mod_simplelesson'));
-
         $questions = questions::get_questions_from_category(
                 $this->_customdata['categoryid']);
 
@@ -53,6 +50,7 @@ class simplelesson_add_question_form extends moodleform {
         // Hidden fields.
         $mform->addElement('hidden', 'courseid', $this->_customdata['courseid']);
         $mform->addElement('hidden', 'simplelessonid', $this->_customdata['simplelessonid']);
+        $mform->addElement('hidden', 'sesskey', $this->_customdata['sesskey']);
 
         $mform->setType('courseid', PARAM_INT);
         $mform->setType('simplelessonid', PARAM_INT);

@@ -85,7 +85,19 @@ class link_data {
         $ret->class = 'mod_simplelesson_edit_links';
         $ret->buttonclass = 'btn btn-default';
         $ret->name = get_string('editing', 'mod_simplelesson');
-        $ret->linkdata = self::get_managing_links($baseparams);
+        // Put an add page link on the home page.
+        $link = new \moodle_url('add_page.php', $baseparams);
+        $ret->linkdata = array();
+        $numpages = pages::count_pages($cm->instance);
+        $link = new \moodle_url('add_page.php', $baseparams);
+        $ret->linkdata[] = ['link' => $link->out(false,
+                ['sequence' => $numpages + 1,
+                 'sesskey' => sesskey()]),
+                'text' => get_string('gotoaddpage', 'mod_simplelesson')];
+
+        // Include the management links.
+        $ret->linkdata = array_merge($ret->linkdata,
+                self::get_managing_links($baseparams));
 
         return $ret;
     }
@@ -167,18 +179,19 @@ class link_data {
         // Add edit and delete links.
         $link = new \moodle_url('add_page.php', $baseparams);
         $ret->linkdata[] = ['link' => $link->out(false,
-                ['sequence' =>$data->sequence + 1]),
+                ['sequence' =>$data->sequence + 1,
+                 'sesskey' => sesskey()]),
                 'text' => get_string('gotoaddpage', 'mod_simplelesson')];
 
         $link = new \moodle_url('edit_page.php', $baseparams);
         $ret->linkdata[] = ['link' => $link->out(false,
-                ['sequence' => $data->sequence]),
+                ['sequence' => $data->sequence, 'sesskey' => sesskey()]),
                  'text' =>
                  get_string('gotoeditpage', 'mod_simplelesson')];
 
         $link = new \moodle_url('delete_page.php', $baseparams);
         $ret->linkdata[] = ['link' => $link->out(false,
-                ['sequence' => $data->sequence, 'returnto' => 'view']),
+                ['sequence' => $data->sequence, 'returnto' => 'view', 'sesskey' => sesskey()]),
                  'text' =>
                  get_string('gotodeletepage', 'mod_simplelesson')];
 
@@ -198,15 +211,15 @@ class link_data {
         $links = array();
 
         // Page management.
-        $link = new \moodle_url('edit.php');
-        $links[] = ['link' => $link->out(false, $baseparams),
+        $link = new \moodle_url('edit.php', $baseparams);
+        $links[] = ['link' => $link->out(false, ['sesskey' => sesskey()]),
                     'text' => get_string(
                     'manage_pages', 'mod_simplelesson')];
 
         // The Question Management page.
-        $link = new \moodle_url('edit_questions.php');
+        $link = new \moodle_url('edit_questions.php', $baseparams);
         $links[] =
-                ['link' => $link->out(false, $baseparams),
+                ['link' => $link->out(false, ['sesskey' => sesskey()]),
                  'text' => get_string(
                  'manage_questions', 'mod_simplelesson')];
         return $links;
@@ -270,7 +283,8 @@ class link_data {
         $numpages = pages::count_pages($cm->instance);
         $link = new \moodle_url('add_page.php', $baseparams);
         $ret->linkdata[] = ['link' => $link->out(false,
-                ['sequence' =>$numpages + 1]),
+                ['sequence' =>$numpages + 1,
+                 'sesskey' => sesskey()]),
                 'text' => get_string('gotoaddpage', 'mod_simplelesson')];
 
         // Link to auto-sequencing page.
@@ -301,15 +315,17 @@ class link_data {
 
         // Link to Add question page
         $link = new \moodle_url('add_question.php', $baseparams);
-        $ret->linkdata[] = ['link' => $link->out(false),
-                'text' => get_string('add_question',
-                'mod_simplelesson')];
+        $ret->linkdata[] = ['link' => $link->out(false,
+                ['sesskey' => sesskey()]),
+                 'text' => get_string('add_question',
+                 'mod_simplelesson')];
 
         // Link Page management.
         $link = new \moodle_url('edit.php', $baseparams);
-        $ret->linkdata[] = ['link' =>$link->out(false),
-                'text' => get_string('manage_pages',
-                'mod_simplelesson')];
+        $ret->linkdata[] = ['link' =>$link->out(false,
+                ['sesskey' => sesskey()]),
+                 'text' => get_string('manage_pages',
+                 'mod_simplelesson')];
 
         return $ret;
     }

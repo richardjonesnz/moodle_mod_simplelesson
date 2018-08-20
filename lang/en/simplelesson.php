@@ -72,7 +72,7 @@ $string['unlimited'] = 'Unlimited';
 $string['simplelesson:manage'] = 'Manage Simple lesson';
 $string['simplelesson:manageattempts'] = 'Manage attempt records';
 $string['simplelesson:addinstance'] = 'Add a new Simple lesson';
-$string['simplelesson:viewreports'] = 'View the reports tab';
+$string['simplelesson:viewreportstab'] = 'View the reports tab';
 $string['simplelesson:view'] = 'View Simple lesson';
 $string['simplelesson:exportreportpages'] = 'Export report pages';
 $string['simplelesson:exportpages'] = 'Export report pages';
@@ -80,7 +80,7 @@ $string['simplelesson:importpages'] = 'Export report pages';
 
 // Page management.
 $string['simplelesson_editing'] = 'Editing Simple lesson';
-$string['manage_pages'] = 'Page management';
+$string['manage_pages'] = 'Manage pages';
 $string['sequence'] = 'sequence';
 $string['title'] = 'Page title';
 $string['nextpage'] = 'Next page';
@@ -118,6 +118,7 @@ $string['edit_question_page'] = 'Click the Allocate link in the last column to a
 // Page editing.
 $string['edit_page'] = 'Edit page';
 $string['page_editing'] = 'Use this page to organize your Simple lesson.  You can edit, view, delete and move pages from here (use the icons under Actions).  Autosequencing will put the sequence numbers into a logical order. ';
+$string['edit_page_form'] = 'Edit the page contents';
 $string['add_page'] = 'Add page';
 $string['delete_page'] = 'Delete page';
 $string['page_adding'] = 'Add a new page';

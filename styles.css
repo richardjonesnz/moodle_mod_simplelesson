@@ -23,10 +23,13 @@
   padding: 10px;
 }
 .mod_simplelesson_question {
-    overflow:auto;
     padding-bottom:1px;
-    float:right;
 }
+.mod_simplelesson_question .grade,
+.mod_simplelesson_question .questionflag {
+    display:none;
+}
+
 .mod_simplelesson_save_button {
     padding-left:140px;
 }

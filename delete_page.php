@@ -48,9 +48,9 @@ $PAGE->set_url('/mod/simplelesson/delete_page.php',
               'simplelessonid' => $simplelessonid,
               'sequence' => $sequence));
 require_login($course, true, $cm);
+require_sesskey();
 $coursecontext = context_course::instance($courseid);
 $modulecontext = context_module::instance($cm->id);
-
 $PAGE->set_context($modulecontext);
 $PAGE->set_pagelayout('course');
 
@@ -59,8 +59,9 @@ $returnview = new moodle_url('/mod/simplelesson/view.php',
 
 $returnedit = new moodle_url('/mod/simplelesson/edit.php',
         array('courseid' => $courseid,
-        'simplelessonid' => $simplelessonid));
-
+        'simplelessonid' => $simplelessonid,
+        'sesskey' => sesskey()));
+require_sesskey();
 // Check if any other pages point to this page and fix their links.
 $pageid = pages::get_page_id_from_sequence($simplelessonid, $sequence);
 pages::fix_page_links($simplelessonid, $pageid);

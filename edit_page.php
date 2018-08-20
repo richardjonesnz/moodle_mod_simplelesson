@@ -46,6 +46,7 @@ $PAGE->set_url('/mod/simplelesson/edit_page.php',
               'sequence' => $sequence));
 
 require_login($course, true, $cm);
+require_sesskey();
 $coursecontext = context_course::instance($courseid);
 $modulecontext = context_module::instance($cm->id);
 
@@ -102,6 +103,7 @@ $data = file_prepare_standard_editor($data, 'pagecontents', $pagecontentsoptions
 
 $mform->set_data($data);
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('page_editing', 'mod_simplelesson'), 2);
+echo $OUTPUT->heading(get_string('edit_page', 'mod_simplelesson'), 2);
+echo get_string('edit_page_form', 'mod_simplelesson');
 $mform->display();
 echo $OUTPUT->footer();

@@ -47,6 +47,7 @@ $PAGE->set_url('/mod/simplelesson/add_page.php',
               'simplelessonid' => $simplelessonid,
               'sequence' => $sequence));
 require_login($course, true, $cm);
+require_sesskey();
 $coursecontext = context_course::instance($courseid);
 $modulecontext = context_module::instance($cm->id);
 

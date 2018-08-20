@@ -35,7 +35,7 @@
          "previous": "1",
          "next": "1",
          "question": ["icon", "component", "alt"],
-         "action": ["add", ["icon", "component", "core"]]
+         "action": ["edit", ["icon", "component", "core"]]
         }
 }}
 <tr class="danger">
@@ -49,9 +49,9 @@
     {{/ pix}}
   </td>
   <td>
-    {{# action.add}}
+    {{# action.edit}}
       {{> mod_simplelesson/page_actions}}
-    {{/ action.add}}
+    {{/ action.edit}}
     {{# action.preview}}
       {{> mod_simplelesson/page_actions}}
     {{/ action.preview}}

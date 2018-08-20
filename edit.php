@@ -41,9 +41,12 @@ $cm = get_coursemodule_from_instance('simplelesson', $simplelessonid,
         $courseid, false, MUST_EXIST);
 
 $PAGE->set_url('/mod/simplelesson/edit.php',
-        array('courseid' => $courseid, 'simplelessonid' => $simplelessonid));
+        array('courseid' => $courseid,
+              'simplelessonid' => $simplelessonid,
+              'sesskey' => sesskey()));
 
 require_login($course, true, $cm);
+require_sesskey();
 $coursecontext = context_course::instance($courseid);
 $modulecontext = context_module::instance($cm->id);
 
@@ -52,7 +55,8 @@ $PAGE->set_pagelayout('course');
 
 $returnedit = new moodle_url('/mod/simplelesson/edit.php',
         array('courseid' => $courseid,
-        'simplelessonid' => $simplelessonid));
+        'simplelessonid' => $simplelessonid,
+        'sesskey' => sesskey()));
 /*
  * Check the action:
  * The up and down arrows are only shown for the relevant

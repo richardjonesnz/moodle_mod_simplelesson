@@ -133,11 +133,12 @@ class table_data {
                 'simplelessonid' => $cm->instance];
 
         // Add edit and delete links.
-        $link = new \moodle_url('add_page.php', $baseparams);
+        $link = new \moodle_url('edit_page.php', $baseparams);
         $icon = ['icon' => 't/edit', 'component' => 'core',
             'alt'=> get_string('gotoeditpage', 'mod_simplelesson')];
-        $actions['add'] = ['link' => $link->out(false,
-                     ['sequence' => $pagedata->sequence + 1]),
+        $actions['edit'] = ['link' => $link->out(false,
+                     ['sequence' => $pagedata->sequence,
+                      'sesskey' => sesskey()]),
                       'icon' => $icon];
 
         // Preview = showpage.
@@ -145,7 +146,7 @@ class table_data {
         $icon = ['icon' => 't/preview', 'component' => 'core',
             'alt'=> get_string('showpage', 'mod_simplelesson')];
         $actions['preview'] = ['link' => $link->out(false,
-                     ['sequence' => $pagedata->sequence]),
+                     ['pageid' => $pagedata->id]),
                       'icon' => $icon];
 
         // Delete page.
@@ -155,7 +156,8 @@ class table_data {
             'mod_simplelesson')];
         $actions['delete'] = ['link' => $link->out(false,
                      ['sequence' => $pagedata->sequence,
-                      'returnto' => 'edit']), 'icon' => $icon];
+                      'returnto' => 'edit',
+                      'sesskey' => sesskey()]), 'icon' => $icon];
 
         // Move page up.
         if ($pagedata->sequence != 1) {
@@ -165,7 +167,8 @@ class table_data {
                     'mod_simplelesson')];
             $actions['moveup'] = ['link' => $link->out(false,
                     ['sequence' => $pagedata->sequence,
-                     'action' => 'move_up']), 'icon' => $icon];
+                     'action' => 'move_up',
+                     'sesskey' => sesskey()]), 'icon' => $icon];
         }
 
         // Move down.
@@ -176,7 +179,8 @@ class table_data {
                     'mod_simplelesson')];
             $actions['movedown'] = ['link' => $link->out(false,
                     ['sequence' => $pagedata->sequence,
-                     'action' => 'move_down']), 'icon' => $icon];
+                     'action' => 'move_down',
+                     'sesskey' => sesskey()]), 'icon' => $icon];
         }
         return $actions;
     }
@@ -235,7 +239,8 @@ class table_data {
                     array('courseid' => $cm->course,
                     'simplelessonid' => $cm->instance,
                     'action' => 'edit',
-                    'actionitem' => $question->qid));
+                    'actionitem' => $question->qid,
+                    'sesskey' => sesskey()));
             $data['link'] = ['link' => $url->out(false),
                     'text' =>
                     get_string('setpage', 'mod_simplelesson')];

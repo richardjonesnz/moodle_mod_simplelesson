@@ -35,7 +35,8 @@ $PAGE->set_url('/mod/simplelesson/autosequence.php',
 require_course_login($courseid);
 $returnedit = new moodle_url('/mod/simplelesson/edit.php',
         array('courseid' => $courseid,
-        'simplelessonid' => $simplelessonid));
+        'simplelessonid' => $simplelessonid,
+        'sesskey' => sesskey()));
 pages::fix_page_sequence($simplelessonid);
 // Go back to page where request came from.
 redirect($returnedit,

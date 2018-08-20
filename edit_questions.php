@@ -88,10 +88,11 @@ $cm = get_coursemodule_from_instance('simplelesson',
 $pageurl = new moodle_url(
         '/mod/simplelesson/edit_questions.php',
         array('courseid' => $courseid,
-        'simplelessonid' => $simplelessonid));
+        'simplelessonid' => $simplelessonid,
+        'sesskey' => sesskey()));
 $PAGE->set_url($pageurl);
 require_login($course, true, $cm);
-
+require_sesskey();
 $coursecontext = context_course::instance($courseid);
 $modulecontext = context_module::instance($cm->id);
 
