@@ -22,10 +22,21 @@
  * @see https://github.com/moodlehq/moodle-mod_newmodule
  *
  */
-defined('MOODLE_INTERNAL') || die();
+require_once('../../config.php');
 $id = required_param('id', PARAM_INT);
-$itemnumber = optional_param('itemnumber', 0, PARAM_INT);
-$userid = optional_param('userid', 0, PARAM_INT);
+$cm = get_coursemodule_from_id('simplelesson', $id, 0, false, MUST_EXIST);
+$course = $DB->get_record('course', array('id' => $cm->course),
+        '*', MUST_EXIST);
+$simplelesson = $DB->get_record('simplelesson',
+            array('id' => $cm->instance), '*', MUST_EXIST);
 
-// In the simplest case just redirect to the view page.
-redirect('view.php?id='.$id);
+require_login($course, false, $cm);
+$modulecontext = context_module::instance($cm->id);
+// Re-direct the user.
+if (has_capability('mod/simplelesson:manage', $modulecontext)) {
+    $url = new moodle_url('reports.php', array('courseid' => $cm->course,
+        'simplelessonid' => $simplelesson->id));
+} else {
+    $url = new moodle_url('view.php', array('id' => $id));
+}
+redirect($url);

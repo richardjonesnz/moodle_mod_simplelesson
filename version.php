@@ -26,10 +26,11 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+// Updated security and fixed broken theme.
 $plugin->component = 'mod_simplelesson';
-$plugin->version = 2018081001;
-$plugin->release = 'v1.24'; // Updated backup db fields.
-$plugin->requires = 2017051506; // Designed for Moodle 3.5.
+$plugin->version = 2018082004;
+$plugin->release = 'v1.25';
+$plugin->requires = 2017111300; // Designed for Moodle 3.5.
 $plugin->maturity = MATURITY_BETA;
 $plugin->cron = 0;
 $plugin->dependencies = array();

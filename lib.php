@@ -330,19 +330,77 @@ function simplelesson_scale_used_anywhere($scaleid) {
         return false;
     }
 }
+/**----------------------------------
+ *  Implementing reset functionality
+ *-----------------------------------
+/**
+ * Removes all grades from gradebook
+ *
+ * @param int $courseid The ID of the course to reset
+ */
+function simplelesson_reset_gradebook($courseid) {
+    global $CFG, $DB;
+
+    $sql = "SELECT a.*, cm.idnumber as cmidnumber, a.course as courseid
+              FROM {simplelesson} a, {course_modules} cm, {modules} m
+             WHERE m.name = :moduletype
+               AND m.id = cm.module
+               AND cm.instance=a.id
+               AND a.course=:courseid";
+
+    $params = array('moduletype'=>'mod_simplelesson',
+            'courseid'=>$courseid);
+
+    if ($simplelessons = $DB->get_records_sql($sql, $params)) {
+        foreach ($simplelessons as $simplelesson) {
+            mod_simplelesson_grade_item_update($simplelesson, 'reset');
+        }
+    }
+}
+/**
+ * Implementation of the function for printing the form elements
+ * that control whether the course reset functionality affects the
+ * simplelesson activity.
+ * @param moodleform $mform form passed by reference
+ */
+function simplelesson_reset_course_form_definition(&$mform) {
+    $mform->addElement('header', 'simplelessonheader', get_string('modulenameplural', 'mod_simplelesson'));
+    $name = get_string('deleteallsubmissions', 'mod_simplelesson');
+    $mform->addElement('advcheckbox', 'reset_mod_simplelesson_submissions', $name);
+    $mform->addElement('advcheckbox', 'reset_mod_simplelesson_user_overrides',
+        get_string('removealluseroverrides', 'mod_simplelesson'));
+    $mform->addElement('advcheckbox', 'reset_mod_simplelesson_group_overrides',
+        get_string('removeallgroupoverrides', 'mod_simplelesson'));
+}
+
+/**
+ * Course reset form defaults.
+ * @param  object $course
+ * @return array
+ */
+function simplelesson_reset_course_form_defaults($course) {
+    return array('reset_mod_simplelesson_submissions' => 1,
+            'reset_mod_simplelesson_group_overrides' => 1,
+            'reset_mod_simplelesson_user_overrides' => 1);
+}
 
 /**
  * Creates or updates grade item for the given simplelesson instance
  *
  * Needed by {@link grade_update_mod_grades()}.
  *
- * @param stdClass $simplelesson instance object with extra idnumber and modname property
- * @param bool $reset reset grades in the gradebook
- * @return void
+ * @param stdClass $mod_simplelesson record with extra cmidnumber
+ * @param array $grades optional array/object of grade(s);
+ *        'reset' means reset grades in gradebook
+ * @return int 0 if ok, error code otherwise
  */
-function simplelesson_grade_item_update(stdClass $simplelesson, $reset=false) {
+function simplelesson_grade_item_update(stdClass $simplelesson,
+        $grades=null) {
     global $CFG;
-    require_once($CFG->libdir.'/gradelib.php');
+   // Workaround for buggy PHP versions.
+    if (!function_exists('grade_update')) {
+        require_once($CFG->libdir.'/gradelib.php');
+    }
 
     $item = array();
     $item['itemname'] = clean_param($simplelesson->name, PARAM_NOTAGS);
@@ -359,26 +417,27 @@ function simplelesson_grade_item_update(stdClass $simplelesson, $reset=false) {
         $item['gradetype'] = GRADE_TYPE_NONE;
     }
 
-    if ($reset) {
+    if ($grades === 'reset') {
         $item['reset'] = true;
+        $grades = null;
     }
-
-    grade_update('mod/simplelesson', $simplelesson->course, 'mod', 'simplelesson',
-            $simplelesson->id, 0, null, $item);
+    return grade_update('mod/simplelesson', $simplelesson->course,
+            'mod', 'simplelesson', $simplelesson->id, 0,
+            $grades, $item);
 }
 
 /**
  * Delete grade item for given simplelesson instance
  *
- * @param stdClass $simplelesson instance object
+ * @param stdClass $simplelesson instance
  * @return grade_item
  */
 function simplelesson_grade_item_delete($simplelesson) {
     global $CFG;
     require_once($CFG->libdir.'/gradelib.php');
-
-    return grade_update('mod/simplelesson', $simplelesson->course, 'mod', 'simplelesson',
-            $simplelesson->id, 0, null, array('deleted' => 1));
+    return grade_update('mod/simplelesson', $simplelesson->course,
+            'mod', 'simplelesson', $simplelesson->id, 0, $grades,
+            array('deleted' => 1));
 }
 
 /**
@@ -386,19 +445,91 @@ function simplelesson_grade_item_delete($simplelesson) {
  *
  * Needed by {@link grade_update_mod_grades()}.
  *
- * @param stdClass $simplelesson instance object with extra idnumber and modname property
- * @param int $userid update grade of specific user only, 0 means all participants
+ * @param stdClass $simplelesson instance object
+ * @param int $userid update grade of specific user only,
+ *        0 means all participants
+ * @param bool $nullifnone - not used
  */
-function simplelesson_update_grades(stdClass $simplelesson, $userid = 0) {
+function simplelesson_update_grades(stdClass $simplelesson,
+        $userid = 0, $nullifnone=true) {
     global $CFG, $DB;
     require_once($CFG->libdir.'/gradelib.php');
 
     // Populate array of grade objects indexed by userid.
-    $grades = array();
-
-    grade_update('mod/simplelesson', $simplelesson->course, 'mod', 'simplelesson', $simplelesson->id, 0, $grades);
+    $grades = simplelesson_get_user_grades($simplelesson, $userid);
+    if ($grades) {
+        simplelesson_grade_item_update($simplelesson, $grades);
+    } else if ($userid) {
+        $grade = new stdClass();
+        $grade->userid = $userid;
+        $grade->rawgrade = NULL;
+        simplelesson_grade_item_update($simplelesson, $grade);
+    } else {
+        simplelesson_grade_item_update($simplelesson);
+    }
 }
+/**
+ * Return grade for given user or all users.
+ *
+ * @global stdClass
+ * @global object
+ * @param stdClass $simplelesson instance
+ * @param int $userid optional user id, 0 means all users
+ * @return array array of grades, false if none
+ */
+function simplelesson_get_user_grades($simplelesson, $userid=0) {
+    global $CFG, $DB;
 
+    $grades = array();
+    if (empty($userid)) {
+        $sql = "SELECT a.id, a.simplelessonid,
+                       a.userid, a.sessionscore,
+                       a.timecreated
+                  FROM {simplelesson_attempts} a
+                 WHERE a.simplelessonid = :slid
+              GROUP BY a.userid";
+
+        $slusers = $DB->get_records_sql($sql,
+                array('slid' => $simplelesson->id));
+
+        if ($slusers) {
+            foreach ($slusers as $sluser) {
+                $grades[$sluser->userid] = new stdClass();
+                $grades[$sluser->userid]->id = $sluser->id;
+                $grades[$sluser->userid]->userid = $sluser->userid;
+                $grades[$sluser->userid]->rawgrade = $sluser->sessionscore;
+            }
+        } else {
+            return false;
+        }
+
+    } else {
+        // User grade for userid.
+        $sql = "SELECT a.id, a.simplelessonid,
+                       a.userid, a.sessionscore,
+                       a.timecreated
+                  FROM {simplelesson_attempts} a
+            INNER JOIN {user} u
+                    ON u.id = a.userid
+                 WHERE a.simplelessonid = :slid
+                   AND u.id = :uid";
+
+        $attempts = $DB->get_records_sql($sql,
+                array('slid' => $simplelesson->id,
+                      'uid' => $userid));
+        if (!$attempts) {
+            return false; // No attempt yet.
+        }
+        $grades[$userid] = new stdClass();
+        $grades[$userid]->id = $simplelesson->id;
+        $grades[$userid]->userid = $userid;
+        // Using selected grading strategy here.
+        $grades[$userid]->rawgrade =
+                \mod_simplelesson\local\grading::grade_user($simplelesson,
+                $attempts);
+    }
+    return $grades;
+}
 /* File API */
 
 // Return editor options.

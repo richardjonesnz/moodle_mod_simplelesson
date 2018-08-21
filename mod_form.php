@@ -26,7 +26,7 @@
  * @see https://github.com/moodlehq/moodle-mod_newmodule
  *
  */
-
+use \mod_simplelesson\local\constants;
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/course/moodleform_mod.php');
@@ -115,6 +115,21 @@ class mod_simplelesson_mod_form extends moodleform_mod {
             1 => '1', 2 => '2', 3 => '3', 4 => '4', 5 => '5');
         $mform->addElement('select', 'maxattempts', get_string('maxattempts', 'mod_simplelesson'), $attemptoptions);
         $mform->setType('maxattempts', PARAM_INT);
+
+        // Grade Method.
+        $gradeoptions = array(
+                constants::MOD_SIMPLELESSON_GRADE_HIGHEST =>
+                get_string('gradehighest', 'mod_simplelesson'),
+                constants::MOD_SIMPLELESSON_GRADE_AVERAGE =>
+                get_string('gradeaverage', 'mod_simplelesson'),
+                constants::MOD_SIMPLELESSON_GRADE_LAST =>
+                get_string('gradelast', 'mod_simplelesson'));
+        $mform->addElement('select', 'grademethod',
+                get_string('grademethod', 'mod_simplelesson'),
+                $gradeoptions);
+        $mform->addHelpButton('grademethod', 'grademethod', 'scorm');
+        $mform->setType('grademethod', PARAM_INT);
+        $mform->setDefault('grademethod', 'highest');
 
         // Question behaviours for simplelesson.
         $boptions = array(

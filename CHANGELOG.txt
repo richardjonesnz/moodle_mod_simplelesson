@@ -1,0 +1,35 @@
+CHANGELOG.txt
+=============
+
+1.25 - working now
+UI
+ - Fixed broken page layout in clean theme
+ - Updated report tab buttons to use template
+
+Reporting
+ - Fixed up calculation bug for sessionscore
+
+Security
+ - Added sesskey checks for action pages
+ - Added capability checks for viewable pages
+
+1.24 - 16/08/2018 - MINOR changes
+
+UI Improvements in consistency
+- Added mustache templates for most page links (buttons).
+- Added mustache templates for formatting table output.
+
+Question types
+- Tested and implemented deferred feedback question behaviours.
+
+Settings
+- Added setting to allow/prevent student review post lesson.
+- Added related changes to database and upgrade.php scripts.
+
+Code
+- Removed code from renderer.php, modified and added to output classes
+- Added allowreview field to install.xml, upgrade.php and backup code
+
+Log is only kept since MINOR version 1.24, 2018081001.
+Version 1.21 is reviewed here:
+https://tracker.moodle.org/browse/CONTRIB-7331

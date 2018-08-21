@@ -104,5 +104,21 @@ function xmldb_simplelesson_upgrade($oldversion) {
         }
         upgrade_mod_savepoint(true, 2018080901, 'simplelesson');
     }
+    if ($oldversion < 2018082002) {
+
+        // Define field for grading method.
+        $table = new xmldb_table('simplelesson');
+        $field = new xmldb_field('grademethod',
+                XMLDB_TYPE_INTEGER, '4',
+                XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '1',
+                'maxattempts');
+        // Add field.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, 2018082002, 'simplelesson');
+    }
+
+
     return true;
 }

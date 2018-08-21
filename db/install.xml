@@ -13,10 +13,12 @@
         <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Format of the intro field (MOODLE, HTML, MARKDOWN...)"/>
         <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Title field for Multichoice"/>
         <FIELD NAME="showindex" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="1" SEQUENCE="false" COMMENT="Whether to show page index"/>
-        <FIELD NAME="allowreview" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="1" SEQUENCE="false" COMMENT="Whether to allow student review"/>        <FIELD NAME="allowincomplete" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Whether to allow incomplete attempts"/>
+        <FIELD NAME="allowreview" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="1" SEQUENCE="false" COMMENT="Whether to allow student review"/>
+        <FIELD NAME="allowincomplete" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Whether to allow incomplete attempts"/>
         <FIELD NAME="categoryid" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Question category id"/>
         <FIELD NAME="behaviour" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" DEFAULT="immediatefeedback" COMMENT="Question behaviour"/>
         <FIELD NAME="maxattempts" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="maxattempts"/>
+        <FIELD NAME="grademethod" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="1" SEQUENCE="false" COMMENT="Attempts grading method"/>
         <FIELD NAME="grade" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="100" SEQUENCE="false" COMMENT="The maximum grade. Can be negative to indicate the use of a scale."/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false"/>

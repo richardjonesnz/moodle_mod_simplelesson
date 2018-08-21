@@ -38,6 +38,11 @@ $string['simplelessonname_help'] = 'Choose a suitable name for your Simple lesso
 $string['pluginadministration'] = 'simplelesson administration';
 $string['pluginname'] = 'Simple lesson';
 
+// Reset form
+$string['deleteallsubmissions'] = 'Delete all submissions';
+$string['removealluseroverrides'] = 'Remove user overrides';
+$string['removeallgroupoverrides'] = 'Remove group overrides';
+
 // Events.
 $string['simplelessonviewed'] = 'Simple lesson viewed';
 $string['pagecreated'] = 'New page created';
@@ -163,7 +168,6 @@ $string['userreportdownload'] = 'Download user report (csv)';
 $string['attemptid'] = "Attempt";
 $string['questionsummary'] = 'Question';
 $string['action'] = 'Action';
-$string['ungraded'] = 'Not graded';
 
 // Admin settings.
 $string['enablereports'] = 'Show reports tab';
@@ -217,6 +221,16 @@ $string['maxmark'] = 'Marks available: {$a}';
 $string['allocate_mark'] = 'Allocate a mark for the essay:';
 $string['grade_saved'] = 'Grade saved';
 $string['no_manual_grades'] = 'Nothing to grade';
+$string['ungraded'] = 'Not graded';
+$string['graded'] = 'Graded';
+
+// Grading method.
+$string['grademethod'] = 'Attempts grading';
+$string['grademethod_help'] = 'If multiple attempts are made, this setting determines how the grade for the gradebook will be calculated.';
+$string['gradehighest'] = 'Highest attempt';
+$string['gradelowest'] = 'Lowest attempt';
+$string['gradeaverage'] = 'Average of attempts';
+$string['gradelast'] = 'Last attempt';
 
 // Privacy.
 $string['privacy:metadata:simplelesson_attempts'] = 'Information about users simplelesson attempts including completion status, the number of correct responses (a score) and the time taken (seconds) for the attempt.';

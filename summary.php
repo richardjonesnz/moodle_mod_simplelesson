@@ -57,39 +57,40 @@ $PAGE->set_context($modulecontext);
 $PAGE->set_pagelayout('course');
 $PAGE->set_heading(format_string($course->fullname));
 $renderer = $PAGE->get_renderer('mod_simplelesson');
+
 /*
     If we got here, the user got to the last page
     and hit the exit link.
     Mode is either preview or attempt.
 */
 if ($mode == 'attempt') {
+    echo $OUTPUT->header();
     $answerdata = attempts::get_lesson_answer_data(
             $attemptid, $options);
     attempts::save_lesson_answerdata($answerdata);
-
+    $sessiondata = attempts::get_sessiondata($answerdata);
     // Show review page (if allowed).
-    if (!$simplelesson->allowreview) {
-        redirect($returnview);
-    } else {
-        echo $OUTPUT->header();
+    $review = ( ($simplelesson->allowreview) || has_capability('mod/simplelesson:manage', $modulecontext) );
+    $user = attempts::get_attempt_user($attemptid);
+
+    if ($review) {
         echo $OUTPUT->heading(get_string('summary_header',
                 'mod_simplelesson'), 2);
-        $user = attempts::get_attempt_user($attemptid);
         $name = $user->firstname . ' ' . $user->lastname;
 
         echo get_string('summary_user', 'mod_simplelesson', $name);
         echo $renderer->lesson_summary($answerdata, $options->markdp);
         // Display summary.
-        $sessiondata = attempts::get_sessiondata($answerdata);
         echo $renderer->show_summary_data($sessiondata);
-
     }
 
-    // Log the completion event.
+    // Log the completion event and update the gradebook.
     $event = attempt_completed::create(array(
         'objectid' => $attemptid,
         'context' => $modulecontext,
     ));
+
+    simplelesson_update_grades($moduleinstance, $user->id);
 
     $event->add_record_snapshot('course', $course);
     $event->add_record_snapshot($cm->modname, $simplelesson);

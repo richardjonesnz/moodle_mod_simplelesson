@@ -163,7 +163,8 @@ class reporting  {
                     'mod_simplelesson');
                 $data->mark = 0;
             } else {
-                $data->status = '';
+                $data->status = get_string('graded',
+                    'mod_simplelesson');
             }
             $gradeurl = new \moodle_url(
                     'manual_grading.php',
