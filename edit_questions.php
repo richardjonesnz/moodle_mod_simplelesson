@@ -84,6 +84,8 @@ $moduleinstance  = $simplelessonid;
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 $cm = get_coursemodule_from_instance('simplelesson',
         $simplelessonid, $courseid, false, MUST_EXIST);
+$simplelesson = $DB->get_record('simplelesson',
+            array('id' => $simplelessonid), '*', MUST_EXIST);
 
 $pageurl = new moodle_url(
         '/mod/simplelesson/edit_questions.php',
@@ -126,6 +128,9 @@ if ($data = $mform->get_data()) {
     if (!questions::page_has_question($simplelessonid, $data->pagetitle)
             || ($data->pagetitle == 0) ) {
         questions::update_question_table($simplelessonid, $data);
+        // Since the teacher can change the question score, let's
+        // update the gradebook.
+        simplelesson_update_grades($simplelesson);
         redirect($PAGE->url,
                 get_string('updated', 'core', $data->name), 2,
                 notification::NOTIFY_SUCCESS);

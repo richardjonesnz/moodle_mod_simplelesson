@@ -72,15 +72,17 @@ $moduleinstance  = $simplelessonid;
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 $cm = get_coursemodule_from_instance('simplelesson',
         $simplelessonid, $courseid, false, MUST_EXIST);
-
+ $simplelesson = $DB->get_record('simplelesson',
+            array('id' => $simplelessonid), '*', MUST_EXIST);
 $pageurl = new moodle_url(
         '/mod/simplelesson/manage_grading.php',
         array('courseid' => $courseid,
         'simplelessonid' => $simplelessonid,
-        'answerid' => $answerid));
+        'answerid' => $answerid,
+        'sesskey' => sesskey()));
 $PAGE->set_url($pageurl);
 require_login($course, true, $cm);
-
+require_sesskey();
 $reportsurl = new moodle_url('/mod/simplelesson/reports.php',
         array('courseid' => $courseid,
         'simplelessonid' => $simplelessonid,
@@ -111,6 +113,7 @@ if ($mform->is_cancelled()) {
 if ($data = $mform->get_data()) {
     // Update the attempt and answer data.
     attempts::update_attempt_score($answerid, $data->mark);
+    simplelesson_update_grades($simplelesson, $answerdata->userid);
     redirect($reportsurl,
             get_string('grade_saved', 'mod_simplelesson'), 2,
             notification::NOTIFY_SUCCESS);

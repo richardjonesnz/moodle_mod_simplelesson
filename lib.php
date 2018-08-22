@@ -105,6 +105,7 @@ function simplelesson_update_instance(stdClass $simplelesson, mod_simplelesson_m
     $result = $DB->update_record('simplelesson', $simplelesson);
 
     simplelesson_grade_item_update($simplelesson);
+    simplelesson_update_grades($simplelesson);
 
     return $result;
 }

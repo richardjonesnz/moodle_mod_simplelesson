@@ -170,7 +170,8 @@ class reporting  {
                     'manual_grading.php',
                     array('courseid' => $courseid,
                     'simplelessonid' => $simplelessonid,
-                    'answerid' => $data->id));
+                    'answerid' => $data->id,
+                    'sesskey' => sesskey()));
             $data->gradelink = \html_writer::link($gradeurl,
                     get_string('gradelink', 'mod_simplelesson'));
             $table[] = $data;
