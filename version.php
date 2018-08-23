@@ -26,10 +26,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-// Updated security and fixed broken theme.
 $plugin->component = 'mod_simplelesson';
-$plugin->version = 2018082004;
-$plugin->release = 'v1.25';
+$plugin->version = 2018082300;
+$plugin->release = 'v1.25';  // Added grades to gradebook.
 $plugin->requires = 2017111300; // Designed for Moodle 3.5.
 $plugin->maturity = MATURITY_BETA;
 $plugin->cron = 0;

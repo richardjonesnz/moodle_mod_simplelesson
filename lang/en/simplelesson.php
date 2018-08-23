@@ -31,7 +31,11 @@ $string['modulename'] = 'Simple lesson';
 $string['modulenameplural'] = 'Simple lessons';
 $string['modulename_help'] = 'Use the Simple lesson module for a simple sequential display of pages with an optional index. The simplelesson module allows the creation and addition of multiple pages of content.
 
-It allows the use of questions from a selected question bank.  User attempt data is recorded and marked. Valid question types that have been tested are true/false, multiple choice (one answer), match, gapselect and short answer.  Essay questions are allowed but not marked.';
+It allows the use of questions from a selected question bank. Valid question types that have been tested are true/false, multiple choice (one answer), match, gapselect and short answer.  Essay questions are allowed and need to be manually marked.  Question behaviours implemented are adaptive, immediate and deferred feedback (without CBM).
+
+User attempt data, includind detailed question responses are recorded and marked.  Grading strategies used for multiple attempts are Highest, Average and Last attempt(s).
+
+Simplelessons and their content pages are backed up but questions are not.';
 $string['simplelessonfieldset'] = 'Custom example fieldset';
 $string['simplelessonname'] = 'Simple lesson name';
 $string['simplelessonname_help'] = 'Choose a suitable name for your Simple lesson.';

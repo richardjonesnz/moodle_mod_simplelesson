@@ -1,7 +1,7 @@
 CHANGELOG.txt
 =============
 
-1.25 - working now
+1.25 - 23/08/2018 - MINOR changes/improvements in functionality
 UI
  - Fixed broken page layout in clean theme
  - Updated report tab buttons to use template
@@ -12,6 +12,10 @@ Reporting
 Security
  - Added sesskey checks for action pages
  - Added capability checks for viewable pages
+
+ Grading
+ - Implemented grading methods: highest, average and latest attempt(s)
+ - Grades sent to Moodle gradebook
 
 1.24 - 16/08/2018 - MINOR changes
 
