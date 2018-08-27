@@ -241,7 +241,7 @@ $string['privacy:metadata:simplelesson_attempts'] = 'Information about users sim
 $string['privacy:metadata:simplelesson_attempts:userid'] = 'The id of the user taking the attempt.';
 $string['privacy:metadata:simplelesson_attempts:status'] = 'The completion status of the attempt.';
 $string['privacy:metadata:simplelesson_attempts:sessionscore'] = 'The score achieved on the attempt.';
-$string['privacy:metadata:simplelesson_attempts:timetaken'] = 'The timetaken to complete the attempt (seconds).';
+$string['privacy:metadata:simplelesson_attempts:timetaken'] = 'The time taken to complete the attempt (seconds).';
 
 $string['privacy:metadata:simplelesson_answers'] = 'Information about users simplelesson attempts at individual questions including their response and a score.';
 $string['privacy:metadata:simplelesson_answers:mark'] = 'The score of the user answering the question.';
