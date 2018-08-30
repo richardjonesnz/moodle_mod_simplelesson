@@ -69,9 +69,11 @@ if ($mode == 'attempt') {
             $attemptid, $options);
     attempts::save_lesson_answerdata($answerdata);
     $sessiondata = attempts::get_sessiondata($answerdata);
+    // Update gradebook.
+    $user = attempts::get_attempt_user($attemptid);
+    simplelesson_update_grades($simplelesson, $user->id);
     // Show review page (if allowed).
     $review = ( ($simplelesson->allowreview) || has_capability('mod/simplelesson:manage', $modulecontext) );
-    $user = attempts::get_attempt_user($attemptid);
 
     if ($review) {
         echo $OUTPUT->heading(get_string('summary_header',
@@ -87,10 +89,7 @@ if ($mode == 'attempt') {
     // Log the completion event and update the gradebook.
     $event = attempt_completed::create(array(
         'objectid' => $attemptid,
-        'context' => $modulecontext,
-    ));
-
-    simplelesson_update_grades($moduleinstance, $user->id);
+        'context' => $modulecontext));
 
     $event->add_record_snapshot('course', $course);
     $event->add_record_snapshot($cm->modname, $simplelesson);

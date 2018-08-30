@@ -100,8 +100,7 @@ $attemptid = attempts::set_attempt_start($attemptdata);
 // Log the event.
 $event = attempt_started::create(array(
         'objectid' => $attemptid,
-        'context' => $modulecontext,
-));
+        'context' => $modulecontext));
 
 $event->add_record_snapshot('course', $course);
 $event->add_record_snapshot($cm->modname, $simplelesson);

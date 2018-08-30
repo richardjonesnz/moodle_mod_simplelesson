@@ -45,65 +45,7 @@ function xmldb_simplelesson_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
-    if ($oldversion < 2018061902) {
 
-        // Define field allowincomplete to be added.
-        // Used to check if incomplete attempts.
-        $table = new xmldb_table('simplelesson');
-        $field = new xmldb_field('allowincomplete',
-                XMLDB_TYPE_INTEGER, '4',
-                XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0',
-                'showindex');
-        // Add field course.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-
-        upgrade_mod_savepoint(true, 2018061902, 'simplelesson');
-    }
-    if ($oldversion < 2018061903) {
-
-        // Define field score for a question.
-        $table = new xmldb_table('simplelesson_questions');
-        $field = new xmldb_field('score',
-                XMLDB_TYPE_INTEGER, '10',
-                XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0',
-                'slot');
-        // Add field course.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-
-        upgrade_mod_savepoint(true, 2018061903, 'simplelesson');
-    }
-    if ($oldversion < 2018062100) {
-
-        // Define field qtype for a answers table.
-        $table = new xmldb_table('simplelesson_answers');
-        $field = new xmldb_field('qtype',
-                XMLDB_TYPE_CHAR, '20',
-                null, XMLDB_NOTNULL, null, 'none',
-                'questionsummary');
-        // Add field.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-        upgrade_mod_savepoint(true, 2018062100, 'simplelesson');
-    }
-    if ($oldversion < 2018080901) {
-
-        // Define field allow review for a mod table.
-        $table = new xmldb_table('simplelesson');
-        $field = new xmldb_field('allowreview',
-                XMLDB_TYPE_INTEGER, '4',
-                XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '1',
-                'showindex');
-        // Add field.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-        upgrade_mod_savepoint(true, 2018080901, 'simplelesson');
-    }
     if ($oldversion < 2018082002) {
 
         // Define field for grading method.
@@ -118,7 +60,5 @@ function xmldb_simplelesson_upgrade($oldversion) {
         }
         upgrade_mod_savepoint(true, 2018082002, 'simplelesson');
     }
-
-
     return true;
 }

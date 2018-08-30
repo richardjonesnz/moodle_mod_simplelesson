@@ -27,9 +27,11 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'mod_simplelesson';
-$plugin->version = 2018082300;
-$plugin->release = 'v1.25';  // Added grades to gradebook.
-$plugin->requires = 2017111300; // Designed for Moodle 3.5.
+$plugin->version = 2018083003;
+// Increased field sizes for various indexed fields.
+// Brings in line with Moodle tables user, question and so on.
+$plugin->release = 'v1.26';
+$plugin->requires = 2017111301; // Designed for Moodle 3.5.
 $plugin->maturity = MATURITY_BETA;
 $plugin->cron = 0;
 $plugin->dependencies = array();

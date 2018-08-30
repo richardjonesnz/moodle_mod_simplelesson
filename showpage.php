@@ -111,11 +111,11 @@ if (data_submitted() && confirm_sesskey()) {
 
        We will keep this data because we will remove the attempt data from the question_attempts table during cleanup.
     */
-    $qid = attempts::get_question_attempt_id($qubaid, $slot);
+    $qatid = attempts::get_question_attempt_id($qubaid, $slot);
     $answerdata = new stdClass();
     $answerdata->id = 0;
     $answerdata->simplelessonid = $simplelessonid;
-    $answerdata->qatid = $qid;
+    $answerdata->qatid = $qatid;
     $answerdata->attemptid = $attemptid;
     $answerdata->pageid = $pageid;
     $answerdata->maxmark = $quba->get_question_max_mark($slot);
@@ -150,12 +150,10 @@ if (data_submitted() && confirm_sesskey()) {
 
     } else {
         $answerdata->youranswer = $quba->get_response_summary($slot);
-        //$answerdata->id = $DB->insert_record(
-          //      'simplelesson_answers', $answerdata);
     }
     // Save might be done several times. Check if exists.
     $answerdata->id = attempts::update_answer($answerdata);
-
+    simplelesson_update_grades($moduleinstance, $USER->id);
     redirect($actionurl);
 } else {
     // Log the page viewed event (but not for every
