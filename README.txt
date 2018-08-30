@@ -6,14 +6,15 @@ Brief description
 =================
 This is hopefully a good basis for a simple lesson module that has basic features as follows:
 
-1.  Supports adding questions from the question bank
+1.  Supports adding basic question types from the question bank
 2.  Consists of multimedia pages with simple hyperlinked navigation
 3.  Summary lesson attempt reports for students and teacher's
-4.  Implements GDPR privacy requests for reporting and deletion of user data
-5.  Designed for Moodle 3.5
+4.  Grades to gradebook, essay questions require manual grading
+5.  Implements GDPR privacy requests for reporting and deletion of user data
+6.  Designed for Moodle 3.5
 
 For more complex needs (timing, access restrictions, use the Lesson activity module)
-For summative activities use the quiz or lesson.
+For summative activities and a wider range of question types use the quiz or lesson.
 
 Limitations
 ===========

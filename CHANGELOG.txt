@@ -1,7 +1,15 @@
 CHANGELOG.txt
 =============
 
+1.26 - 30/08/2018 - MAJOR changes to database (uninstall required)
+=================
+Database
+  - increased sizes of some key fiedlds and indexes to macth Moodle tables
+Grading
+  - fixed bug updating grades for single user
+
 1.25 - 23/08/2018 - MINOR changes/improvements in functionality
+=================
 UI
  - Fixed broken page layout in clean theme
  - Updated report tab buttons to use template
@@ -18,7 +26,7 @@ Security
  - Grades sent to Moodle gradebook
 
 1.24 - 16/08/2018 - MINOR changes
-
+=================
 UI Improvements in consistency
 - Added mustache templates for most page links (buttons).
 - Added mustache templates for formatting table output.
