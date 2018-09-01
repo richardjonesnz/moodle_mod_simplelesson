@@ -48,7 +48,7 @@ class mod_simplelesson_mod_form extends moodleform_mod {
 
         $mform = $this->_form;
 
-        // Adding the "general" fieldset, where all the common settings are showed.
+        // Adding the "general" fieldset, where all the common settings are shown.
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
         // Adding the standard "name" field.

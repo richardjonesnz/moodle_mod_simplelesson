@@ -56,10 +56,12 @@ class grading {
             case constants::MOD_SIMPLELESSON_GRADE_AVERAGE:
                 $score = 0.0;
                 foreach ($attempts as $attempt) {
-                    $score += floatval($attempt->sessionscore);
+                    $score += $attempt->sessionscore;
                 }
                 $n = count($attempts);
-                return round(($score / $n), $options->markdp);
+                \mod_simplelesson\local\debugging::logit('grade average ',
+                        $score);
+                return $score / $n;
             break;
 
             case constants::MOD_SIMPLELESSON_GRADE_LAST:

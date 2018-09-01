@@ -105,7 +105,7 @@ function simplelesson_update_instance(stdClass $simplelesson, mod_simplelesson_m
     $result = $DB->update_record('simplelesson', $simplelesson);
 
     simplelesson_grade_item_update($simplelesson);
-    simplelesson_update_grades($simplelesson);
+    simplelesson_update_grades($simplelesson, 0);
 
     return $result;
 }
@@ -394,7 +394,7 @@ function simplelesson_reset_userdata($data) {
 
     $componentstr = get_string('modulenameplural', 'simplelesson');
     $status = array();
-    \mod_simplelesson\local\debugging::logit('reset ', $data);
+
     // Suddenly we're back to mod_simplelesson here, go figure.
     if ($data->reset_mod_simplelesson_submissions) {
         $sql = "SELECT l.id
@@ -499,7 +499,6 @@ function simplelesson_update_grades(stdClass $simplelesson,
 
     // Populate array of grade objects indexed by userid.
     $grades = simplelesson_get_user_grades($simplelesson, $userid);
-    \mod_simplelesson\local\debugging::logit('Grades: ', $grades);
     if ($grades) {
         simplelesson_grade_item_update($simplelesson, $grades);
     } else if ($userid) {
@@ -525,6 +524,7 @@ function simplelesson_get_user_grades($simplelesson, $userid=0) {
 
     $grades = array();
     if (empty($userid)) {
+        // All user attempts for this simple lesson.
         $sql = "SELECT a.id, a.simplelessonid,
                        a.userid, a.sessionscore,
                        a.timecreated
@@ -534,13 +534,31 @@ function simplelesson_get_user_grades($simplelesson, $userid=0) {
 
         $slusers = $DB->get_records_sql($sql,
                 array('slid' => $simplelesson->id));
-
+        \mod_simplelesson\local\debugging::logit('slusers grade: ',
+                $slusers);
         if ($slusers) {
             foreach ($slusers as $sluser) {
                 $grades[$sluser->userid] = new stdClass();
                 $grades[$sluser->userid]->id = $sluser->id;
                 $grades[$sluser->userid]->userid = $sluser->userid;
-                $grades[$sluser->userid]->rawgrade = $sluser->sessionscore;
+
+                // Get this users attempts.
+                $sql = "SELECT a.id, a.simplelessonid,
+                       a.userid, a.sessionscore,
+                       a.timecreated
+                  FROM {simplelesson_attempts} a
+            INNER JOIN {user} u
+                    ON u.id = a.userid
+                 WHERE a.simplelessonid = :slid
+                   AND u.id = :uid";
+                $attempts = $DB->get_records_sql($sql,
+                array('slid' => $simplelesson->id,
+                      'uid' => $sluser->userid));
+
+                // Apply grading method.
+                $grades[$sluser->userid]->rawgrade =
+                        \mod_simplelesson\local\grading::
+                        grade_user($simplelesson, $attempts);
             }
         } else {
             return false;
@@ -563,6 +581,7 @@ function simplelesson_get_user_grades($simplelesson, $userid=0) {
         if (!$attempts) {
             return false; // No attempt yet.
         }
+        // Update grades for user.
         $grades[$userid] = new stdClass();
         $grades[$userid]->id = $simplelesson->id;
         $grades[$userid]->userid = $userid;
