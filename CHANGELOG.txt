@@ -1,5 +1,13 @@
 CHANGELOG.txt
 =============
+1.27 - 01/09/2018 - MINOR changes/improvements
+=================
+Grading
+  - Fixed incorrect grading method calculation
+    Note: Grading changes for all users if grade calculation
+          method is changed in settings.
+Other
+  - Enabled actvity reset
 
 1.26 - 30/08/2018 - MAJOR changes to database (uninstall required)
 =================
