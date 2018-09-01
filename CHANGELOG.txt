@@ -7,7 +7,7 @@ Grading
     Note: Grading changes for all users if grade calculation
           method is changed in settings.
 Other
-  - Enabled actvity reset
+  - Enabled activity reset
 
 1.26 - 30/08/2018 - MAJOR changes to database (uninstall required)
 =================
