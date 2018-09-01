@@ -402,7 +402,6 @@ function simplelesson_reset_userdata($data) {
                  WHERE l.course=:course";
         $params = array('course' => $data->courseid);
         $simplelessons = $DB->get_records_sql($sql, $params);
-        \mod_simplelesson\local\debugging::logit('reset ', $simplelessons);
 
         // Delete all the data for all simple lesson attempts and
         // answers in this course.
@@ -534,8 +533,6 @@ function simplelesson_get_user_grades($simplelesson, $userid=0) {
 
         $slusers = $DB->get_records_sql($sql,
                 array('slid' => $simplelesson->id));
-        \mod_simplelesson\local\debugging::logit('slusers grade: ',
-                $slusers);
         if ($slusers) {
             foreach ($slusers as $sluser) {
                 $grades[$sluser->userid] = new stdClass();

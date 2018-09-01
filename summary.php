@@ -98,8 +98,8 @@ if ($mode == 'attempt') {
     // Clean up our attempt data.
     attempts::set_attempt_completed($attemptid,
             $sessiondata);
+
     // Update the grade for this attempt.
-    \mod_simplelesson\local\debugging::logit('Grade update session data', $sessiondata);
     simplelesson_update_grades($simplelesson, $user->id);
 
     // Clean up question usage and attempt data.

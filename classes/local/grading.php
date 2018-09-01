@@ -59,8 +59,6 @@ class grading {
                     $score += $attempt->sessionscore;
                 }
                 $n = count($attempts);
-                \mod_simplelesson\local\debugging::logit('grade average ',
-                        $score);
                 return $score / $n;
             break;
 
