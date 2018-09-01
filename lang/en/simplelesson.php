@@ -249,3 +249,6 @@ $string['privacy:metadata:simplelesson_answers:youranswer'] = 'The response of t
 
 // Task.
 $string['clean_up_usages'] = 'Clean old question usages for Simple lesson';
+
+// Reset
+$string['deleteallattempts'] = 'Delete all attempts.';

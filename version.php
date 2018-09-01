@@ -27,10 +27,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'mod_simplelesson';
-$plugin->version = 2018083003;
-// Increased field sizes for various indexed fields.
-// Brings in line with Moodle tables user, question and so on.
-$plugin->release = 'v1.26';
+$plugin->version = 2018090100;
+$plugin->release = 'v1.27'; // Implementing course reset.
 $plugin->requires = 2017111301; // Designed for Moodle 3.5.
 $plugin->maturity = MATURITY_BETA;
 $plugin->cron = 0;

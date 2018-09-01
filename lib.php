@@ -354,7 +354,7 @@ function simplelesson_reset_gradebook($courseid) {
 
     if ($simplelessons = $DB->get_records_sql($sql, $params)) {
         foreach ($simplelessons as $simplelesson) {
-            mod_simplelesson_grade_item_update($simplelesson, 'reset');
+            simplelesson_grade_item_update($simplelesson, 'reset');
         }
     }
 }
@@ -368,10 +368,6 @@ function simplelesson_reset_course_form_definition(&$mform) {
     $mform->addElement('header', 'simplelessonheader', get_string('modulenameplural', 'mod_simplelesson'));
     $name = get_string('deleteallsubmissions', 'mod_simplelesson');
     $mform->addElement('advcheckbox', 'reset_mod_simplelesson_submissions', $name);
-    $mform->addElement('advcheckbox', 'reset_mod_simplelesson_user_overrides',
-        get_string('removealluseroverrides', 'mod_simplelesson'));
-    $mform->addElement('advcheckbox', 'reset_mod_simplelesson_group_overrides',
-        get_string('removeallgroupoverrides', 'mod_simplelesson'));
 }
 
 /**
@@ -384,7 +380,52 @@ function simplelesson_reset_course_form_defaults($course) {
             'reset_mod_simplelesson_group_overrides' => 1,
             'reset_mod_simplelesson_user_overrides' => 1);
 }
+/**
+ * Actual implementation of the reset course functionality,
+ * delete all the Simple lesson attempts for course $data->courseid.
+ *
+ * @global stdClass
+ * @global object
+ * @param object $data the data submitted from the reset course.
+ * @return array status array
+ */
+function simplelesson_reset_userdata($data) {
+    global $CFG, $DB;
 
+    $componentstr = get_string('modulenameplural', 'simplelesson');
+    $status = array();
+    \mod_simplelesson\local\debugging::logit('reset ', $data);
+    // Suddenly we're back to mod_simplelesson here, go figure.
+    if ($data->reset_mod_simplelesson_submissions) {
+        $sql = "SELECT l.id
+                  FROM {simplelesson} l
+                 WHERE l.course=:course";
+        $params = array('course' => $data->courseid);
+        $simplelessons = $DB->get_records_sql($sql, $params);
+        \mod_simplelesson\local\debugging::logit('reset ', $simplelessons);
+
+        // Delete all the data for all simple lesson attempts and
+        // answers in this course.
+        $DB->delete_records_select('simplelesson_attempts',
+                "simplelessonid IN ($sql)", $params);
+        $DB->delete_records_select('simplelesson_answers',
+                "simplelessonid IN ($sql)", $params);
+
+        $status[] = array('component'=>$componentstr, 'item' =>
+                get_string('deleteallattempts', 'simplelesson'),
+                'error'=>false);
+
+        // remove all grades from gradebook.
+        if (empty($data->reset_gradebook_grades)) {
+            simplelesson_reset_gradebook($data->courseid);
+        }
+        // Any changes to the list of dates that needs to be rolled should be same during course restore and course reset.
+        // See MDL-9367.
+        // Don't need to roll dates at present.
+
+    }
+    return $status;
+}
 /**
  * Creates or updates grade item for the given simplelesson instance
  *
@@ -458,6 +499,7 @@ function simplelesson_update_grades(stdClass $simplelesson,
 
     // Populate array of grade objects indexed by userid.
     $grades = simplelesson_get_user_grades($simplelesson, $userid);
+    \mod_simplelesson\local\debugging::logit('Grades: ', $grades);
     if ($grades) {
         simplelesson_grade_item_update($simplelesson, $grades);
     } else if ($userid) {

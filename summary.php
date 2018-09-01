@@ -71,6 +71,7 @@ if ($mode == 'attempt') {
     $sessiondata = attempts::get_sessiondata($answerdata);
     // Update gradebook.
     $user = attempts::get_attempt_user($attemptid);
+    \mod_simplelesson\local\debugging::logit('Grade update', $user->id);
     simplelesson_update_grades($simplelesson, $user->id);
     // Show review page (if allowed).
     $review = ( ($simplelesson->allowreview) || has_capability('mod/simplelesson:manage', $modulecontext) );

@@ -153,7 +153,6 @@ if (data_submitted() && confirm_sesskey()) {
     }
     // Save might be done several times. Check if exists.
     $answerdata->id = attempts::update_answer($answerdata);
-    simplelesson_update_grades($moduleinstance, $USER->id);
     redirect($actionurl);
 } else {
     // Log the page viewed event (but not for every
