@@ -100,6 +100,13 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
     }
 
     /**
+     * Show the first page links
+     *
+     * @param object $data object containing link data
+     * @return none
+     */
+
+    /**
      * Show the current page.
      *
      * @param object $data object instance of current page

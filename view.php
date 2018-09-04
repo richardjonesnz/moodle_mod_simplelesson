@@ -113,8 +113,9 @@ if ($numpages > 0) {
 
     // Render the buttons.
     $data = link_data::get_firstpage_links($cm, $pageid, $attemptlink);
-    echo $OUTPUT->render_from_template('mod_simplelesson/buttonlinks',
-            $data);
+    //echo $OUTPUT->render_from_template('mod_simplelesson/buttonlinks',
+    //        $data);
+    echo $renderer->first_page_links($data);
 }
 
 $canmanage = has_capability('mod/simplelesson:manage',

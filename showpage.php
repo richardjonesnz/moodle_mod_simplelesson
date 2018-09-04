@@ -209,7 +209,7 @@ if ( ($questionentry) && ($mode == 'attempt') ) {
 // Check if the question was answered.
 $answered = attempts::is_answered($simplelessonid, $attemptid,
         $pageid);
-$shownavigation = ($answered || $moduleinstance->allowincomplete);
+$shownavigation = ($answered && !$moduleinstance->allowincomplete)
 // Show the navigation links when appropriate.
 if ($shownavigation) {
     $lastpage = pages::is_last_page($data);
