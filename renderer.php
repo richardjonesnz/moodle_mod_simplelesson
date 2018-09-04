@@ -102,10 +102,93 @@ class mod_simplelesson_renderer extends plugin_renderer_base {
     /**
      * Show the first page links
      *
-     * @param object $data object containing link data
-     * @return none
+     * @param $data object containing link data stdClass
+     * @return rendered html
      */
-
+    public function first_page_links($data) {
+        return $this->render_from_template('mod_simplelesson/buttonlinks', $data);
+    }
+    /**
+     * Show the page editing links.
+     *
+     * @param $data object containing link data stdClass
+     * @return rendered html
+     */
+    public function edit_links($data) {
+        return $this->render_from_template('mod_simplelesson/buttonlinks', $data);
+    }
+    /**
+     * Show the navigation links.
+     *
+     * @param $data object containing link data stdClass
+     * @return rendered html
+     */
+    public function nav_links($data) {
+        return $this->render_from_template('mod_simplelesson/buttonlinks', $data);
+    }
+    /**
+     * Show the page management links.
+     *
+     * @param $data object containing link data stdClass
+     * @return rendered html
+     */
+    public function manage_links($data) {
+        return $this->render_from_template('mod_simplelesson/buttonlinks', $data);
+    }
+    /**
+     * Show the home link.
+     *
+     * @param $data object containing link data stdClass
+     * @return rendered html
+     */
+    public function home_button($data) {
+        return $this->render_from_template('mod_simplelesson/buttonlinks', $data);
+    }
+    /**
+     * Show the report buttona.
+     *
+     * @param $data object containing link data stdClass
+     * @return rendered html
+     */
+    public function report_menu($data) {
+        return $this->render_from_template('mod_simplelesson/buttonlinks', $data);
+    }
+    /**
+     * Show the page management links for edit page.
+     *
+     * @param $data object containing link data stdClass
+     * @return rendered html
+     */
+    public function page_management_links($data) {
+        return $this->render_from_template('mod_simplelesson/buttonlinks', $data);
+    }
+    /**
+     * Show the links for edit page table.
+     *
+     * @param $data object containing link data stdClass
+     * @return rendered html
+     */
+    public function edit_table_links($data) {
+        return $this->render_from_template('mod_simplelesson/pages_edit', $data);
+    }
+    /**
+     * Show the question table.
+     *
+     * @param $data object containing link data stdClass
+     * @return rendered html
+     */
+    public function question_table($data) {
+        return $this->render_from_template('mod_simplelesson/question_edit', $data);
+    }
+    /**
+     * Show the question links.
+     *
+     * @param $data object containing link data stdClass
+     * @return rendered html
+     */
+    public function questionpage_links($data) {
+        return $this->render_from_template('mod_simplelesson/buttonlinks', $data);
+    }
     /**
      * Show the current page.
      *

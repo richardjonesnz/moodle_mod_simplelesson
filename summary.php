@@ -110,8 +110,7 @@ if ($mode == 'attempt') {
 
     $linkdata = link_data::get_home_button($cm,
             get_string('finishreview', 'mod_simplelesson'));
-    echo $OUTPUT->render_from_template('mod_simplelesson/buttonlinks',
-            $linkdata);
+    echo $renderer->home_button($linkdata);
 } else {
     // It's a preview, go back to the home page.
     $returnview = new moodle_url('/mod/simplelesson/view.php',

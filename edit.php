@@ -52,7 +52,7 @@ $modulecontext = context_module::instance($cm->id);
 
 $PAGE->set_context($modulecontext);
 $PAGE->set_pagelayout('course');
-
+$renderer = $PAGE->get_renderer('mod_simplelesson');
 $returnedit = new moodle_url('/mod/simplelesson/edit.php',
         array('courseid' => $courseid,
         'simplelessonid' => $simplelessonid,
@@ -76,9 +76,8 @@ echo $OUTPUT->heading(get_string('simplelesson_editing',
         'mod_simplelesson'), 2);
 
 $tabledata = table_data::get_edit_table_data($cm);
-echo $OUTPUT->render_from_template('mod_simplelesson/pages_edit',
-        $tabledata);
-$linkdata = link_data::get_pagemanagement_links($cm);
-echo $OUTPUT->render_from_template('mod_simplelesson/buttonlinks',
-        $linkdata);
+echo $renderer->edit_table_links($linkdata);
+$linkdata = link_data::get_page_management_links($cm);
+echo $renderer->page_management_links($linkdata);
+
 echo $OUTPUT->footer();

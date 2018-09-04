@@ -478,7 +478,7 @@ class reporting  {
      * @param $simplelessonid - current instance id
      * @return html to display buttons
      */
-    public static function show_menu($courseid, $simplelessonid) {
+    public static function get_report_menu($courseid, $simplelessonid) {
         // Buttons on reports tab.
 
         $data = new \stdClass;

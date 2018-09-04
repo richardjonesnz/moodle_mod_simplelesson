@@ -4,7 +4,7 @@ CHANGELOG.txt
 =================
 Attempts
   - Allow incomplete attempts. Otherwise student must answer
-    question to proceed.
+    question to view navigation.
   - Adds new database field for question state.
 
 1.27 - 01/09/2018 - MINOR changes/improvements

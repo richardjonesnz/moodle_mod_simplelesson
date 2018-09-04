@@ -209,20 +209,18 @@ if ( ($questionentry) && ($mode == 'attempt') ) {
 // Check if the question was answered.
 $answered = attempts::is_answered($simplelessonid, $attemptid,
         $pageid);
-$shownavigation = ($answered && !$moduleinstance->allowincomplete)
+$shownavigation = ($answered && !$moduleinstance->allowincomplete);
 // Show the navigation links when appropriate.
-if ($shownavigation) {
+if ( ($shownavigation) || ($mode == 'preview') ) {
     $lastpage = pages::is_last_page($data);
-    $linkdata = link_data::get_nav_links($data, $cm, $mode, $attemptid,
-            $lastpage);
-    echo $OUTPUT->render_from_template('mod_simplelesson/buttonlinks',
-            $linkdata);
+    $linkdata = link_data::get_nav_links($data, $cm, $mode,
+            $attemptid, $lastpage);
+    echo $renderer->nav_links($linkdata);
 }
 
 if (has_capability('mod/simplelesson:manage', $modulecontext)) {
     $linkdata = link_data::get_manage_links($data, $cm);
-    echo $OUTPUT->render_from_template('mod_simplelesson/buttonlinks',
-            $linkdata);
+    echo $renderer->manage_links($linkdata);
 }
 
 echo $OUTPUT->footer();

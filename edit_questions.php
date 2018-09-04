@@ -190,13 +190,11 @@ echo get_string('edit_question_page', 'mod_simplelesson');
 //        $courseid, $simplelessonid, $questions);
 
 $tabledata = table_data::get_question_table_data($cm);
-echo $OUTPUT->render_from_template('mod_simplelesson/question_edit',
-            $tabledata);
+echo $renderer->question_table($tabledata);
 
 // Add page links.
 if (has_capability('mod/simplelesson:manage', $modulecontext)) {
     $linkdata = link_data::get_questionpage_links($cm);
-    echo $OUTPUT->render_from_template('mod_simplelesson/buttonlinks',
-            $linkdata);
+    echo $renderer->questionpage_links($linkdata);
 }
 echo $OUTPUT->footer();

@@ -112,9 +112,8 @@ if ($numpages > 0) {
     $attemptlink = (count($questionentries) > 0);
 
     // Render the buttons.
-    $data = link_data::get_firstpage_links($cm, $pageid, $attemptlink);
-    //echo $OUTPUT->render_from_template('mod_simplelesson/buttonlinks',
-    //        $data);
+    $data = link_data::get_firstpage_links($cm, $pageid,
+            $attemptlink);
     echo $renderer->first_page_links($data);
 }
 
@@ -145,9 +144,8 @@ if ($canmanage) {
     if ($numpages == 0) {
         echo $renderer->fetch_nopage_links($cm);
     } else {
-    $data = link_data::get_edit_links($cm);
-    echo $OUTPUT->render_from_template('mod_simplelesson/buttonlinks',
-        $data);
+        $data = link_data::get_edit_links($cm);
+        echo $renderer->edit_links($data);
     }
 }
 // Finish the page.

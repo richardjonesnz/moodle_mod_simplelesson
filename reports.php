@@ -52,14 +52,15 @@ $exporturl = new moodle_url('/mod/simplelesson/export.php',
                 array('courseid' => $courseid,
                 'simplelessonid' => $simplelessonid,
                 'type' => $report));
+
+$renderer = $PAGE->get_renderer('mod_simplelesson');
 switch ($report) {
 
     case 'menu':
         echo $OUTPUT->header();
         echo reporting::show_reports_tab($courseid, $simplelessonid);
-        $data = reporting::show_menu($courseid, $simplelessonid);
-        echo $OUTPUT->render_from_template(
-                'mod_simplelesson/buttonlinks', $data);
+        $data = reporting::get_report_menu($courseid, $simplelessonid);
+        echo $renderer->report_menu($data);
         break;
     case 'answers':
         echo $OUTPUT->header();
@@ -104,6 +105,5 @@ switch ($report) {
 }
 $linkdata = link_data::get_home_button($cm, get_string(
         'homelink', 'mod_simplelesson'));
-echo $OUTPUT->render_from_template('mod_simplelesson/buttonlinks',
-            $linkdata);
+echo $renderer->home_button($linkdata);
 echo $OUTPUT->footer();

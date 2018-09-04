@@ -267,7 +267,7 @@ class link_data {
      * @param object $cm the course module instance
      * @return array link data for mustache template
      */
-     public static function get_pagemanagement_links($cm) {
+     public static function get_page_management_links($cm) {
 
         $baseparams = ['courseid' => $cm->course,
                        'simplelessonid' => $cm->instance];
