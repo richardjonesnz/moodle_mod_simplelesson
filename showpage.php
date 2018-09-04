@@ -197,10 +197,10 @@ if ( ($moduleinstance->showindex) && ($mode != 'attempt') ) {
     echo $renderer->fetch_index($pagelinks);
 }
 echo $renderer->show_page($data);
-
+$isquestionpage = ($questionentry) && ($mode == 'attempt');
 // If there is a question and this is an attempt, show
 // the question.
-if ( ($questionentry) && ($mode == 'attempt') ) {
+if ($isquestionpage) {
     $slot = questions::get_slot($simplelessonid, $pageid);
 
     echo $renderer->render_question_form($actionurl, $options,
@@ -211,7 +211,7 @@ $answered = attempts::is_answered($simplelessonid, $attemptid,
         $pageid);
 $shownavigation = ($answered && !$moduleinstance->allowincomplete);
 // Show the navigation links when appropriate.
-if ( ($shownavigation) || ($mode == 'preview') ) {
+if ( ($shownavigation) || (!$isquestionpage) ) {
     $lastpage = pages::is_last_page($data);
     $linkdata = link_data::get_nav_links($data, $cm, $mode,
             $attemptid, $lastpage);

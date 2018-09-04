@@ -76,7 +76,7 @@ echo $OUTPUT->heading(get_string('simplelesson_editing',
         'mod_simplelesson'), 2);
 
 $tabledata = table_data::get_edit_table_data($cm);
-echo $renderer->edit_table_links($linkdata);
+echo $renderer->edit_table_links($tabledata);
 $linkdata = link_data::get_page_management_links($cm);
 echo $renderer->page_management_links($linkdata);
 
