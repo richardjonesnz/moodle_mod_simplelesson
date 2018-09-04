@@ -92,6 +92,13 @@ class mod_simplelesson_mod_form extends moodleform_mod {
         $mform->addHelpButton('allowreview', 'allowreview',
                 'simplelesson');
 
+        // Allow incomplete attempts.
+        $mform->addElement('advcheckbox', 'allowincomplete',
+                get_string('allowincomplete', 'mod_simplelesson'));
+        $mform->setDefault('allowincomplete', 1);
+        $mform->addHelpButton('allowincomplete', 'allowincomplete',
+                'simplelesson');
+
         // Select the category for the questions that can be added.
         $categories = array();
         $cats = $DB->get_records('question_categories',

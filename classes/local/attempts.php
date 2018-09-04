@@ -329,6 +329,24 @@ class attempts  {
         }
     }
     /**
+     * Is question answered?
+     *
+     * @param stdCall $answerdata question answerdata
+     * @return bool true if completed
+     */
+    public static function is_answered($simplelessonid, $attemptid,
+            $pageid) {
+        global $DB;
+        $stateclass = $DB->get_field('simplelesson_answers',
+                'stateclass', array('simplelessonid' => $simplelessonid,
+                'attemptid' => $attemptid, 'pageid' => $pageid));
+        if ( ($stateclass == '') || ($stateclass == 'notanswered') ||
+             ($stateclass == 'invalidanswer') || ($stateclass == 'notyetanswered')) {
+            return false;
+        }
+        return true;
+    }
+    /**
      * Delete the record for an attempt and the associated answers
      *
      * @param int $attemptid the attempt record id

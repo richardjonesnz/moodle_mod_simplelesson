@@ -87,7 +87,6 @@ $actionurl = new moodle_url ('/mod/simplelesson/showpage.php',
 
 // Check if data submitted.
 if (data_submitted() && confirm_sesskey()) {
-
     $timenow = time();
     $transaction = $DB->start_delegated_transaction();
     $quba = \question_engine::load_questions_usage_by_activity($qubaid);
@@ -141,6 +140,11 @@ if (data_submitted() && confirm_sesskey()) {
     // Calculate the elapsed time (s).
     $answerdata->timetaken = ($answerdata->timecompleted
                     - $answerdata->timestarted);
+
+    // Check if question has a valid answer.
+    $state = $quba->get_question_state($slot);
+    $answerdata->stateclass = $state->get_state_class(false);
+
     if ($qtype == 'essay') {
         // Special case, has additional save option.
         $submitteddata = $quba->extract_responses($slot);
@@ -169,8 +173,6 @@ if (data_submitted() && confirm_sesskey()) {
     $event->trigger();
 }
 
-echo $OUTPUT->header();
-
 // Now get this page record.
 $data = pages::get_page_record($pageid);
 
@@ -187,12 +189,13 @@ $formatoptions->overflowdiv = true;
 $formatoptions->context = $modulecontext;
 $data->pagecontents = format_text($data->pagecontents, $data->pagecontentsformat, $formatoptions);
 
+echo $OUTPUT->header();
+
 // Show the page index if required (but not during an attempt).
 if ( ($moduleinstance->showindex) && ($mode != 'attempt') ) {
     $pagelinks = pages::fetch_page_links($courseid, $simplelessonid, $pageid);
     echo $renderer->fetch_index($pagelinks);
 }
-
 echo $renderer->show_page($data);
 
 // If there is a question and this is an attempt, show
@@ -203,13 +206,18 @@ if ( ($questionentry) && ($mode == 'attempt') ) {
     echo $renderer->render_question_form($actionurl, $options,
             $slot, $quba, time(), $qtype);
 }
-
-// Show the navigation links.
-$lastpage = pages::is_last_page($data);
-$linkdata = link_data::get_nav_links($data, $cm, $mode, $attemptid,
-        $lastpage);
-echo $OUTPUT->render_from_template('mod_simplelesson/buttonlinks',
-        $linkdata);
+// Check if the question was answered.
+$answered = attempts::is_answered($simplelessonid, $attemptid,
+        $pageid);
+$shownavigation = ($answered || $moduleinstance->allowincomplete);
+// Show the navigation links when appropriate.
+if ($shownavigation) {
+    $lastpage = pages::is_last_page($data);
+    $linkdata = link_data::get_nav_links($data, $cm, $mode, $attemptid,
+            $lastpage);
+    echo $OUTPUT->render_from_template('mod_simplelesson/buttonlinks',
+            $linkdata);
+}
 
 if (has_capability('mod/simplelesson:manage', $modulecontext)) {
     $linkdata = link_data::get_manage_links($data, $cm);

@@ -60,5 +60,19 @@ function xmldb_simplelesson_upgrade($oldversion) {
         }
         upgrade_mod_savepoint(true, 2018082002, 'simplelesson');
     }
+    if ($oldversion < 2018090400) {
+
+        // Define field to check answer state.
+        $table = new xmldb_table('simplelesson_answers');
+        $field = new xmldb_field('stateclass', XMLDB_TYPE_TEXT, null,
+                null, null, null, null, 'youranswer');
+
+        // Add field.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2018090400, 'simplelesson');
+    }
     return true;
 }

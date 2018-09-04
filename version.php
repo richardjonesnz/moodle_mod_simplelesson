@@ -27,8 +27,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'mod_simplelesson';
-$plugin->version = 2018090100;
-$plugin->release = 'v1.27'; // Implementing course reset.
+$plugin->version = 2018090400;
+$plugin->release = 'v1.28'; // Adding question answered checks.
 $plugin->requires = 2017111301; // Designed for Moodle 3.5.
 $plugin->maturity = MATURITY_BETA;
 $plugin->cron = 0;

@@ -99,6 +99,7 @@
         <FIELD NAME="qtype" TYPE="char" LENGTH = "20" NOTNULL="true" DEFAULT = 'none' SEQUENCE="false" COMMENT="This is the question type"/>
         <FIELD NAME="rightanswer" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="This is a summary of the right answer to this question."/>
         <FIELD NAME="youranswer" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="This is a summary of the student's response."/>
+        <FIELD NAME="stateclass" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="State of the question (eg completed, notyetanswered)."/>
         <FIELD NAME="timetaken" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="timestarted" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="timecompleted" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
