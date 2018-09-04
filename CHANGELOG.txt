@@ -1,6 +1,5 @@
 CHANGELOG.txt
 =============
-<<<<<<< HEAD
 1.28 - 04/09/2018 - MINOR changes/improvements
 =================
 Attempts
@@ -8,8 +7,6 @@ Attempts
     question to view navigation.
   - Adds new database field for question state.
 
-=======
->>>>>>> bac05d470e51c6fea12efa1e002a8ec7ee5d08bc
 1.27 - 01/09/2018 - MINOR changes/improvements
 =================
 Grading
