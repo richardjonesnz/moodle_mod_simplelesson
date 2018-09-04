@@ -1,5 +1,12 @@
 CHANGELOG.txt
 =============
+1.28 - 04/09/2018 - MINOR changes/improvements
+=================
+Attempts
+  - Allow incomplete attempts. Otherwise student must answer
+    question to view navigation.
+  - Adds new database field for question state.
+
 1.27 - 01/09/2018 - MINOR changes/improvements
 =================
 Grading
