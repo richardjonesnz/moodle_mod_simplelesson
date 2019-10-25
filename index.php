@@ -23,7 +23,7 @@
  * @see https://github.com/moodlehq/moodle-mod_newmodule
  * @see https://github.com/justinhunt/moodle-mod_pairwork
  */
-use \mod_simplelesson\event;
+use \mod_simplelesson\event\course_module_instance_list_viewed;
 require_once('../../config.php');
 
 $id = required_param('id', PARAM_INT); // Course.

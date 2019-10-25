@@ -1,5 +1,11 @@
 CHANGELOG.txt
 =============
+1.29 - 26/10/19 - MINOR bug fixes, thanks Al Rachels.
+Language file
+  - capitalized "sequence"
+index.php
+  - fixed use statement
+
 1.28 - 04/09/2018 - MINOR changes/improvements
 =================
 Attempts

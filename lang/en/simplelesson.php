@@ -91,7 +91,7 @@ $string['simplelesson:importpages'] = 'Export report pages';
 // Page management.
 $string['simplelesson_editing'] = 'Editing Simple lesson';
 $string['manage_pages'] = 'Manage pages';
-$string['sequence'] = 'sequence';
+$string['sequence'] = 'Sequence';
 $string['title'] = 'Page title';
 $string['nextpage'] = 'Next page';
 $string['prevpage'] = 'Previous page';
