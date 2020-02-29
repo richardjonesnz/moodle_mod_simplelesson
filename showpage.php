@@ -198,20 +198,22 @@ if ( ($moduleinstance->showindex) && ($mode != 'attempt') ) {
 }
 echo $renderer->show_page($data);
 $isquestionpage = ($questionentry) && ($mode == 'attempt');
-// If there is a question and this is an attempt, show
-// the question.
+
+// If there is a question and this is an attempt, show the question.
 if ($isquestionpage) {
     $slot = questions::get_slot($simplelessonid, $pageid);
 
     echo $renderer->render_question_form($actionurl, $options,
             $slot, $quba, time(), $qtype);
 }
+
 // Check if the question was answered.
-$answered = attempts::is_answered($simplelessonid, $attemptid,
-        $pageid);
-$shownavigation = ($answered && !$moduleinstance->allowincomplete);
-// Show the navigation links when appropriate.
-if ( ($shownavigation) || (!$isquestionpage) ) {
+$answered = attempts::is_answered($simplelessonid, $attemptid, $pageid);
+
+// Has teacher has allowed incomplete?
+$shownavigation = ( (!$moduleinstance->allowincomplete) || ($answered) );
+
+if ($shownavigation) {
     $lastpage = pages::is_last_page($data);
     $linkdata = link_data::get_nav_links($data, $cm, $mode,
             $attemptid, $lastpage);

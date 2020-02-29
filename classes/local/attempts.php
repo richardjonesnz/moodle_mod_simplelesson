@@ -337,14 +337,18 @@ class attempts  {
     public static function is_answered($simplelessonid, $attemptid,
             $pageid) {
         global $DB;
+        $result = false;
         $stateclass = $DB->get_field('simplelesson_answers',
                 'stateclass', array('simplelessonid' => $simplelessonid,
                 'attemptid' => $attemptid, 'pageid' => $pageid));
         if ( ($stateclass == '') || ($stateclass == 'notanswered') ||
              ($stateclass == 'invalidanswer') || ($stateclass == 'notyetanswered')) {
-            return false;
+            $result = false;
+        } else {
+            $result = true;
         }
-        return true;
+
+        return $result;
     }
     /**
      * Delete the record for an attempt and the associated answers
