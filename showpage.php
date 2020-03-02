@@ -211,12 +211,11 @@ if ($isquestionpage) {
 $answered = attempts::is_answered($simplelessonid, $attemptid, $pageid);
 
 // Has teacher has allowed incomplete?
-$shownavigation = ( (!$moduleinstance->allowincomplete) || ($answered) );
+$shownavigation = ( (!$moduleinstance->allowincomplete) || ($answered) || ($mode == 'preview') );
 
 if ($shownavigation) {
     $lastpage = pages::is_last_page($data);
-    $linkdata = link_data::get_nav_links($data, $cm, $mode,
-            $attemptid, $lastpage);
+    $linkdata = link_data::get_nav_links($data, $cm, $mode, $attemptid, $lastpage);
     echo $renderer->nav_links($linkdata);
 }
 
