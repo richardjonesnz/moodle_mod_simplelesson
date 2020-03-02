@@ -1,5 +1,8 @@
 CHANGELOG.txt
 =============
+1.29.1 - 2/3/20 - MINOR fixes to navigation - thanks Joseph Rézeau
+Nav now shows after answering question in deferred mode.
+
 1.29 - 26/10/19 - MINOR bug fixes, thanks Al Rachels.
 Language file
   - capitalized "sequence"

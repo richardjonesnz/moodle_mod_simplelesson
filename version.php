@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'mod_simplelesson';
 $plugin->version = 2020030200;
-$plugin->release = 'v1.29'; // Reverting to previous branch.
+$plugin->release = 'v1.29.1'; // Fixed navigation issues.
 $plugin->requires = 2017111301; // Designed for Moodle 3.5.
 $plugin->maturity = MATURITY_BETA;
 $plugin->cron = 0;
