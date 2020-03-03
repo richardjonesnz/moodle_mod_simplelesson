@@ -2,6 +2,9 @@ CHANGELOG.txt
 =============
 1.29.1 - 2/3/20 - MINOR fixes to navigation - thanks Joseph Rézeau
 Nav now shows after answering question in deferred mode.
+If user double-clicks check button, returns to home page
+  - this is an issue with the question engine sometimes
+  - getting an out of sequence error.
 
 1.29 - 26/10/19 - MINOR bug fixes, thanks Al Rachels.
 Language file

@@ -29,6 +29,7 @@ use \mod_simplelesson\local\attempts;
 use \mod_simplelesson\local\display_options;
 use \mod_simplelesson\output\link_data;
 use \mod_simplelesson\event\page_viewed;
+use \core\output\notification;
 require_once('../../config.php');
 require_once(dirname(__FILE__).'/lib.php');
 require_once($CFG->libdir . '/questionlib.php');
@@ -84,22 +85,29 @@ $actionurl = new moodle_url ('/mod/simplelesson/showpage.php',
         'pageid' => $pageid,
         'mode' => $mode,
         'attemptid' => $attemptid));
+$viewurl = new moodle_url ('/mod/simplelesson/view.php',
+        array('simplelessonid' => $moduleinstance->id));
 
 // Check if data submitted.
 if (data_submitted() && confirm_sesskey()) {
-    $timenow = time();
-    $transaction = $DB->start_delegated_transaction();
-    $quba = \question_engine::load_questions_usage_by_activity($qubaid);
-    $quba->process_all_actions($timenow);
-    question_engine::save_questions_usage_by_activity($quba);
-    $transaction->allow_commit();
+    try {
+        $transaction = $DB->start_delegated_transaction();
+        $quba = \question_engine::load_questions_usage_by_activity($qubaid);
+        $timenow = time();
+        $quba->process_all_actions($timenow);
+        question_engine::save_questions_usage_by_activity($quba);
+        $transaction->allow_commit();
 
-    // Force finish the deferred question on save. But not if
-    // it's an essay where we want multiple saves allowed.
-    $slot = questions::get_slot($simplelessonid, $pageid);
-    if ( ($quba->get_preferred_behaviour() == 'deferredfeedback')
-            && ($qtype != 'essay') ) {
-        $quba->finish_question($slot);
+        // Force finish the deferred question on save. But not if
+        // it's an essay where we want multiple saves allowed.
+        $slot = questions::get_slot($simplelessonid, $pageid);
+        if ( ($quba->get_preferred_behaviour() == 'deferredfeedback')
+                && ($qtype != 'essay') ) {
+            $quba->finish_question($slot);
+        }
+    } catch (question_out_of_sequence_exception $e) {
+        redirect($viewurl, get_string('outofsequence', 'mod_simplelesson'), 2,
+                notification::NOTIFY_WARNING);
     }
     /* Record results here for each answer.
        qatid is entry in question_attempts table

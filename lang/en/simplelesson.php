@@ -253,3 +253,4 @@ $string['clean_up_usages'] = 'Clean old question usages for Simple lesson';
 
 // Reset
 $string['deleteallattempts'] = 'Delete all attempts.';
+$string['outofsequence'] = 'Something went wrong with the question engine, please try again';
