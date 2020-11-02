@@ -207,19 +207,21 @@ if ( ($moduleinstance->showindex) && ($mode != 'attempt') ) {
 echo $renderer->show_page($data);
 $isquestionpage = ($questionentry) && ($mode == 'attempt');
 
+$answered = FALSE;
+
 // If there is a question and this is an attempt, show the question.
 if ($isquestionpage) {
     $slot = questions::get_slot($simplelessonid, $pageid);
 
     echo $renderer->render_question_form($actionurl, $options,
             $slot, $quba, time(), $qtype);
+
+   // Check if the question was answered.
+   $answered = attempts::is_answered($simplelessonid, $attemptid, $pageid);
 }
 
-// Check if the question was answered.
-$answered = attempts::is_answered($simplelessonid, $attemptid, $pageid);
-
 // Has teacher has allowed incomplete?
-$shownavigation = ( (!$moduleinstance->allowincomplete) || ($answered) || ($mode == 'preview') );
+$shownavigation = ( (!$moduleinstance->allowincomplete) || (!$isquestionpage)  || ($answered) || ($mode == 'preview') );
 
 if ($shownavigation) {
     $lastpage = pages::is_last_page($data);
