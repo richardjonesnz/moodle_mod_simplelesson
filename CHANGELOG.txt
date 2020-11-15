@@ -5,6 +5,11 @@ A link is added that takes you to the question bank for the course where you can
 edit your question.
 
 1.29.1 - 2/3/20 - MINOR fixes to navigation - thanks Joseph Rézeau
+
+1.29.1 - 3/11/20 - MINOR change to navigation - sparry407
+Nav shows on non-question pages when allow incomplete attempts are disallowed.
+
+       - 2/3/20 - MINOR fixes to navigation - thanks Joseph Rézeau
 Nav now shows after answering question in deferred mode.
 If user double-clicks check button, returns to home page
   - this is an issue with the question engine sometimes
