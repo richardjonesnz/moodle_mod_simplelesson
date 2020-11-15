@@ -112,6 +112,8 @@ $string['managing'] = 'Manage pages: ';
 $string['manage_questions'] = 'Manage questions';
 $string['question_editing'] = 'Editing questions';
 $string['qnumber'] = 'Question number';
+$string['qlinkheader'] = 'Find in bank';
+$string['qlink'] = 'Find';
 $string['question_name'] = 'Question name';
 $string['question_text'] = 'Question text';
 $string['setpage'] = 'Allocate';
@@ -122,7 +124,7 @@ $string['add_question_page'] = 'Check the boxes to add selected questions to thi
 $string['selecting_page'] = 'Select the page for question: ';
 $string['question_exists'] = 'That page has a question already';
 $string['questionscore'] = "Score";
-$string['edit_question_page'] = 'Click the Allocate link in the last column to allocate questions to pages (only one question per page is permitted).  You can also set the score for a question.';
+$string['edit_question_page'] = 'Click the Allocate link in the last column to allocate questions to pages (only one question per page is permitted).  You can also set the score for a question.  The Find in bank link will take you to the question bank.';
 
 // Page editing.
 $string['edit_page'] = 'Edit page';

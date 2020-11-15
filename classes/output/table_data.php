@@ -198,6 +198,7 @@ class table_data {
         $headerdata[] = get_string('questionscore', 'mod_simplelesson');
         $headerdata[] = get_string('pagetitle', 'mod_simplelesson');
         $headerdata[] = get_string('setpage', 'mod_simplelesson');
+        $headerdata[] = get_string('qlinkheader', 'mod_simplelesson');
 
         return $headerdata;
     }
@@ -244,6 +245,10 @@ class table_data {
             $data['link'] = ['link' => $url->out(false),
                     'text' =>
                     get_string('setpage', 'mod_simplelesson')];
+            $questionurl = new \moodle_url('/question/edit.php', ['courseid' => $cm->course]);
+            $data['qlink'] = ['qlink' => $questionurl->out(false),
+                    'text' =>
+                    get_string('qlink', 'mod_simplelesson')];
             $table->tabledata[] = $data;
         }
         return $table;

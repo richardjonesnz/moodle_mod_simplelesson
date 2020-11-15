@@ -111,7 +111,8 @@ $mform = new simplelesson_pagechanger_form(null,
         array('courseid' => $courseid,
         'simplelessonid' => $simplelessonid,
         'page_titles' => $pagetitles,
-        'actionitem' => $actionitem));
+        'actionitem' => $actionitem,
+        'qlink' => $actionitem));
 
 if ($mform->is_cancelled()) {
     redirect($pageurl, get_string('cancelled'), 2);

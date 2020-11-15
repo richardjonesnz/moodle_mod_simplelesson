@@ -1,5 +1,9 @@
 CHANGELOG.txt
 =============
+1.29.2 - 15/11/20 - MINOR improvement to Manage Questions page - thanks Stephen Parry @sparry0407
+A link is added that takes you to the question bank for the course where you can preview and
+edit your question.
+
 1.29.1 - 2/3/20 - MINOR fixes to navigation - thanks Joseph Rézeau
 Nav now shows after answering question in deferred mode.
 If user double-clicks check button, returns to home page
