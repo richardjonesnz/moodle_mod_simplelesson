@@ -83,7 +83,7 @@ class link_data {
         $baseparams = ['courseid' => $cm->course,
                 'simplelessonid' => $cm->instance];
         $ret->class = 'mod_simplelesson_edit_links';
-        $ret->buttonclass = 'btn btn-default';
+        $ret->buttonclass = 'btn btn-info';
         $ret->name = get_string('editing', 'mod_simplelesson');
         // Put an add page link on the home page.
         $link = new \moodle_url('add_page.php', $baseparams);
@@ -173,7 +173,7 @@ class link_data {
                 'simplelessonid' => $cm->instance];
         $ret = new \stdClass;
         $ret->class = 'mod_simplelesson_nav_links';
-        $ret->buttonclass = 'btn btn-default';
+        $ret->buttonclass = 'btn btn-info';
         $ret->linkdata = array();
 
         // Add edit and delete links.
